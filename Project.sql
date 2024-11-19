@@ -1,70 +1,83 @@
--- Question 2 BlogDB
 DROP DATABASE IF EXISTS NUconnect;
 
-CREATE DATABASE NUconnect;
+CREATE DATABASE IF NOT EXISTS NUconnect;
+
 USE NUconnect;
 
 CREATE TABLE programs (
     programId INT AUTO_INCREMENT PRIMARY KEY,
-    applicants JSON,
-    approve boolean,
+    title VARCHAR (100) NOT NULL UNIQUE,
+    description (300),
+    location (100) NOT NULL, 
+    approved BOOLEAN DEFAULT false,
+    schoolId INT,
+    professorId INT,
+    applicants JSON, #notnull?
+    approvedApplicants JSON
     dateCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
     programStart DATE,
-    programEnd DATE,
-    approvedApplicants JSON);
-
-CREATE TABLE posts (
-    postId INT AUTO_INCREMENT PRIMARY KEY,
-    programId INT,
-    FOREIGN KEY (programId) REFERENCES programs(programId),
-    postAuthor VARCHAR(150),
-    tags VARCHAR(100),
-    favorite boolean,
-    title VARCHAR (200),
-    bodyText JSON);
+    programEnd DATE;
+    FOREIGN KEY (schoolId) REFERENCES school(schoolId),
+    FOREIGN KEY (professorId) REFERENCES users(userId)
+);
 
 CREATE TABLE school (
     schoolId INT AUTO_INCREMENT PRIMARY KEY,
-    programId INT,
-    FOREIGN KEY (programId) REFERENCES programs(programId),
-    programs JSON,
     name VARCHAR(200) NOT NULL UNIQUE,
-    professor JSON);
+    programId INT,
+    programs JSON, #notnull?
+    students JSON,
+    professors JSON,
+    bio VARCHAR(300),
+    #profilepic
+    FOREIGN KEY (programId) REFERENCES programs(programId)
+);
 
 CREATE TABLE roles (
     roleId INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150),
-    canEdit boolean,
-    canEditAll boolean,
-    canEditOwn boolean,
-    canDeleteOwn boolean,
-    canDeleteAll boolean,
-    canApprove boolean,
-    canAssign boolean);
-
+    name VARCHAR(150) NOT NULL,
+    canPost BOOLEAN DEFAULT false,
+    canApprove BOOLEAN DEFAULT false,
+    canAssignProf BOOLEAN DEFAULT false,
+    canApply BOOLEAN DEFAULT false,
+    canRetract BOOLEAN DEFAULT false,
+    canEditOwn BOOLEAN DEFAULT false,
+    canEditAll BOOLEAN DEFAULT false,
+    canDeleteOwn BOOLEAN DEFAULT false,
+    canDeleteAll BOOLEAN DEFAULT false,
+    canUpdateAccess BOOLEAN DEFAULT false
+);
 
 CREATE TABLE users (
     userId INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50) NOT NULL,
     middleName VARCHAR(50),
-    lastName VARCHAR(50)NOT NULL,
-    phone VARCHAR(15),
-    email VARCHAR(254)NOT NULL UNIQUE,
+    lastName VARCHAR(50) NOT NULL,
+    phone VARCHAR(15) UNIQUE,
+    email VARCHAR(254) NOT NULL UNIQUE,
     schoolId INT,
     roleId INT,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lastLogin DATETIME DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (schoolId) REFERENCES school(schoolId),
-    FOREIGN KEY (roleId) REFERENCES roles(roleId));
+    FOREIGN KEY (roleId) REFERENCES roles(roleId)
+);
 
 CREATE TABLE userTags (
-    userTagId INT AUTO_INCREMENT PRIMARY KEY,
     userId INT,
-    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE);
-
-CREATE TABLE userTagParents (
-    tagName VARCHAR(100),
-    category VARCHAR(100),
     userTagId INT,
-    FOREIGN KEY (userTagId) REFERENCES userTags(userTagId) ON DELETE CASCADE);
+    FOREIGN KEY (userId) REFERENCES users(userId) 
+	    ON UPDATE cascade ON DELETE cascade,
+    FOREIGN KEY (userTagId) REFERENCES userTagParent(userTagId) 
+	    ON UPDATE cascade ON DELETE cascade
+);
+
+CREATE TABLE userTagParent (
+    userTagId INT AUTO_INCREMENT PRIMARY KEY,
+    tagName VARCHAR(100),
+    category VARCHAR(100)
+);
 
 CREATE TABLE profiles (
     profileId INT AUTO_INCREMENT PRIMARY KEY,
@@ -72,21 +85,49 @@ CREATE TABLE profiles (
     middleName VARCHAR(50),
     lastName VARCHAR(50) NOT NULL,
     userId INT,
-    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE,
+    schoolId INT,
     bio VARCHAR(300),
+    #profilepic
     email VARCHAR(254) NOT NULL UNIQUE,
-    userTagsArray JSON);
+    userTagsArray JSON, #notnull?
+    FOREIGN KEY (userId) REFERENCES users(userId),
+    FOREIGN KEY (schoolId) REFERENCES programs(schoolId),
+);
+
+CREATE TABLE posts (
+    postId INT AUTO_INCREMENT PRIMARY KEY,
+    postAuthor VARCHAR(150) NOT NULL,
+    title VARCHAR (100) NOT NULL,
+    body VARCHAR (300),
+    profileId INT,
+    programId INT,
+    #thumbnail,
+    tags JSON, #notnull?
+    published BOOLEAN DEFAULT false,
+    favourited BOOLEAN DEFAULT false,
+    applied BOOLEAN DEFAULT false,
+    acceepted BOOLEAN DEFAULT false,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lastEdited DATETIME DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (profileId) REFERENCES profiles(profileId),
+    FOREIGN KEY (programId) REFERENCES programs(programId),
+);
 
 CREATE TABLE postTags (
-    postTagId INT AUTO_INCREMENT PRIMARY KEY,
     postId INT,
-    FOREIGN KEY (postId) REFERENCES posts(postId) ON DELETE CASCADE);
-
-CREATE TABLE postTagParents (
-    postName VARCHAR(100),
-    category VARCHAR(100),
     postTagId INT,
-    FOREIGN KEY (postTagId) REFERENCES postTags(postTagId) ON DELETE CASCADE);
+    FOREIGN KEY (postId) REFERENCES posts(postId) 
+	    ON UPDATE cascade ON DELETE cascade,
+    FOREIGN KEY (postTagId) REFERENCES postTagParent(postTagId) 
+	    ON UPDATE cascade ON DELETE cascade,
+);
+
+CREATE TABLE postTagParent (
+    postTagId INT AUTO_INCREMENT PRIMARY KEY,
+    tagName VARCHAR(100),
+    category VARCHAR(100),
+);
 
 INSERT INTO school (name, programs, professor) VALUES
 ('Boston University', JSON_ARRAY('CIEE Monteverde - Sustainability and the Environment', ' Mexico City: Gender and Migration'), JSON_ARRAY('Dr. Smith', 'Dr. Ron')),
