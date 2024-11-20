@@ -145,11 +145,14 @@ INSERT INTO user (firstName, middleName, lastName, phone, email, schoolId, roleI
 ('White', 'Apple', 'Snow', '567-343-5678', 'snow@example.edu', 2, 2),
 ('Swift', NULL, 'Taylor', '345-222-3243', 'taylor@example.edu', 2, 2),
 ('Dao', 'Lain', 'Hope', '123-456-7890', 'dao@example.edu', 1, 3),
-('Ben', NULL, 'June', '555-555-5555', 'ben@example.edu', 2, 3);
+('Ben', NULL, 'June', '555-555-5555', 'ben@example.edu', 2, 3),
+('Brown', 'Charlie', 'Alex', '444-333-2222', 'charlie@example.edu', 2, 2),
+('Collins', 'Susan', 'Jade', '777-888-9999', 'jade@example.edu', 1, 3);
 
 INSERT INTO userTagParent (tagName, category) VALUES
 ('Computer Science', 'Major'),
-('2027', 'Graduation Year');
+('2027', 'Graduation Year'),
+('Business', 'Curriculum');
 
 INSERT INTO userTag (userId, userTagId) VALUES
 (1, 1),
@@ -242,9 +245,9 @@ VALUES
     (1, 2, TRUE, FALSE, FALSE);
 
 #2.6
-INSERT INTO userTag (userId, userTagId)
-VALUES
-    (1, (SELECT userTagId FROM userTagParent WHERE tagName = '2027'));
+UPDATE userTag
+SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Business')
+WHERE userId = 1;
 
 #3.1
 UPDATE program
@@ -299,12 +302,12 @@ SET professorId = (SELECT userId FROM user WHERE email = 'jenni@example.edu')
 WHERE programId = 4;
 
 #4.5
-INSERT INTO user (firstName, lastName, email, schoolId, roleId)
-VALUES
-    ('Emily', 'Johnson', 'emilyj@example.edu', 2, 3);
+SELECT lastName, middleName, firstName
+FROM user
+WHERE schoolId = 2;
+
 
 #4.6
-INSERT INTO application (userId, programId, applied, accepted, denied)
-VALUES
-    (7, 4, TRUE, TRUE, FALSE),
-    (8, 4, TRUE, FALSE, TRUE);
+SELECT lastName, middleName, firstName
+FROM user JOIN application a on user.userId = a.userId
+WHERE schoolId = 2 AND denied = true;
