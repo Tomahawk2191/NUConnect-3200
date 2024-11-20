@@ -146,11 +146,10 @@ VALUES ('Boston University',
        ('University of Southern California',
         'The University of Southern California is a private research university in Los Angeles, California, United States.');
 
-INSERT INTO role (name, canPost, canApprove, canAssignProf, canApply, canRetract, canEditOwn, canEditAll, canDeleteOwn,
-                  canDeleteAll, canUpdateAccess)
-VALUES ('Admin', TRUE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE),
-       ('Professor', TRUE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE),
-       ('Student', FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE);
+INSERT INTO role (name, canPost, canApprove, canAssignProf, canApply, canRetract, canEditOwn, canEditAll, canDeleteOwn, canDeleteAll, canUpdateAccess) VALUES
+('Admin', TRUE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE),
+('Professor', TRUE, FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE),
+('Student', FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE);
 
 INSERT INTO user (firstName, middleName, lastName, phone, email, schoolId, roleId)
 VALUES ('Daniel', NULL, 'Smith', '098-765-4321', 'smith@example.edu', 1, 2),
@@ -203,6 +202,7 @@ INSERT INTO application (userId, programId, applied, accepted, denied)
 VALUES (1, 1, TRUE, FALSE, FALSE),
        (4, 2, TRUE, TRUE, FALSE);
 
+# Persona 1: Student
 #1.1
 INSERT INTO application (userId, programId, applied, accepted, denied)
 VALUES (5, 1, TRUE, FALSE, FALSE),
@@ -234,6 +234,7 @@ UPDATE userTag
 SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Computer Science')
 WHERE userId = 5;
 
+# Persona 2: Professor
 #2.1
 INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved, awaiting)
 VALUES ('Dialogue: Data Ethics and Privacy', 'Ireland', 1, 1, '2024-04-01', '2024-08-01', FALSE, TRUE);
@@ -265,10 +266,10 @@ UPDATE userTag
 SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Business')
 WHERE userId = 1;
 
+# Persona 3: NU Administrator
 #3.1
-UPDATE program
-SET approved = TRUE
-WHERE programId = 1;
+SELECT *
+FROM program;
 
 #3.2
 DELETE
@@ -276,44 +277,43 @@ FROM post
 WHERE body LIKE '%inappropriate content%';
 
 #3.3
-INSERT INTO user (firstName, lastName, email, schoolId, roleId)
-VALUES ('John', 'Doe', 'johndoe@example.edu', 2, 3),
-       ('Jane', 'Smith', 'janesmith@example.edu', 1, 2);
+SELECT *
+FROM user;
 
 #3.4
 UPDATE role
-SET canUpdateAccess = TRUE
-WHERE roleId = (SELECT r.roleId
-                FROM (SELECT roleId FROM role WHERE name = 'Admin') AS r);
+SET canAssignProf = TRUE
+WHERE roleId = (SELECT roleId FROM role WHERE name = 'Professor');
 
 #3.5
-DELETE
-FROM user
-WHERE email = 'johndoe@example.edu';
+DELETE FROM user
+WHERE firstName = 'Weasley' AND lastName = 'Ron';
 
 #3.6
 UPDATE program
 SET description = 'Updated program details for new courses'
-WHERE programId = 3;
+WHERE programId = 2;
 
+# Persona 4: Outside University Administrator
 #4.1
 UPDATE program
 SET approved = TRUE
-WHERE programId = 4;
+WHERE programId = 1;
 
 #4.2
 INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved)
-VALUES ('Dialogue: International Business Strategies', 'Japan', 2, 4, '2024-06-01', '2024-09-01', FALSE);
+VALUES
+    ('Dialogue: International Business Strategies', 'Japan', 2, 4, '2024-06-01', '2024-09-01', FALSE);
 
 #4.3
 UPDATE program
 SET description = 'Travel to Greece and learn more about engineering'
-WHERE programId = 4;
+WHERE programId = 2;
 
 #4.4
 UPDATE program
 SET professorId = (SELECT userId FROM user WHERE email = 'jenni@example.edu')
-WHERE programId = 4;
+WHERE programId = 2;
 
 #4.5
 SELECT lastName, middleName, firstName
