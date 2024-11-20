@@ -77,6 +77,7 @@ CREATE TABLE program (
     description VARCHAR (300),
     location VARCHAR (100) NOT NULL,
     approved BOOLEAN DEFAULT false,
+    awaiting BOOLEAN DEFAULT false,
     schoolId INT,
     professorId INT,
     dateCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -162,9 +163,9 @@ INSERT INTO profile (firstName, middleName, lastName, userId, schoolId, bio, ema
 ('Dao', 'Lain', 'Hope', 5, 1,'Software Engineer looking for a dialogue!', 'dao@example.com'),
 ('Ben', NULL, 'June', 6, 2,'Business Analyst specializing in market trends.', 'ben@example.com');
 
-INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd) VALUES
-('Dialogue: The Mathematical Heritage of Hungary', 'Hungary', 1, 1, '2024-01-01', '2024-06-01'),
-('Dialogue: The Chemistry of Green Energy in Iceland', 'Iceland', 2, 3, '2024-02-01', '2024-07-01');
+INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved, awaiting) VALUES
+('Dialogue: The Mathematical Heritage of Hungary', 'Hungary', 1, 1, '2024-01-01', '2024-06-01', TRUE, FALSE),
+('Dialogue: The Chemistry of Green Energy in Iceland', 'Iceland', 2, 3, '2024-02-01', '2024-07-01', FALSE, TRUE);
 
 INSERT INTO post (postAuthor, title, body, programId, userId, favorited) VALUES
 ('Dr. Smith', 'Dialogue: The Mathematical Heritage of Hungary', 'This is an introduction to computer science courses.', 1, 1, TRUE),
@@ -181,3 +182,129 @@ INSERT INTO postTag (postId, postTagId) VALUES
 INSERT INTO application (userId, programId, applied, accepted, denied) VALUES
 (1, 1, TRUE, FALSE, FALSE),
 (4, 2, TRUE, TRUE, FALSE);
+
+#1.1
+INSERT INTO application (userId, programId, applied, accepted, denied)
+VALUES
+    (5, 1, TRUE, FALSE, FALSE),
+    (5, 2, TRUE, FALSE, FALSE);
+
+#1.2
+DELETE FROM application
+WHERE userId = 5 AND programId = 1;
+
+#1.3
+INSERT INTO userTag (userId, userTagId)
+VALUES
+    (5, 1),
+    (5, 2);
+
+#1.4
+INSERT INTO application (userId, programId, applied, accepted, denied)
+VALUES
+    (5, 1, TRUE, FALSE, FALSE),
+    (5, 2, TRUE, TRUE, FALSE);
+
+#1.5
+INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd)
+VALUES
+    ('Dialogue: Innovation in Artificial Intelligence', 'Singapore', 1, 2, '2024-05-01', '2024-08-01'),
+    ('Dialogue: Sustainable Engineering Practices', 'Germany', 2, 3, '2024-06-01', '2024-09-01');
+
+#1.6
+UPDATE userTag
+SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Computer Science')
+WHERE userId = 5;
+
+#2.1
+INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved, awaiting)
+VALUES
+    ('Dialogue: Data Ethics and Privacy', 'Ireland', 1, 1, '2024-04-01', '2024-08-01', FALSE, TRUE);
+
+#2.2
+DELETE FROM program
+WHERE professorId = 1 AND title = 'Dialogue: Data Ethics and Privacy';
+
+#2.3
+UPDATE program
+SET location = 'Scotland', description = 'A hands-on program on AI ethics and social impact'
+WHERE programId = 1 AND professorId = 1;
+
+#2.4
+INSERT INTO application (userId, programId, applied, accepted, denied)
+VALUES
+    (6, 1, TRUE, FALSE, FALSE),
+    (5, 1, TRUE, TRUE, FALSE);
+
+#2.5
+INSERT INTO application (userId, programId, applied, accepted, denied)
+VALUES
+    (1, 2, TRUE, FALSE, FALSE);
+
+#2.6
+INSERT INTO userTag (userId, userTagId)
+VALUES
+    (1, (SELECT userTagId FROM userTagParent WHERE tagName = '2027'));
+
+#3.1
+UPDATE program
+SET approved = TRUE
+WHERE programId = 1;
+
+#3.2
+DELETE FROM post
+WHERE body LIKE '%inappropriate content%';
+
+#3.3
+INSERT INTO user (firstName, lastName, email, schoolId, roleId)
+VALUES
+    ('John', 'Doe', 'johndoe@example.edu', 2, 3),
+    ('Jane', 'Smith', 'janesmith@example.edu', 1, 2);
+
+#3.4
+UPDATE role
+SET canUpdateAccess = TRUE
+WHERE roleId = (
+    SELECT r.roleId
+    FROM (SELECT roleId FROM role WHERE name = 'Admin') AS r
+);
+
+#3.5
+DELETE FROM user
+WHERE email = 'johndoe@example.edu';
+
+#3.6
+UPDATE program
+SET description = 'Updated program details for new courses'
+WHERE programId = 3;
+
+#4.1
+UPDATE program
+SET approved = TRUE
+WHERE programId = 4;
+
+#4.2
+INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved)
+VALUES
+    ('Dialogue: International Business Strategies', 'Japan', 2, 4, '2024-06-01', '2024-09-01', FALSE);
+
+#4.3
+UPDATE program
+SET description = 'Travel to Greece and learn more about engineering'
+WHERE programId = 4;
+
+#4.4
+UPDATE program
+SET professorId = (SELECT userId FROM user WHERE email = 'jenni@example.edu')
+WHERE programId = 4;
+
+#4.5
+INSERT INTO user (firstName, lastName, email, schoolId, roleId)
+VALUES
+    ('Emily', 'Johnson', 'emilyj@example.edu', 2, 3);
+
+#4.6
+INSERT INTO application (userId, programId, applied, accepted, denied)
+VALUES
+    (7, 4, TRUE, TRUE, FALSE),
+    (8, 4, TRUE, FALSE, TRUE);
