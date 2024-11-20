@@ -320,7 +320,6 @@ SELECT lastName, middleName, firstName
 FROM user
 WHERE schoolId = 2;
 
-
 #4.6
 SELECT lastName, middleName, firstName
 FROM user
