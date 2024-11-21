@@ -40,8 +40,10 @@ CREATE TABLE user
     createdAt  DATETIME DEFAULT CURRENT_TIMESTAMP,
     lastLogin  DATETIME DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (schoolId) REFERENCES school (schoolId),
+    FOREIGN KEY (schoolId) REFERENCES school (schoolId)
+        ON UPDATE cascade ON DELETE restrict,
     FOREIGN KEY (roleId) REFERENCES role (roleId)
+        ON UPDATE cascade ON DELETE restrict
 );
 
 CREATE TABLE userTagParent
@@ -72,8 +74,10 @@ CREATE TABLE profile
     bio        VARCHAR(300),
     #profilepic
     email      VARCHAR(254) NOT NULL UNIQUE,
-    FOREIGN KEY (userId) REFERENCES user (userId),
+    FOREIGN KEY (userId) REFERENCES user (userId)
+        ON UPDATE cascade ON DELETE cascade,
     FOREIGN KEY (schoolId) REFERENCES school (schoolId)
+        ON UPDATE cascade ON DELETE restrict
 );
 
 CREATE TABLE program
@@ -89,8 +93,10 @@ CREATE TABLE program
     dateCreated  DATETIME DEFAULT CURRENT_TIMESTAMP,
     programStart DATE,
     programEnd   DATE,
-    FOREIGN KEY (schoolId) REFERENCES school (schoolId),
+    FOREIGN KEY (schoolId) REFERENCES school (schoolId)
+        ON UPDATE cascade ON DELETE restrict,
     FOREIGN KEY (professorId) REFERENCES user (userId)
+        ON UPDATE cascade ON DELETE restrict
 );
 
 CREATE TABLE post
@@ -107,8 +113,10 @@ CREATE TABLE post
     createdAt  DATETIME DEFAULT CURRENT_TIMESTAMP,
     lastEdited DATETIME DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES user (userId),
+    FOREIGN KEY (userId) REFERENCES user (userId)
+        ON UPDATE cascade ON DELETE restrict,
     FOREIGN KEY (programId) REFERENCES program (programId)
+        ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE postTagParent
@@ -136,9 +144,12 @@ CREATE TABLE application
     applied       BOOLEAN DEFAULT false,
     accepted      BOOLEAN DEFAULT false,
     denied        BOOLEAN DEFAULT false,
-    FOREIGN KEY (userId) REFERENCES user (userId),
+    FOREIGN KEY (userId) REFERENCES user (userId)
+        ON UPDATE cascade ON DELETE cascade,
     FOREIGN KEY (programId) REFERENCES program (programId)
+        ON UPDATE cascade ON DELETE cascade
 );
+
 
 INSERT INTO school (name, bio)
 VALUES ('Boston University',
@@ -202,6 +213,7 @@ INSERT INTO application (userId, programId, applied, accepted, denied)
 VALUES (1, 1, TRUE, FALSE, FALSE),
        (4, 2, TRUE, TRUE, FALSE);
 
+
 # Persona 1: Student
 #1.1
 INSERT INTO application (userId, programId, applied, accepted, denied)
@@ -215,19 +227,23 @@ WHERE userId = 5
   AND programId = 1;
 
 #1.3
-INSERT INTO userTag (userId, userTagId)
-VALUES (5, 1),
-       (5, 2);
+SELECT p.postAuthor, p.title, p.body, p.programId, p.userId
+FROM post AS p
+    JOIN postTag AS pt ON p.postId = pt.postId
+    JOIN postTagParent pTP ON pt.postTagId = pTP.postTagId
+WHERE pt.postTagId = 2;
 
 #1.4
-INSERT INTO application (userId, programId, applied, accepted, denied)
-VALUES (5, 1, TRUE, FALSE, FALSE),
-       (5, 2, TRUE, TRUE, FALSE);
+SELECT a.userId, p.programId, p.title, p.location, a.applied, a.accepted, a.denied
+FROM application AS a
+    JOIN program AS p ON a.programId = p.programId
+WHERE a.userId = 5;
 
 #1.5
-INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd)
-VALUES ('Dialogue: Innovation in Artificial Intelligence', 'Singapore', 1, 2, '2024-05-01', '2024-08-01'),
-       ('Dialogue: Sustainable Engineering Practices', 'Germany', 2, 3, '2024-06-01', '2024-09-01');
+SELECT p.programId, p.title, p.location, schoolId, professorId, p.programStart, p.programEnd, COUNT(a.accepted) AS totalApplications
+FROM program p
+    JOIN application a on p.programId = a.programId
+GROUP BY p.programId;
 
 #1.6
 UPDATE userTag
@@ -247,24 +263,28 @@ WHERE professorId = 1
 
 #2.3
 UPDATE program
-SET location    = 'Scotland',
-    description = 'A hands-on program on AI ethics and social impact'
+SET location = 'Scotland', description = 'A hands-on program on AI ethics and social impact'
 WHERE programId = 1
   AND professorId = 1;
 
 #2.4
-INSERT INTO application (userId, programId, applied, accepted, denied)
-VALUES (6, 1, TRUE, FALSE, FALSE),
-       (5, 1, TRUE, TRUE, FALSE);
+SELECT p.programId, COUNT(a.applicationId) AS totalApplications
+FROM program AS p
+    LEFT JOIN application AS a ON p.programId = a.programId
+WHERE p.professorId = (SELECT userId
+                       FROM user WHERE email = 'smith@example.edu')
+GROUP BY p.programId;
 
 #2.5
 INSERT INTO application (userId, programId, applied, accepted, denied)
 VALUES (1, 2, TRUE, FALSE, FALSE);
 
 #2.6
-UPDATE userTag
-SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Business')
-WHERE userId = 1;
+UPDATE profile
+SET bio = 'Updated bio about courses taught, qualifications, etc.',
+    middleName = 'Eras'
+WHERE userId = (SELECT userId
+                FROM user WHERE email = 'taylor@example.edu');
 
 # Persona 3: NU Administrator
 #3.1
@@ -283,11 +303,13 @@ FROM user;
 #3.4
 UPDATE role
 SET canAssignProf = TRUE
-WHERE roleId = (SELECT roleId FROM role WHERE name = 'Professor');
+WHERE roleId = (SELECT r.roleId
+                FROM (SELECT roleId FROM role WHERE name = 'Professor') AS r);
 
 #3.5
-DELETE FROM user
-WHERE firstName = 'Weasley' AND lastName = 'Ron';
+DELETE
+FROM user
+WHERE firstName = 'Ben' AND lastName = 'June';
 
 #3.6
 UPDATE program
@@ -301,9 +323,9 @@ SET approved = TRUE
 WHERE programId = 1;
 
 #4.2
-INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved)
+INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved, awaiting)
 VALUES
-    ('Dialogue: International Business Strategies', 'Japan', 2, 4, '2024-06-01', '2024-09-01', FALSE);
+    ('Dialogue: International Business Strategies', 'Japan', 2, 4, '2024-06-01', '2024-09-01', FALSE, TRUE);
 
 #4.3
 UPDATE program
@@ -322,7 +344,7 @@ WHERE schoolId = 2;
 
 #4.6
 SELECT lastName, middleName, firstName
-FROM user
-         JOIN application a on user.userId = a.userId
+FROM user u
+         JOIN application a on u.userId = a.userId
 WHERE schoolId = 2
   AND denied = true;
