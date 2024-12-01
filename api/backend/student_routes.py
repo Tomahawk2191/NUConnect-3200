@@ -73,6 +73,21 @@ def apply_program():
 #------------------------------------------------------------
 # 1.2
 # Rescinds/unerolls student's application from a program
+@students.route('/applications', methods=['DELETE'])
+def unenroll_program(userID, programID):
+    query = f'''
+        DELETE 
+        FROM application
+        WHERE userId = {str(userID)}' AND programId = {str(programID)};
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response("Program post successfully deleted")
+    response.status_code = 200
+    return response
 
 #------------------------------------------------------------
 # 1.3
@@ -140,8 +155,9 @@ def view_specific_program(programID):
 
 #------------------------------------------------------------
 # 1.6
-# Enrolls a student into a specific program using their userID
-# and the program's programID
+# Edits/updates student's profile information
 
-
+# UPDATE userTag
+# SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Computer Science')
+# WHERE userId = 5
 
