@@ -57,7 +57,7 @@ if st.button("Act as Dao, a Student on NUConnect",
     logger.info("Logging in as Dao, a student")
     st.switch_page('pages/00_Student_Home.py')
 
-if st.button('Act as Cooper, a Professor on NUConnect', 
+if st.button('Act as Cooper, A Northeastern Professor', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
