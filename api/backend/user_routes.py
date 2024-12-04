@@ -5,11 +5,11 @@ from flask import make_response
 from flask import current_app
 from backend.db_connection import db
 
-users = Blueprint('student', __name__)
+user = Blueprint('user', __name__)
 
 #------------------------------------------------------------
 # Return a list of all users
-@users.route('/users', methods=['GET'])
+@user.route('/users', methods=['GET'])
 def get_users():
     query = f'''
         SELECT *
@@ -28,18 +28,18 @@ def get_users():
 #------------------------------------------------------------
 # Profile routes - return details about a specific user
 #------------------------------------------------------------
-# Return a specific user's profile by their ID
-@users.route('/users/profile/<userID>', methods=['GET', 'PUT', 'DELETE'])
-def get_user(userID):
+# Return a user's profile by their ID
+@user.route('/users/profile/<userID>', methods=['GET', 'PUT', 'DELETE'])
+def get_user(userId):
   if request.method == 'GET': # Get a user's profile
     query = f'''
         SELECT *
         FROM user
-        WHERE userId = {str(userID)}
+        WHERE userId = {str(userId)}
     '''
     
     # Log the query
-    current_app.logger.info(f'GET /users/profile/{userID} query = {query}')
+    current_app.logger.info(f'GET /users/profile/{userId} query = {query}')
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
@@ -57,6 +57,8 @@ def get_user(userID):
     email = theData['email']
     
     #TODO: can update roleID?
+    # roleId = theData['roleID']
+    
     query = f'''
         UPDATE user
         SET firstName = '{firstName}', middleName = '{middleName}', lastName = '{lastName}', phone = '{phone}', email = '{email}'
@@ -87,10 +89,11 @@ def get_user(userID):
     response = make_response(jsonify(theData))
     response.status_code = 200
   return response
+
 #------------------------------------------------------------
 # Create a new user profile
 #------------------------------------------------------------
-@users.route('/users/profile', methods=['POST'])
+@user.route('/users/profile', methods=['POST'])
 def create_new_user():
   
   theData = request.json
