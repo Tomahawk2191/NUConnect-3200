@@ -28,16 +28,16 @@ def get_schools():
 # School routes - return details about a specific school
 #------------------------------------------------------------
 # Return a school's profile by their ID
-@school.route('/school/profile/<schoolId>', methods=['GET', 'PUT', 'DELETE'])
+@school.route('/school/<int:schoolId>', methods=['GET', 'PUT', 'DELETE'])
 def get_school(schoolId):
   if request.method == 'GET':
     query = f'''
         SELECT *
         FROM school
-        WHERE schoolId = {str(schoolId)}
+        WHERE schoolId = {schoolId}
     '''
     
-    current_app.logger.info(f'GET /school/profile/{schoolId} query = {query}')
+    current_app.logger.info(f'GET /school/{schoolId} query = {query}')
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
@@ -54,7 +54,7 @@ def get_school(schoolId):
     query = f'''
         UPDATE school
         SET name = '{name}', bio = '{bio}'
-        WHERE schoolId = {str(schoolId)}
+        WHERE schoolId = {schoolId}
     '''
     
     current_app.logger.info(f'Updated school {schoolId} PUT /school/profile/{schoolId} query = {query}')
@@ -69,7 +69,7 @@ def get_school(schoolId):
   elif request.method == 'DELETE':
     query = f'''
         DELETE FROM school
-        WHERE schoolId = {str(schoolId)}
+        WHERE schoolId = {schoolId}
     '''
     
     current_app.logger.info(f'Deleted school {schoolId} DELETE /school/profile/{schoolId} query = {query}')

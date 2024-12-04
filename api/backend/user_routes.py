@@ -11,31 +11,32 @@ user = Blueprint('user', __name__)
 # Return a list of all users
 @user.route('/users', methods=['GET'])
 def get_users():
-    query = f'''
-        SELECT *
-        FROM user
-    '''
-    
-    current_app.logger.info(f'GET /users query = {query}')
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
+  query = f'''
+      SELECT *
+      FROM user
+  '''
+  
+  current_app.logger.info(f'GET /users query = {query}')
+  cursor = db.get_db().cursor()
+  cursor.execute(query)
+  theData = cursor.fetchall()
+  
+  response = make_response(jsonify(theData))
+  response.status_code = 200
+  return response
   
 #------------------------------------------------------------
 # Profile routes - return details about a specific user
 #------------------------------------------------------------
 # Return a user's profile by their ID
-@user.route('/users/profile/<userID>', methods=['GET', 'PUT', 'DELETE'])
+#TODO: do we need to have profile? if not we can change the route to /users/<userID>
+@user.route('/users/profile/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
 def get_user(userId):
   if request.method == 'GET': # Get a user's profile
     query = f'''
         SELECT *
         FROM user
-        WHERE userId = {str(userId)}
+        WHERE userId = {userId}
     '''
     
     # Log the query
@@ -62,7 +63,7 @@ def get_user(userId):
     query = f'''
         UPDATE user
         SET firstName = '{firstName}', middleName = '{middleName}', lastName = '{lastName}', phone = '{phone}', email = '{email}'
-        WHERE userId = {str(userId)}
+        WHERE userId = {userId}
     '''
     
     current_app.logger.info(f'Updated user {userId} PUT /users/profile/{userId} query = {query}')
@@ -75,9 +76,9 @@ def get_user(userId):
     response.status_code = 200
   elif request.method == 'DELETE': # Delete a user
     query = f'''
-      DELETE 
+      DELETE
       FROM user
-      WHERE userId = {str(userId)}
+      WHERE userId = {userId}
     '''
   
     current_app.logger.info(f'Deleted user {userId} DELETE /users/profile/{userId} query = {query}')
