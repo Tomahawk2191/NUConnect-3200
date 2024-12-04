@@ -6,7 +6,7 @@ from flask import current_app
 from backend.db_connection import db
 from backend.ml_models.model01 import predict
 
-customers = Blueprint('customers', __name__)
+nuadmin = Blueprint('nuadmin', __name__)
 
 #------------------------------------------------------------
 # Creates new account in the "NU Admin role"

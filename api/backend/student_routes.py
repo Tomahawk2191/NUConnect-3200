@@ -6,11 +6,11 @@ from flask import current_app
 from backend.db_connection import db
 from backend.ml_models.model01 import predict
 
-customers = Blueprint('customers', __name__)
+student = Blueprint('student', __name__)
 
 #------------------------------------------------------------
 # Creates new account in the "Student role"
-@students.route('/accounts', methods=['POST'])
+@student.route('/users', methods=['POST'])
 def create_account():
     # In a POST request, there is a 
     # collecting data from the request object 
@@ -44,7 +44,7 @@ def create_account():
 # 1.1
 # Enrolls a student into a specific program using their userID
 # and the program's programID
-@students.route('/apply', methods=['POST'])
+@student.route('/apply', methods=['POST'])
 def apply_program():
     # In a POST request, there is a 
     # collecting data from the request object 
@@ -73,7 +73,8 @@ def apply_program():
 #------------------------------------------------------------
 # 1.2
 # Rescinds/unerolls student's application from a program
-@students.route('/applications', methods=['DELETE'])
+# TODO: authentication for deleting other user's applications
+@student.route('/applications', methods=['DELETE'])
 def unenroll_program(userID, programID):
     query = f'''
         DELETE 
@@ -92,7 +93,7 @@ def unenroll_program(userID, programID):
 #------------------------------------------------------------
 # 1.3
 # Filters program posts given a postTagID
-@students.route('/programs', methods=['GET'])
+@student.route('/programs', methods=['GET'])
 def filter_program_posts(postTagId):
     query = f'''
         SELECT p.postAuthor, p.title, p.body, p.programId, p.userId
@@ -113,7 +114,7 @@ def filter_program_posts(postTagId):
 #------------------------------------------------------------
 # 1.4
 # View all submitted applications for a given user (using userID)
-@students.route('/applications/<userID>', methods=['GET'])
+@student.route('/applications/<userID>', methods=['GET'])
 def filter_program_posts(userID):
     query = f'''
         SELECT a.userId, p.programId, p.title, p.location, a.applied, a.accepted, a.denied
@@ -134,7 +135,7 @@ def filter_program_posts(userID):
 # 1.5
 # View the program information for a specific program, including 
 # its details as well as the current number of (accepted) applicants
-@students.route('/programs/<programID>', methods=['GET'])
+@student.route('/programs/<programID>', methods=['GET'])
 def view_specific_program(programID):
     
     query = f'''
@@ -156,7 +157,6 @@ def view_specific_program(programID):
 #------------------------------------------------------------
 # 1.6
 # Edits/updates student's profile information
-
 # UPDATE userTag
 # SET userTagId = (SELECT userTagId FROM userTagParent WHERE tagName = 'Computer Science')
 # WHERE userId = 5
