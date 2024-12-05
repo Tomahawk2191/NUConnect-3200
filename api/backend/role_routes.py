@@ -8,37 +8,84 @@ from backend.db_connection import db
 role = Blueprint('role', __name__)
 
 #------------------------------------------------------------
-# Return a list of all user_tags
-@role.route('/role', methods=['GET'])
+# Return a list of all roles
+@role.route('/role', methods=['GET', 'POST'])
 def get_roles():
-    query = f'''
-        SELECT *
-        FROM role
-    '''
-    
-    current_app.logger.info(f'GET /role query = {query}')
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
-#------------------------------------------------------------
-# User_tag routes - return details about a specific user_tag
-#------------------------------------------------------------
-# Return a user_tag by their ID
-@user_tags.route('/user_tags/<int:userTagId>', methods=['GET', 'PUT', 'DELETE'])
-def get_user_tag(userTagId):
-    if request.method == 'GET': # Get a user_tag
+    if request.method == 'GET': #Gets all roles
         query = f'''
             SELECT *
-            FROM userTagParent
-            WHERE userTagId = {userTagId}
+            FROM role
+        '''
+    
+        current_app.logger.info(f'GET /role query = {query}')
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+
+    elif request.method == 'POST': #Creates a new role
+        theData = request.json
+        current_app.logger.info(theData)
+    
+        roleName = theData['name']
+        canPost = theData['canPost'] 
+        canApprove = theData['canApprove'] 
+        canAssignProf = theData['canAssignProf'] 
+        canApply = theData['canApply'] 
+        canRetract = theData['canRetract'] 
+        canEditOwn = theData['canEditOwn'] 
+        canEditAll = theData['canEditAll'] 
+        canDeleteOwn = theData['canDeleteOwn'] 
+        canDeleteAll = theData['canDeleteAll'] 
+        canUpdateAcceess = theData['canUpdateAcceess'] 
+    
+        query = f'''
+            INSERT INTO role (name, 
+                              canPost, 
+                              canApprove, 
+                              canAssignProf, 
+                              canApply, 
+                              canRetract, 
+                              canEditOwn, 
+                              canEditAll, 
+                              canDeleteOwn, 
+                              canDeleteAll, 
+                              canUpdateAcceess)
+            VALUES ('{roleName}', '{canPost}', 
+                    '{canApprove}', '{canAssignProf}', 
+                    '{canApply}', '{canRetract}'),
+                    '{canEditOwn}', '{canEditAll}'),
+                    '{canDeleteOwn}', '{canDeleteAll}', 
+                    {canUpdateAcceess})
+        '''
+    
+        current_app.logger.info(f'Added new role {roleName} POST /role query = {query}')
+    
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+    
+        response = make_response('Added new role')
+        response.status_code = 200
+        return response
+
+#------------------------------------------------------------
+# Role routes - return details about a specific role
+#------------------------------------------------------------
+# Return a role by their ID
+@role.route('/role/<int:roleId>', methods=['GET', 'PUT', 'DELETE'])
+def get_role(roleId):
+    if request.method == 'GET': # Get a role
+        query = f'''
+            SELECT *
+            FROM role
+            WHERE roleId = {roleId}
         '''
         
         # Log the query
-        current_app.logger.info(f'GET /user_tags/{userTagId} query = {query}')
+        current_app.logger.info(f'GET /role/{roleId} query = {query}')
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
@@ -46,40 +93,61 @@ def get_user_tag(userTagId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    elif request.method == 'PUT': # Update a user_tag
+
+    elif request.method == 'PUT': # Update a role
         theData = request.json
         current_app.logger.info(theData)
         
-        tagName = theData['tagName']
-        category = theData['category'] 
+        roleName = theData['name']
+        canPost = theData['canPost'] 
+        canApprove = theData['canApprove'] 
+        canAssignProf = theData['canAssignProf'] 
+        canApply = theData['canApply'] 
+        canRetract = theData['canRetract'] 
+        canEditOwn = theData['canEditOwn'] 
+        canEditAll = theData['canEditAll'] 
+        canDeleteOwn = theData['canDeleteOwn'] 
+        canDeleteAll = theData['canDeleteAll'] 
+        canUpdateAcceess = theData['canUpdateAcceess'] 
     
         query = f'''
-            UPDATE userTagParent`
-            SET tagName = '{tagName}', category = '{category}'
-            WHERE userTagId = {userTagId}
+            UPDATE role
+            SET name = '{roleName}', 
+                canPost = '{canPost}', 
+                canApprove = '{canApprove}',
+                canAssignProf = '{canAssignProf}', 
+                canApply = '{canApply}', 
+                canRetract = '{canRetract}', 
+                canEditOwn = '{canEditOwn}', 
+                canEditAll = '{canEditAll}', 
+                canDeleteOwn = '{canDeleteOwn}',
+                canDeleteAll = '{canDeleteAll}',
+                canUpdateAcceess = '{canUpdateAcceess}',
+            WHERE roleId = {roleId}
         '''
         
-        current_app.logger.info(f'Updated user_tag {userTagId} PUT /user_tags/{userTagId} query = {query}')
+        current_app.logger.info(f'Updated role {roleId} PUT /role/{roleId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         
-        response = make_response(f'User_tag {userTagId} updated')
+        response = make_response(f'Role {roleId} updated')
         response.status_code = 200
         return response
-    elif request.method == 'DELETE': # Delete a user
+
+    elif request.method == 'DELETE': # Delete a role
         query = f'''
         DELETE
-        FROM userTagParent
-        WHERE userTagId = {userTagId}
+        FROM role
+        WHERE roleId = {roleId}
         '''
     
-        current_app.logger.info(f'Deleted user_tag {userTagId} DELETE /user_tags/{userTagId} query = {query}')
+        current_app.logger.info(f'Deleted role {roleId} DELETE /role/{roleId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
         
-        response = make_response(f'user_tag {userTagId} deleted')
+        response = make_response(f'Role {roleId} deleted')
         response.status_code = 200
         return response
