@@ -40,14 +40,14 @@ def get_users():
     
     query = f'''
         INSERT INTO user (firstName, middleName, lastName, phone, email, schoolId, roleId)
-        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{schoolId}', '{roleId}')
+        VALUES ('{str(firstName)}', '{str(middleName)}', '{str(lastName)}', '{str(phone)}', '{str(email)}', '{int(schoolId)}', '{int(roleId)}')
     '''
     
     current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users query = {query}')
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response('Added new user')
     response.status_code = 200
@@ -99,7 +99,7 @@ def get_user(userId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'User {userId} updated')
     response.status_code = 200

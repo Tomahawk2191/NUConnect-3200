@@ -25,8 +25,8 @@ with st.form("Add a new user"):
     last_name = st.text_input('Last Name')
     phone = st.text_input('Phone Number')
     email = st.text_input('Email')
-    school_Id = st.text_input('School ID')
-    role_Id = st.text_input('Role ID')
+    school_Id = st.number_input('School ID')
+    role_Id = st.number_input('Role ID')
     submitted = st.form_submit_button('Submit')
 
     user_data = {
@@ -39,10 +39,12 @@ with st.form("Add a new user"):
         "roleId": role_Id
     }
     
+    
     if submitted:
+      logger.info(f'Add User submitted  with data: {user_data}')
       try:
         response = requests.post('http://api:4000/users/users', json=user_data)
-        st.write(response.json())
+        st.rerun()
         if (response.status_code == 200):
           st.write("User added successfully")
         else:
