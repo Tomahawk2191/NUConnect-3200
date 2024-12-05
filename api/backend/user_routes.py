@@ -115,3 +115,24 @@ def get_user(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
   return response
+
+
+
+@user.route('/users/<int:userID>/posts', methods=['GET'])
+def get_user_posts(userId):
+    query = f'''
+        SELECT *
+        FROM posts
+        WHERE userId = {userId}
+    '''
+    current_app.logger.info(f'GET /users/{userId}/posts query = {query}')
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+
+    return response
+
+  
