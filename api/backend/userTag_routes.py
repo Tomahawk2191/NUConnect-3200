@@ -8,7 +8,7 @@ from backend.db_connection import db
 user_tags = Blueprint('user_tags', __name__)
 
 #------------------------------------------------------------
-# Return a list of all user_tags
+# Return a list of all user tags
 @user_tags.route('/user_tags', methods=['GET', 'POST'])
 def get_user_tags():
     if (request.method == 'GET'):
@@ -24,7 +24,8 @@ def get_user_tags():
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    elif (request.method == 'POST'):
+
+    elif (request.method == 'POST'): #Creates a new user tag
         theData = request.json
         current_app.logger.info(theData)
         
@@ -36,23 +37,23 @@ def get_user_tags():
             VALUES ('{tagName}', '{category}')
         '''
         
-        current_app.logger.info(f'Added new user_tag {tagName} POST /user_tags query = {query}')
+        current_app.logger.info(f'Added new user tag {tagName} POST /user_tags query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
         
-        response = make_response('Added new user_tag')
+        response = make_response('Added new user tag')
         response.status_code = 200
         return response
 
 #------------------------------------------------------------
-# User_tag routes - return details about a specific user_tag
+# User tag routes - return details about a specific user tag
 #------------------------------------------------------------
-# Return a user_tag by their ID
+# Return a user tag by their ID
 @user_tags.route('/user_tags/<int:userTagId>', methods=['GET', 'PUT', 'DELETE'])
 def get_user_tag(userTagId):
-    if request.method == 'GET': # Get a user_tag
+    if request.method == 'GET': # Get a user tag
         query = f'''
             SELECT *
             FROM userTagParent
@@ -68,7 +69,8 @@ def get_user_tag(userTagId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    elif request.method == 'PUT': # Update a user_tag
+
+    elif request.method == 'PUT': # Update a user tag
         theData = request.json
         current_app.logger.info(theData)
         
@@ -81,27 +83,28 @@ def get_user_tag(userTagId):
             WHERE userTagId = {userTagId}
         '''
         
-        current_app.logger.info(f'Updated user_tag {userTagId} PUT /user_tags/{userTagId} query = {query}')
+        current_app.logger.info(f'Updated user tag {userTagId} PUT /user_tags/{userTagId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         
-        response = make_response(f'User_tag {userTagId} updated')
+        response = make_response(f'User tag {userTagId} updated')
         response.status_code = 200
         return response
-    elif request.method == 'DELETE': # Delete a user
+
+    elif request.method == 'DELETE': # Delete a user tag
         query = f'''
         DELETE
         FROM userTagParent
         WHERE userTagId = {userTagId}
         '''
     
-        current_app.logger.info(f'Deleted user_tag {userTagId} DELETE /user_tags/{userTagId} query = {query}')
+        current_app.logger.info(f'Deleted user tag {userTagId} DELETE /user_tags/{userTagId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
         
-        response = make_response(f'user_tag {userTagId} deleted')
+        response = make_response(f'User tag {userTagId} deleted')
         response.status_code = 200
         return response

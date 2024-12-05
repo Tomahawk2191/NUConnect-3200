@@ -11,7 +11,7 @@ role = Blueprint('role', __name__)
 # Return a list of all roles
 @role.route('/role', methods=['GET', 'POST'])
 def get_roles():
-    if request.method == 'GET': #Gets all roles
+    if request.method == 'GET':
         query = f'''
             SELECT *
             FROM role

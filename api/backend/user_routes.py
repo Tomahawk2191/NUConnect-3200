@@ -25,7 +25,8 @@ def get_users():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-  elif request.method == 'POST':
+
+  elif request.method == 'POST': #Creates a new user
     theData = request.json
     current_app.logger.info(theData)
     
@@ -52,7 +53,7 @@ def get_users():
     return response
   
 #------------------------------------------------------------
-# Profile routes - return details about a specific user
+# User routes - return details about a specific user
 #------------------------------------------------------------
 # Return a user's profile by their ID
 @user.route('/users/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
@@ -72,6 +73,7 @@ def get_user(userId):
     
     response = make_response(jsonify(theData))
     response.status_code = 200
+
   elif request.method == 'PUT': # Update a user's profile
     theData = request.json
     current_app.logger.info(theData)
@@ -99,6 +101,7 @@ def get_user(userId):
     
     response = make_response(jsonify(theData))
     response.status_code = 200
+
   elif request.method == 'DELETE': # Delete a user
     query = f'''
       DELETE
@@ -115,7 +118,8 @@ def get_user(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
   return response
-
+  
+#Returns a list of all posts created by a user  
 @user.route('/users/<int:userID>/posts', methods=['GET'])
 def get_user_posts(userId):
     query = f'''
