@@ -4,6 +4,12 @@ from backend.db_connection import db
 from backend.customers.customer_routes import customers
 from backend.products.products_routes import products
 from backend.simple.simple_routes import simple_routes
+from backend.role_routes import role
+from backend.user_routes import user
+from backend.userTag_routes import user_tags
+from backend.postTag_routes import post_tags
+
+
 import os
 from dotenv import load_dotenv
 
@@ -42,6 +48,11 @@ def create_app():
     app.register_blueprint(simple_routes)
     app.register_blueprint(customers,   url_prefix='/c')
     app.register_blueprint(products,    url_prefix='/p')
+    app.register_blueprint(role, url_prefix='/roles')
+    app.register_blueprint(user, url_prefix='/users')
+    app.register_blueprint(user_tags, url_prefix='/user_tags')
+    # app.register_blueprint(post_routes, url_prefix='/posts')
+    app.register_blueprint(post_tags, url_prefix='/post_tags')
 
     # Don't forget to return the app object
     return app

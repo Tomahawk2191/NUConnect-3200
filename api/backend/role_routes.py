@@ -28,7 +28,7 @@ def get_roles():
 # User_tag routes - return details about a specific user_tag
 #------------------------------------------------------------
 # Return a user_tag by their ID
-@user_tags.route('/user_tags/<int:userTagId>', methods=['GET', 'PUT', 'DELETE'])
+@role.route('/user_tags/<int:userTagId>', methods=['GET', 'PUT', 'DELETE'])
 def get_user_tag(userTagId):
     if request.method == 'GET': # Get a user_tag
         query = f'''
