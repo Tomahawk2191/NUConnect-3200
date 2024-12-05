@@ -25,8 +25,7 @@ def get_users():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-
-  elif request.method == 'POST': #Creates a new user
+  elif request.method == 'POST':
     theData = request.json
     current_app.logger.info(theData)
     
@@ -53,7 +52,7 @@ def get_users():
     return response
   
 #------------------------------------------------------------
-# User routes - return details about a specific user
+# Profile routes - return details about a specific user
 #------------------------------------------------------------
 # Return a user's profile by their ID
 @user.route('/users/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
@@ -73,7 +72,6 @@ def get_user(userId):
     
     response = make_response(jsonify(theData))
     response.status_code = 200
-
   elif request.method == 'PUT': # Update a user's profile
     theData = request.json
     current_app.logger.info(theData)
@@ -101,7 +99,6 @@ def get_user(userId):
     
     response = make_response(jsonify(theData))
     response.status_code = 200
-
   elif request.method == 'DELETE': # Delete a user
     query = f'''
       DELETE
@@ -118,13 +115,14 @@ def get_user(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
   return response
-  
-#Returns a list of all posts created by a user  
+
+
+
 @user.route('/users/<int:userID>/posts', methods=['GET'])
 def get_user_posts(userId):
     query = f'''
         SELECT *
-        FROM posts
+        FROM post
         WHERE userId = {userId}
     '''
     current_app.logger.info(f'GET /users/{userId}/posts query = {query}')
@@ -137,4 +135,20 @@ def get_user_posts(userId):
 
     return response
 
+@user.route('/user/<int:userID>/applications', methods = ['GET'])
+def get_user_applications(userId):
+    query = f'''
+        SELECT *
+        FROM application
+        WHERE userId = {userId}
+    '''
   
+    current_app.logger.info(f'GET /users/{userId}/applications query = {query}')
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+

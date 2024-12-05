@@ -28,7 +28,7 @@ def get_posts():
 
 #------------------------------------------------------------
 
-@post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+@post.route('/users/<int:userId>/posts/<int:postID>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
 def get_post_info(userId, postId):
 
     # return a post's information
@@ -48,7 +48,7 @@ def get_post_info(userId, postId):
 
         response = make_response(jsonify(theData))
         response.status_code = 200
-        return response
+        
     
     # create a post
     elif request.method == 'POST':
@@ -73,7 +73,7 @@ def get_post_info(userId, postId):
         
         response = make_response(jsonify(theData))
         response.status_code = 200
-        return response
+     
     
     # update a post's information
     elif request.method == 'PUT':
@@ -97,8 +97,7 @@ def get_post_info(userId, postId):
         
         response = make_response(jsonify(theData))
         response.status_code = 200
-        return response
-    
+       
     # delete a post
     elif request.method == 'DELETE': 
         query = f'''
@@ -115,5 +114,6 @@ def get_post_info(userId, postId):
         
         response = make_response(jsonify(theData))
         response.status_code = 200
-        return response
+
+    return response
 
