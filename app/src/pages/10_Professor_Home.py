@@ -19,12 +19,13 @@ if st.button('Edit/Post Programs',
              use_container_width=True):
   st.switch_page('pages/11_EditPost_Programs.py')
 
+if st.button('View Profile', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/12_Prof_Profile.py')
+
 if st.button("View Applications",
              type='primary',
              use_container_width=True):
   st.switch_page('pages/13_Applications.py')
 
-if st.button('View Profile', 
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/12_Prof_Profile.py')
