@@ -9,28 +9,53 @@ user = Blueprint('user', __name__)
 
 #------------------------------------------------------------
 # Return a list of all users
-@user.route('/users', methods=['GET'])
+@user.route('/users', methods=['GET', 'POST'])
 def get_users():
-  query = f'''
-      SELECT *
-      FROM user
-  '''
-  
-  current_app.logger.info(f'GET /users query = {query}')
-  cursor = db.get_db().cursor()
-  cursor.execute(query)
-  theData = cursor.fetchall()
-  
-  response = make_response(jsonify(theData))
-  response.status_code = 200
-  return response
+  if request.method == 'GET':
+    query = f'''
+        SELECT *
+        FROM user
+    '''
+    
+    current_app.logger.info(f'GET /users query = {query}')
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+  elif request.method == 'POST':
+    theData = request.json
+    current_app.logger.info(theData)
+    
+    firstName = theData['firstName']
+    middleName = theData['middleName']
+    lastName = theData['lastName']
+    phone = theData['phone']
+    email = theData['email']
+    roleID = theData['roleID']
+    
+    query = f'''
+        INSERT INTO user (firstName, lastName, email, phone, roleID)
+        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{roleID}')
+    '''
+    
+    current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
   
 #------------------------------------------------------------
 # Profile routes - return details about a specific user
 #------------------------------------------------------------
 # Return a user's profile by their ID
-#TODO: do we need to have profile? if not we can change the route to /users/<userID>
-@user.route('/users/profile/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
+@user.route('/users/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
 def get_user(userId):
   if request.method == 'GET': # Get a user's profile
     query = f'''
@@ -40,7 +65,7 @@ def get_user(userId):
     '''
     
     # Log the query
-    current_app.logger.info(f'GET /users/profile/{userId} query = {query}')
+    current_app.logger.info(f'GET /users/{userId} query = {query}')
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
@@ -66,7 +91,7 @@ def get_user(userId):
         WHERE userId = {userId}
     '''
     
-    current_app.logger.info(f'Updated user {userId} PUT /users/profile/{userId} query = {query}')
+    current_app.logger.info(f'Updated user {userId} PUT /users/{userId} query = {query}')
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -81,7 +106,7 @@ def get_user(userId):
       WHERE userId = {userId}
     '''
   
-    current_app.logger.info(f'Deleted user {userId} DELETE /users/profile/{userId} query = {query}')
+    current_app.logger.info(f'Deleted user {userId} DELETE /users/{userId} query = {query}')
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -89,34 +114,4 @@ def get_user(userId):
     
     response = make_response(jsonify(theData))
     response.status_code = 200
-  return response
-
-#------------------------------------------------------------
-# Create a new user profile
-#------------------------------------------------------------
-@user.route('/users/profile', methods=['POST'])
-def create_new_user():
-  theData = request.json
-  current_app.logger.info(theData)
-  
-  firstName = theData['firstName']
-  middleName = theData['middleName']
-  lastName = theData['lastName']
-  phone = theData['phone']
-  email = theData['email']
-  roleID = theData['roleID']
-  
-  query = f'''
-      INSERT INTO user (firstName, lastName, email, phone, roleID)
-      VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{roleID}')
-  '''
-  
-  current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users/profile query = {query}')
-  
-  cursor = db.get_db().cursor()
-  cursor.execute(query)
-  theData = cursor.fetchall()
-  
-  response = make_response(jsonify(theData))
-  response.status_code = 200
   return response
