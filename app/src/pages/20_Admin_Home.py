@@ -14,14 +14,14 @@ st.title('System Admin Home Page')
 if st.button('Manage Programs', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/21_ML_Model_Mgmt.py')
+  st.switch_page('pages/21_Manage_My_Programs.py')
 
-if st.button('Manage User', 
+if st.button('Manage Users', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/22_Manage_My_User.py')
+  st.switch_page('pages/22_Manage_My_Users.py')
 
 if st.button('View User Directory', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/21_ML_Model_Mgmt.py')
+  st.switch_page('pages/23_View_User_Directory.py')
