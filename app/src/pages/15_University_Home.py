@@ -24,7 +24,7 @@ if st.button("Manage All Users",
              use_container_width=True):
   st.switch_page('pages/17_Uni_All_Users.py')
 
-if st.button('View Profile', 
+if st.button('View All Profile', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/18_Uni__All_Profile.py')
