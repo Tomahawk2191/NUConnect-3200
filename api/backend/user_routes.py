@@ -67,6 +67,7 @@ def get_user(userId):
     
     # Log the query
     current_app.logger.info(f'GET /users/{userId} query = {query}')
+    
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
