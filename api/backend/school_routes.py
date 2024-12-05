@@ -11,6 +11,7 @@ school = Blueprint('school', __name__)
 # Return a list of all schools
 @school.route('/school', methods=['GET'])
 def get_schools():
+  if request.method == 'GET':
     query = f'''
         SELECT *
         FROM school
@@ -23,6 +24,28 @@ def get_schools():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+  elif request.method == 'POST': #Enters a new school into the database
+        theData = request.json
+        current_app.logger.info(theData)
+    
+        schoolName = theData['name']
+        bio = theData['bio'] 
+    
+        query = f'''
+            INSERT INTO role (name, bio)
+            VALUES ('{schoolName}, {bio})
+        '''
+    
+        current_app.logger.info(f'Added new school {schoolName} POST /school query = {query}')
+    
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+    
+        response = make_response('Added new school')
+        response.status_code = 200
+        return response
 
 #------------------------------------------------------------
 # School routes - return details about a specific school
@@ -44,7 +67,8 @@ def get_school(schoolId):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-  elif request.method == 'PUT':
+
+  elif request.method == 'PUT': #Update a school's info
     theData = request.json
     current_app.logger.info(theData)
     
@@ -63,10 +87,11 @@ def get_school(schoolId):
     cursor.execute(query)
     theData = cursor.fetchall()
     
-    response = make_response(jsonify(theData))
+    response = make_response(f'School {schoolId} updated')
     response.status_code = 200
     return response
-  elif request.method == 'DELETE':
+
+  elif request.method == 'DELETE': #Delete a school
     query = f'''
         DELETE FROM school
         WHERE schoolId = {schoolId}
@@ -78,7 +103,7 @@ def get_school(schoolId):
     cursor.execute(query)
     theData = cursor.fetchall()
     
-    response = make_response(jsonify(theData))
+    response = make_response(f'School {schoolId} deleted')
     response.status_code = 200
     return response
   
