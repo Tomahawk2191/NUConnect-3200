@@ -8,6 +8,7 @@ from backend.role_routes import role
 from backend.user_routes import user
 from backend.userTag_routes import user_tags
 from backend.postTag_routes import post_tags
+from backend.program_routes import programs
 
 
 import os
@@ -50,6 +51,7 @@ def create_app():
     app.register_blueprint(products,    url_prefix='/p')
     app.register_blueprint(role, url_prefix='/roles')
     app.register_blueprint(user, url_prefix='/users')
+    app.register_blueprint(programs, url_prefix='/programs')
     app.register_blueprint(user_tags, url_prefix='/user_tags')
     # app.register_blueprint(post_routes, url_prefix='/posts')
     app.register_blueprint(post_tags, url_prefix='/post_tags')
