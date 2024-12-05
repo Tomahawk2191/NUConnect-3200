@@ -4,6 +4,7 @@ from flask import jsonify
 from flask import make_response
 from flask import current_app
 from backend.db_connection import db
+import pymysql
 
 user = Blueprint('user', __name__)
 
@@ -45,9 +46,15 @@ def get_users():
     
     current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users query = {query}')
     
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    db.get_db().commit()
+    try:
+      cursor = db.get_db().cursor()
+      cursor.execute(query)
+      db.get_db().commit()
+    except pymysql.Error as e:
+      current_app.logger.error(f'Error adding new user: {e}')
+      response = make_response('Error adding new user')
+      response.status_code = 500
+      return response
     
     response = make_response('Added new user')
     response.status_code = 200
@@ -97,9 +104,15 @@ def get_user(userId):
     
     current_app.logger.info(f'Updated user {userId} PUT /users/{userId} query = {query}')
     
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    db.get_db().commit()
+    try:
+      cursor = db.get_db().cursor()
+      cursor.execute(query)
+      db.get_db().commit()
+    except pymysql.Error as e:
+      current_app.logger.error(f'Error updating user {userId}: {e}')
+      response = make_response(f'Error updating user {userId}')
+      response.status_code = 500
+      return response
     
     response = make_response(f'User {userId} updated')
     response.status_code = 200

@@ -41,10 +41,16 @@ with st.form("Add a new user"):
     
     
     if submitted:
+      # If the middle name is empty, set it to None
+      if (user_data["middleName"] == ""):
+        user_data["middleName"] = None
+        
+      # Log the data to the console
       logger.info(f'Add User submitted  with data: {user_data}')
+      
+      # Send the data to the backend
       try:
         response = requests.post('http://api:4000/users/users', json=user_data)
-        st.rerun()
         if (response.status_code == 200):
           st.write("User added successfully")
         else:
