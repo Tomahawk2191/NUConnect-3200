@@ -139,4 +139,3 @@ def get_user_posts(userId):
     response.status_code = 200
     return response
 
-  

@@ -37,7 +37,7 @@ def get_post_info(userId, postId):
         query = f'''
             SELECT * 
             FROM post
-            WHERE postId = {postId}
+            WHERE postId = {postId} 
         '''
         
         current_app.logger.info(f'GET /posts/{userId}/posts/{postId} query = {query}')
@@ -63,8 +63,7 @@ def get_post_info(userId, postId):
             INSERT INTO post (postAuthor, title, body, userId, programId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
-
-        current_app.logger.info(f'Added new post {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} 
+        current_app.logger.info(f'Added new user {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} 
                                 query = {query}')
 
         cursor = db.get_db().cursor()
