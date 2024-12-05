@@ -96,11 +96,9 @@ def get_user(userId):
 #------------------------------------------------------------
 @user.route('/users/profile', methods=['POST'])
 def create_new_user():
-  
   theData = request.json
   current_app.logger.info(theData)
   
-  userId = theData['userId']
   firstName = theData['firstName']
   middleName = theData['middleName']
   lastName = theData['lastName']
@@ -113,7 +111,7 @@ def create_new_user():
       VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{roleID}')
   '''
   
-  current_app.logger.info(f'Added new user {userId} POST /users/profile query = {query}')
+  current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users/profile query = {query}')
   
   cursor = db.get_db().cursor()
   cursor.execute(query)
