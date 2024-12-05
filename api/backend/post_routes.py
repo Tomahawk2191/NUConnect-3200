@@ -29,7 +29,7 @@ def get_posts():
 #------------------------------------------------------------
 # Returns all posts made by a user
 @post.route('/users/<int:userId>/posts/', methods = ['GET'])
-def get_post_info(userId, postId):
+def get_user_posts(userId):
 
     if request.method == 'GET':
 
@@ -83,8 +83,7 @@ def get_post_info(userId, postId):
             INSERT INTO post (postAuthor, title, body, userId, programId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
-        current_app.logger.info(f'Added new user {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} 
-                                query = {query}')
+        current_app.logger.info(f'Added new user {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} query = {query}')
 
         cursor = db.get_db().cursor()
         cursor.execute(query)
