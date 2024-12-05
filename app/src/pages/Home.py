@@ -66,7 +66,7 @@ if st.button('Act as Cooper, A Northeastern Professor',
     logger.info("Logging in as Dr. Cooper, a professor")
     st.switch_page('pages/10_Professor_Home.py')
 
-if st.button('Act as Lisa, a Northeastern University Administrator', 
+if st.button('Act as Lisa, a Northeastern Univeristy Administrator', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
