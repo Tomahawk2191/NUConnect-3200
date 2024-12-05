@@ -35,11 +35,12 @@ def get_users():
     lastName = theData['lastName']
     phone = theData['phone']
     email = theData['email']
+    schoolId = theData['schoolId']
     roleID = theData['roleID']
     
     query = f'''
         INSERT INTO user (firstName, lastName, email, phone, roleID)
-        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{roleID}')
+        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{schoolId}', '{roleID}')
     '''
     
     current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users query = {query}')
@@ -85,13 +86,12 @@ def get_user(userId):
     lastName = theData['lastName']
     phone = theData['phone']
     email = theData['email']
-    
-    #TODO: can update roleID?
-    # roleId = theData['roleID']
+    schoolId = theData['schoolId']
+    roleId = theData['roleID']
     
     query = f'''
         UPDATE user
-        SET firstName = '{firstName}', middleName = '{middleName}', lastName = '{lastName}', phone = '{phone}', email = '{email}'
+        SET firstName = '{firstName}', middleName = '{middleName}', lastName = '{lastName}', phone = '{phone}', email = '{email}', schoolId = '{schoolId}', roleId = '{roleId}'
         WHERE userId = {userId}
     '''
     
