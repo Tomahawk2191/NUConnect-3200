@@ -36,11 +36,11 @@ def get_users():
     phone = theData['phone']
     email = theData['email']
     schoolId = theData['schoolId']
-    roleID = theData['roleID']
+    roleId = theData['roleId']
     
     query = f'''
-        INSERT INTO user (firstName, lastName, email, phone, roleID)
-        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{schoolId}', '{roleID}')
+        INSERT INTO user (firstName, middleName, lastName, phone, email, schoolId, roleId)
+        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{schoolId}', '{roleId}')
     '''
     
     current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users query = {query}')
