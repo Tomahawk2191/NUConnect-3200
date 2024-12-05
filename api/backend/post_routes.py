@@ -37,7 +37,7 @@ def get_post_info(userId, postId):
         query = f'''
             SELECT * 
             FROM post
-            WHERE postId = {postId}
+            WHERE postId = {postId} 
         '''
 
         
@@ -64,7 +64,7 @@ def get_post_info(userId, postId):
             INSERT INTO post (postAuthor, title, body, userId, programId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
-        current_app.logger.info(f'Added new user {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} 
+        current_app.logger.info(f'Added new post {postAuthor}, {title}, {body}, {postId}, {programId} POST /users/{userId}/posts/{postId} 
                                 query = {query}')
 
         cursor = db.get_db().cursor()
@@ -89,7 +89,7 @@ def get_post_info(userId, postId):
             WHERE postId = {postId}
         '''
     
-        current_app.logger.info(f'Updated user {userId} PUT /users/{userId}/posts/{postId} query = {query}')
+        current_app.logger.info(f'Updated post {postId} PUT /users/{userId}/posts/{postId} query = {query}')
     
         cursor = db.get_db().cursor()
         cursor.execute(query)
@@ -106,7 +106,7 @@ def get_post_info(userId, postId):
         WHERE postId = {postId}
         '''
     
-        current_app.logger.info(f'Deleted user {userId} DELETE /users/{userId}/posts/{postId} query = {query}')
+        current_app.logger.info(f'Deleted post {postId} DELETE /users/{userId}/posts/{postId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)

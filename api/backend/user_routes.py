@@ -135,6 +135,7 @@ def get_user_posts(userId):
 
     return response
 
+# return all applications of a user 
 @user.route('/user/<int:userID>/applications', methods = ['GET'])
 def get_user_applications(userId):
     query = f'''
@@ -151,4 +152,91 @@ def get_user_applications(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@user.route('user/<int:userID>/applications/<int:applicatonID>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+def get_user_application(userId, applicationId):
+  if request.method == 'GET':
+     query = f'''
+        SELECT *
+        FROM application
+        WHERE applicationId = {applicationId}
+    '''
+     current_app.logger.info(f'GET /users/{userId}/applications/{applicationId} query = {query}')
+     cursor = db.get_db().cursor()
+     cursor.execute(query)
+     theData = cursor.fetchall()
+    
+     response = make_response(jsonify(theData))
+     response.status_code = 200
+  
+  elif request.method == 'POST':
+    theData = request.json
+    applied = theData['applied']
+    programId = theData['programId']
+    
+
+    query = f'''
+        INSERT INTO application (userId, programId, applied)
+        VALUES ('{userId}', '{programId}', '{applied}')
+
+    '''
+    current_app.logger.info(f'Added new application {applicationId}, {programId}, {applied}, POST /users/{userId}/applications/{applicationId},
+                                query = {query}')
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+        
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+
+
+
+  elif request.method == 'PUT':
+    theData = request.json
+    current_app.logger.info(theData)
+
+
+    applied = theData['applied']
+    denied = theData['denied']
+    accepted = theData['accepted']
+    query = f'''
+         UPDATE application
+         SET applied = '{applied}', accepted = '{accepted}', denied = '{denied}'
+         WHERE applicationId = {applicationId}
+    '''
+
+    current_app.logger.info(f'Updated application {applicationId} PUT /users/{userId}/application/{applicationId}, query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+        
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+
+
+  elif request.method == 'DELETE':
+    query = f'''
+        DELETE 
+        FROM application
+        WHERE applicationId = {applicationId}
+        '''
+
+    current_app.logger.info(f'Deleted application {applicationId} DELETE /users/{userId}/application/{applicationId} query = {query}')
+        
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+        
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+
+
+
+
+
+
+  return response
+
 
