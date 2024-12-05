@@ -28,16 +28,36 @@ def get_posts():
 
 #------------------------------------------------------------
 # Returns all posts made by a user
-@post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+@post.route('/users/<int:userId>/posts/', methods = ['GET'])
 def get_post_info(userId, postId):
 
-    # Return a post's information
     if request.method == 'GET':
 
         query = f'''
             SELECT * 
             FROM post
-            WHERE postId = {postId} 
+            WHERE userId = {userId}
+        '''
+        
+        current_app.logger.info(f'GET /posts/{userId}/posts/ query = {query}')
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+
+@post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+def get_post_info(userId, postId):
+
+    if request.method == 'GET': # Return a post's information
+
+        query = f'''
+            SELECT * 
+            FROM post
+            WHERE postId = {postId} and userId = {userId}
         '''
         
         current_app.logger.info(f'GET /posts/{userId}/posts/{postId} query = {query}')
