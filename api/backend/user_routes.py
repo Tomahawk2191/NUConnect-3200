@@ -116,8 +116,6 @@ def get_user(userId):
     response.status_code = 200
   return response
 
-
-
 @user.route('/users/<int:userID>/posts', methods=['GET'])
 def get_user_posts(userId):
     query = f'''

@@ -9,21 +9,51 @@ programs = Blueprint('programs', __name__)
 
 #------------------------------------------------------------
 # Return a list of all programs
-@programs.route('/programs', methods=['GET'])
+@programs.route('/programs', methods=['GET', 'POST'])
 def get_programs():
-  query = f'''
-      SELECT *
-      FROM programs
-  '''
-  
-  current_app.logger.info(f'GET /programs query = {query}')
-  cursor = db.get_db().cursor()
-  cursor.execute(query)
-  theData = cursor.fetchall()
-  
-  response = make_response(jsonify(theData))
-  response.status_code = 200
-  return response
+  if request.method == 'GET':
+    query = f'''
+        SELECT *
+        FROM programs
+    '''
+    
+    current_app.logger.info(f'GET /programs query = {query}')
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+  elif request.method == 'POST':
+    theData = request.json
+    current_app.logger.info(theData)
+    
+    title = theData['title']
+    description = theData['description']
+    location = theData['location']
+    approved = theData['approved']
+    awaiting = theData['awaiting']
+    schoolId = theData['schoolId']
+    professorId = theData['professorId']
+    programStart = theData['programStart']
+    programEnd = theData['programEnd']
+    
+    #TODO: should awaiting default to false? If so, remove from query
+    query = f'''
+      INSERT INTO program (title, description, location, approved, awaiting, schoolId, professorId, programStart, programEnd)
+      VALUES ('{title}', '{description}', '{location}', '{approved}', '{awaiting}', '{schoolId}', '{professorId}' '{programStart}', '{programEnd}')
+    '''
+    
+    current_app.logger.info(f'Added new program {title} POST /users/profile query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response('Added new program')
+    response.status_code = 200
+    return response
   
 #------------------------------------------------------------
 # Program routes - return details about a specific program
@@ -95,37 +125,3 @@ def get_program(programId):
     response = make_response(f'Program {programId} deleted')
     response.status_code = 200
     return response
-  
-#------------------------------------------------------------
-# Create a new program
-#------------------------------------------------------------
-@programs.route('/program', methods=['POST'])
-def create_new_program():
-  theData = request.json
-  current_app.logger.info(theData)
-  
-  title = theData['title']
-  description = theData['description']
-  location = theData['location']
-  approved = theData['approved']
-  awaiting = theData['awaiting']
-  schoolId = theData['schoolId']
-  professorId = theData['professorId']
-  programStart = theData['programStart']
-  programEnd = theData['programEnd']
-  
-  #TODO: should awaiting default to false? If so, remove from query
-  query = f'''
-     INSERT INTO program (title, description, location, approved, awaiting, schoolId, professorId, programStart, programEnd)
-     VALUES ('{title}', '{description}', '{location}', '{approved}', '{awaiting}', '{schoolId}', '{professorId}' '{programStart}', '{programEnd}')
-  '''
-  
-  current_app.logger.info(f'Added new program {title} POST /users/profile query = {query}')
-  
-  cursor = db.get_db().cursor()
-  cursor.execute(query)
-  theData = cursor.fetchall()
-  
-  response = make_response('Added new program')
-  response.status_code = 200
-  return response
