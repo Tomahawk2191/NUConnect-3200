@@ -14,17 +14,17 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
-if st.button('My Programs', 
+if st.button('Edit/Post Programs', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Prediction.py')
+  st.switch_page('pages/11_EditPost_Programs.py')
 
-if st.button('Browse Available Applications', 
+if st.button("View Applications",
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/12_API_Test.py')
+  st.switch_page('pages/13_Applications.py')
 
-if st.button("View Profile",
+if st.button('View Profile', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/13_Classification.py')
+  st.switch_page('pages/12_Prof_Profile.py')
