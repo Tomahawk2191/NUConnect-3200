@@ -108,8 +108,8 @@ CREATE TABLE post
     userId     INT,
     programId  INT,
     #thumbnail,
-    published  BOOLEAN  DEFAULT false,
-    favorited  BOOLEAN  DEFAULT false,
+    -- published  BOOLEAN  DEFAULT false,
+    -- favorited  BOOLEAN  DEFAULT false,
     createdAt  DATETIME DEFAULT CURRENT_TIMESTAMP,
     lastEdited DATETIME DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
@@ -195,11 +195,11 @@ INSERT INTO program (title, location, schoolId, professorId, programStart, progr
 VALUES ('Dialogue: The Mathematical Heritage of Hungary', 'Hungary', 1, 1, '2024-01-01', '2024-06-01', TRUE, FALSE),
        ('Dialogue: The Chemistry of Green Energy in Iceland', 'Iceland', 2, 3, '2024-02-01', '2024-07-01', FALSE, TRUE);
 
-INSERT INTO post (postAuthor, title, body, programId, userId, favorited)
+INSERT INTO post (postAuthor, title, body, programId, userId)
 VALUES ('Dr. Smith', 'Dialogue: The Mathematical Heritage of Hungary',
         'This is an introduction to computer science courses.', 1, 1, TRUE),
        ('White Apple Snow', 'Dialogue: The Chemistry of Green Energy in Iceland',
-        'Explore the world of finance and business opportunities in Iceland.', 2, 3, FALSE);
+        'Explore the world of finance and business opportunities in Iceland.', 2, 3);
 
 INSERT INTO postTagParent (tagName, category)
 VALUES ('Summer 1', 'Time'),
