@@ -9,7 +9,7 @@ from backend.db_connection import db
 post_tags = Blueprint('post_tags', __name__)
 
 # Return a list of all post tags
-@post_tags.route('/user_tags', methods=['GET'])
+@post_tags.route('/post_tags', methods=['GET'])
 def get_user_tags():
     query = f'''
         SELECT *
@@ -28,7 +28,7 @@ def get_user_tags():
 # User_tag routes - return details about a specific user_tag
 #------------------------------------------------------------
 # Return a user_tag by their ID
-@post_tags.route('/post_tags/<int:userTagId>', methods=['GET', 'PUT', 'DELETE'])
+@post_tags.route('/post_tags/<int:postTagId>', methods=['GET', 'PUT', 'DELETE'])
 def get_post_tag(postTagId):
     if request.method == 'GET': # Get a user_tag
         query = f'''
@@ -38,7 +38,7 @@ def get_post_tag(postTagId):
         '''
         
         # Log the query
-        current_app.logger.info(f'GET /user_tags/{postTagId} query = {query}')
+        current_app.logger.info(f'GET /post_tags/{postTagId} query = {query}')
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
@@ -64,7 +64,7 @@ def get_post_tag(postTagId):
         cursor = db.get_db().cursor()
         cursor.execute(query)
         
-        response = make_response(f'User_tag {postTagId} updated')
+        response = make_response(f'Post_tag {postTagId} updated')
         response.status_code = 200
         return response
     elif request.method == 'DELETE': # Delete a user
