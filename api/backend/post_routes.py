@@ -30,6 +30,8 @@ def get_posts():
 
 @post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
 def get_post_info(userId, postId):
+
+    # return a post's information
     if request.method == 'GET':
 
         query = f'''
@@ -48,13 +50,14 @@ def get_post_info(userId, postId):
         response.status_code = 200
         return response
     
+    # create a post
     elif request.method == 'POST':
         theData = request.json
         current_app.logger.info(theData)
         postAuthor = theData['postAuthor']
         title = theData['title']
         body = theData['body']
-        userId = {userId}
+   
         programId = theData['programId']
 
         query = f'''
@@ -72,4 +75,45 @@ def get_post_info(userId, postId):
         response.status_code = 200
         return response
     
+    # update a post's information
+    elif request.method == 'PUT':
+        theData = request.json
+        current_app.logger.info(theData)
+        postAuthor = theData['postAuthor']
+        title = theData['title']
+        body = theData['body']
+        
+        query = f'''
+            UPDATE post
+            SET postAuthor = '{postAuthor}', title = '{title}', body = '{body}'
+            WHERE postId = {postId}
+        '''
     
+        current_app.logger.info(f'Updated user {userId} PUT /users/{userId}/posts/{postId} query = {query}')
+    
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+        
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+    
+    # delete a post
+    elif request.method == 'DELETE': 
+        query = f'''
+        DELETE
+        FROM post
+        WHERE postId = {postId}
+        '''
+    
+        current_app.logger.info(f'Deleted user {userId} DELETE /users/{userId}/posts/{postId} query = {query}')
+        
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+        
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+
