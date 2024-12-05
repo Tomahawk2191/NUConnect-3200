@@ -28,3 +28,8 @@ if st.button('Track Application Status',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/03_Application_Stat.py')
+  
+if st.button('View All Users', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/17_Uni_All_Users.py')
