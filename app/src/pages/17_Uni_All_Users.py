@@ -14,4 +14,4 @@ st.write('### Manage all Uni Users')
 # Get the data from the backend
 response = requests.get('http://api:4000/users/users').json()
 
-st.dataframe(response)
+st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId", "createdAt", "lastLogin"], hide_index=True)
