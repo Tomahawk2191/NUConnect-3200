@@ -5,7 +5,6 @@ from flask import make_response
 from flask import current_app
 from backend.db_connection import db
 
-
 post_tags = Blueprint('post_tags', __name__)
 
 # Return a list of all post tags
@@ -18,13 +17,16 @@ def get_user_tags():
         '''
         
         current_app.logger.info(f'GET /post_tags query = {query}')
+
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
+
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    elif (request.method == 'POST'):
+
+    elif (request.method == 'POST'): #Create a new post tag
         theData = request.json
         current_app.logger.info(theData)
         
@@ -36,30 +38,31 @@ def get_user_tags():
             VALUES ('{tagName}', '{category}')
         '''
         
-        current_app.logger.info(f'Added new post_tag {tagName} POST /post_tags query = {query}')
+        current_app.logger.info(f'Added new post tag {tagName} POST /post_tags query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
         
-        response = make_response('Added new post_tag')
+        response = make_response('Added new post tag')
         response.status_code = 200
         return response
+
 #------------------------------------------------------------
-# User_tag routes - return details about a specific user_tag
+# Post tag routes - return details about a specific post tag
 #------------------------------------------------------------
-# Return a user_tag by their ID
+# Return a post tag by their ID
 @post_tags.route('/post_tags/<int:postTagId>', methods=['GET', 'PUT', 'DELETE'])
 def get_post_tag(postTagId):
-    if request.method == 'GET': # Get a user_tag
+    if request.method == 'GET': # Get a post tag
         query = f'''
             SELECT *
             FROM postTagParent
             WHERE postTagId = {postTagId}
         '''
         
-        # Log the query
         current_app.logger.info(f'GET /post_tags/{postTagId} query = {query}')
+        
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
@@ -67,7 +70,8 @@ def get_post_tag(postTagId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    elif request.method == 'PUT': # Update a post_tag
+
+    elif request.method == 'PUT': # Update a post tag
         theData = request.json
         current_app.logger.info(theData)
         
@@ -80,27 +84,29 @@ def get_post_tag(postTagId):
             WHERE postTagId = {postTagId}
         '''
         
-        current_app.logger.info(f'Updated post_tag {postTagId} PUT /post_tags/{postTagId} query = {query}')
+        current_app.logger.info(f'Updated post tag {postTagId} PUT /post_tags/{postTagId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
+        theData = cursor.fetchall()
         
-        response = make_response(f'Post_tag {postTagId} updated')
+        response = make_response(f'Post tag {postTagId} updated')
         response.status_code = 200
         return response
-    elif request.method == 'DELETE': # Delete a user
+
+    elif request.method == 'DELETE': # Delete a post tag
         query = f'''
         DELETE
         FROM postTagParent
         WHERE postTagId = {postTagId}
         '''
     
-        current_app.logger.info(f'Deleted user_tag {postTagId} DELETE /post_tags/{postTagId} query = {query}')
+        current_app.logger.info(f'Deleted post tag {postTagId} DELETE /post_tags/{postTagId} query = {query}')
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
         
-        response = make_response(f'post_tag {postTagId} deleted')
+        response = make_response(f'Post tag {postTagId} deleted')
         response.status_code = 200
         return response
