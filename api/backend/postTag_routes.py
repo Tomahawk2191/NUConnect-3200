@@ -9,21 +9,42 @@ from backend.db_connection import db
 post_tags = Blueprint('post_tags', __name__)
 
 # Return a list of all post tags
-@post_tags.route('/post_tags', methods=['GET'])
+@post_tags.route('/post_tags', methods=['GET', 'POST'])
 def get_user_tags():
-    query = f'''
-        SELECT *
-        FROM postTagParent
-    '''
-    
-    current_app.logger.info(f'GET /post_tags query = {query}')
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
+    if (request.method == 'GET'):
+        query = f'''
+            SELECT *
+            FROM postTagParent
+        '''
+        
+        current_app.logger.info(f'GET /post_tags query = {query}')
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+    elif (request.method == 'POST'):
+        theData = request.json
+        current_app.logger.info(theData)
+        
+        tagName = theData['tagName']
+        category = theData['category']
+        
+        query = f'''
+            INSERT INTO postTagParent (tagName, category)
+            VALUES ('{tagName}', '{category}')
+        '''
+        
+        current_app.logger.info(f'Added new post_tag {tagName} POST /post_tags query = {query}')
+        
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
+        
+        response = make_response('Added new post_tag')
+        response.status_code = 200
+        return response
 #------------------------------------------------------------
 # User_tag routes - return details about a specific user_tag
 #------------------------------------------------------------
