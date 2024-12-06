@@ -62,7 +62,7 @@ def get_programs():
 #------------------------------------------------------------
 # Return a program by their ID
 @programs.route('/programs/<int:programId>', methods=['GET', 'PUT', 'DELETE'])
-def get_progra_users(programId):
+def get_program_users(programId):
   if request.method == 'GET':
     query = f'''
         SELECT *
@@ -97,14 +97,7 @@ def get_progra_users(programId):
   
     query = f'''
         UPDATE program
-        SET title = '{title}', 
-            description = '{description}', 
-            location = '{location}', 
-            approved = '{approved}', 
-            schoolId = '{schoolId}',
-            professorId = '{professorId}'
-            programStart = '{programStart}', 
-            programEnd = '{programEnd}'
+        SET title = '{title}', description = '{description}', location = '{location}', approved = '{approved}', schoolId = '{schoolId}', professorId = '{professorId}', programStart = '{programStart}', programEnd = '{programEnd}'
         WHERE programId = {programId}
     '''
     
@@ -141,11 +134,11 @@ def get_progra_users(programId):
 def get_program(programId):
   if request.method == 'GET':
     query = f'''
-        SELECT p.programId, p.title, u.firstName, u.lastName, u.email
-        FROM program p
-          JOIN application a on p.programId = a.programId
-          JOIN user u on a.userId = u.userId
-        WHERE programId = {programId}
+      SELECT p.programId, p.title, u.firstName, u.lastName, u.email
+      FROM program p
+      JOIN application a on p.programId = a.programId
+      JOIN user u on a.userId = u.userId
+      WHERE programId = {programId}
     '''
     
     current_app.logger.info(f'GET /programs/{programId}/users query = {query}')

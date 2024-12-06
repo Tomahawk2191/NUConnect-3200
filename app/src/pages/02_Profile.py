@@ -83,7 +83,10 @@ st.write('View All Tags')
 response = requests.get('http://api:4000/users/users/2/user_tags').json()
 logger.info(f'data {response}')
 
-userTagId = response[0]["userTagId"]
+
+
+if response and isinstance(response, list) and response[0] and "userTagId" in response[0]:
+ userTagId = response[0]["userTagId"]
 
 df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
 
@@ -109,16 +112,59 @@ def edit_user_tag():
     try:
       response = requests.put('http://api:4000/user_tags/user_tags/2', json=tag_data)
       if (response.status_code == 200):
-        st.success("User edited")
+        st.success("Tag edited")
         response = requests.get('http://api:4000/user_tags/user_tags/2').json()
         df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
       else:
-          st.error("Error editing user")
+          st.error("Error editing Tag")
     except requests.exceptions.RequestException as e:
         st.error(f"Error with requests: {e}")
 
+@st.dialog("Delete tag")
+def delete_user_tag():
+   st.write("Delete tag")
+   tagName = st.text_input('tag name')
+   category = st.text_input('category')
+   submitted = st.button('Submit')
+
+   tag_data = {
+
+    "userTagId": userTagId,
+    "tagName": tagName,
+    "category": category
+  }
+  
+  
+   if submitted:
+
+        logger.info(f'{tag_data}')
+   try:
+      response = requests.delete('http://api:4000/user_tags/user_tags/2', json=tag_data)
+      if (response.status_code == 200):
+        st.success("Tag deleted")
+        response = requests.get('http://api:4000/user_tags/user_tags/2').json()
+        df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
+      else:
+          st.error("Error deleting Tag")
+   except requests.exceptions.RequestException as e:
+        st.error(f"Error with requests: {e}")
+   
+  
+@st.dialog("Add tag")
+def delete_user_tag():
+   pass
+
+
 if (st.button('Edit tag')):
         edit_user_tag()
+
+
+
+
+
+if (st.button('Delete tag')):
+        delete_user_tag()
+
 if (st.button('Refresh tag')):
         st.rerun()
   
