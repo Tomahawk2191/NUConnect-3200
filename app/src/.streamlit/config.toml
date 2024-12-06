@@ -6,6 +6,9 @@
 # https://docs.streamlit.io/develop/api-reference/configuration/config.toml
 # ------------------------------------------------------------
 
+[server]
+runOnSave = true
+fileWatcherType = "poll"
 
 [client]
 # Turning the default sidebar navigation off so we 
@@ -17,4 +20,3 @@ showSidebarNavigation = false
 base="light"
 primaryColor="#6550e6"
 font="monospace"
-

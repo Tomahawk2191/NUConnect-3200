@@ -1,11 +1,9 @@
 from flask import Flask
 
 from backend.db_connection import db
-from backend.customers.customer_routes import customers
-from backend.products.products_routes import products
-from backend.simple.simple_routes import simple_routes
 from backend.role_routes import role
 from backend.user_routes import user
+from backend.post_routes import post
 from backend.userTag_routes import user_tags
 from backend.postTag_routes import post_tags
 from backend.program_routes import programs
@@ -45,15 +43,12 @@ def create_app():
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
-    app.logger.info('current_app(): registering blueprints with Flask app object.')   
-    app.register_blueprint(simple_routes)
-    app.register_blueprint(customers,   url_prefix='/c')
-    app.register_blueprint(products,    url_prefix='/p')
+    app.logger.info('current_app(): registering blueprints with Flask app object.')
     app.register_blueprint(role, url_prefix='/roles')
     app.register_blueprint(user, url_prefix='/users')
     app.register_blueprint(programs, url_prefix='/programs')
     app.register_blueprint(user_tags, url_prefix='/user_tags')
-    # app.register_blueprint(post_routes, url_prefix='/posts')
+    app.register_blueprint(post, url_prefix='/posts')
     app.register_blueprint(post_tags, url_prefix='/post_tags')
 
     # Don't forget to return the app object

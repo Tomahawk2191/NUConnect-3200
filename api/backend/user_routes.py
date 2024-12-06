@@ -4,9 +4,12 @@ from flask import jsonify
 from flask import make_response
 from flask import current_app
 from backend.db_connection import db
+import pymysql
 
 user = Blueprint('user', __name__)
 
+#------------------------------------------------------------
+# User routes
 #------------------------------------------------------------
 # Return a list of all users
 @user.route('/users', methods=['GET', 'POST'])
@@ -25,7 +28,8 @@ def get_users():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-  elif request.method == 'POST':
+
+  elif request.method == 'POST': #Creates a new user
     theData = request.json
     current_app.logger.info(theData)
     
@@ -34,28 +38,34 @@ def get_users():
     lastName = theData['lastName']
     phone = theData['phone']
     email = theData['email']
-    roleID = theData['roleID']
+    schoolId = theData['schoolId']
+    roleId = theData['roleId']
     
     query = f'''
-        INSERT INTO user (firstName, lastName, email, phone, roleID)
-        VALUES ('{firstName}', '{middleName}', '{lastName}', '{phone}', '{email}', '{roleID}')
+        INSERT INTO user (firstName, middleName, lastName, phone, email, schoolId, roleId)
+        VALUES ('{str(firstName)}', '{str(middleName)}', '{str(lastName)}', '{str(phone)}', '{str(email)}', '{int(schoolId)}', '{int(roleId)}')
     '''
     
     current_app.logger.info(f'Added new user {firstName} {middleName} {lastName} POST /users query = {query}')
     
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
+    try:
+      cursor = db.get_db().cursor()
+      cursor.execute(query)
+      db.get_db().commit()
+
+    except pymysql.Error as e:
+      current_app.logger.error(f'Error adding new user: {e}')
+      response = make_response('Error adding new user')
+      response.status_code = 500
+      return response
     
-    response = make_response(jsonify(theData))
+    response = make_response('Added new user')
     response.status_code = 200
     return response
   
 #------------------------------------------------------------
-# Profile routes - return details about a specific user
-#------------------------------------------------------------
 # Return a user's profile by their ID
-@user.route('/users/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
+@user.route('/users/<int:userId>', methods=['GET', 'PUT', 'DELETE'])
 def get_user(userId):
   if request.method == 'GET': # Get a user's profile
     query = f'''
@@ -66,12 +76,15 @@ def get_user(userId):
     
     # Log the query
     current_app.logger.info(f'GET /users/{userId} query = {query}')
+    
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
     
     response = make_response(jsonify(theData))
     response.status_code = 200
+    return response
+
   elif request.method == 'PUT': # Update a user's profile
     theData = request.json
     current_app.logger.info(theData)
@@ -81,25 +94,36 @@ def get_user(userId):
     lastName = theData['lastName']
     phone = theData['phone']
     email = theData['email']
-    
-    #TODO: can update roleID?
-    # roleId = theData['roleID']
+    schoolId = theData['schoolId']
+    roleId = theData['roleID']
     
     query = f'''
         UPDATE user
-        SET firstName = '{firstName}', middleName = '{middleName}', lastName = '{lastName}', phone = '{phone}', email = '{email}'
+        SET firstName = '{firstName}', middleName = '{middleName}', lastName = '{lastName}', phone = '{phone}', email = '{email}', schoolId = '{schoolId}', roleId = '{roleId}'
         WHERE userId = {userId}
     '''
     
     current_app.logger.info(f'Updated user {userId} PUT /users/{userId} query = {query}')
     
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
+    try:
+      cursor = db.get_db().cursor()
+      cursor.execute(query)
+      db.get_db().commit()
+    except pymysql.Error as e:
+      current_app.logger.error(f'Error updating user {userId}: {e}')
+      response = make_response(f'Error updating user {userId}')
+      response.status_code = 500
+      return response
     
-    response = make_response(jsonify(theData))
+    response = make_response(f'User {userId} updated')
     response.status_code = 200
+    return response
+
   elif request.method == 'DELETE': # Delete a user
+    # theData = request.json
+    # current_app.logger.info(theData)
+    # userId = theData['userId']
+    
     query = f'''
       DELETE
       FROM user
@@ -112,131 +136,25 @@ def get_user(userId):
     cursor.execute(query)
     theData = cursor.fetchall()
     
-    response = make_response(jsonify(theData))
+    response = make_response(f'User {userId} deleted')
     response.status_code = 200
-  return response
-
-
-
+    return response
+  
+#Returns a list of all posts created by a user  
 @user.route('/users/<int:userID>/posts', methods=['GET'])
 def get_user_posts(userId):
     query = f'''
         SELECT *
-        FROM post
+        FROM posts
         WHERE userId = {userId}
     '''
     current_app.logger.info(f'GET /users/{userId}/posts query = {query}')
+
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
 
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-
-    return response
-
-# return all applications of a user 
-@user.route('/user/<int:userID>/applications', methods = ['GET'])
-def get_user_applications(userId):
-    query = f'''
-        SELECT *
-        FROM application
-        WHERE userId = {userId}
-    '''
-  
-    current_app.logger.info(f'GET /users/{userId}/applications query = {query}')
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-
-@user.route('user/<int:userID>/applications/<int:applicatonID>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
-def get_user_application(userId, applicationId):
-  if request.method == 'GET':
-     query = f'''
-        SELECT *
-        FROM application
-        WHERE applicationId = {applicationId}
-    '''
-     current_app.logger.info(f'GET /users/{userId}/applications/{applicationId} query = {query}')
-     cursor = db.get_db().cursor()
-     cursor.execute(query)
-     theData = cursor.fetchall()
-    
-     response = make_response(jsonify(theData))
-     response.status_code = 200
-  
-  elif request.method == 'POST':
-    theData = request.json
-    applied = theData['applied']
-    programId = theData['programId']
-    
-
-    query = f'''
-        INSERT INTO application (userId, programId, applied)
-        VALUES ('{userId}', '{programId}', '{applied}')
-
-    '''
-    current_app.logger.info(f'Added new application {applicationId}, {programId}, {applied}, POST /users/{userId}/applications/{applicationId},
-                                query = {query}')
-
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-        
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-
-
-
-  elif request.method == 'PUT':
-    theData = request.json
-    current_app.logger.info(theData)
-
-
-    applied = theData['applied']
-    denied = theData['denied']
-    accepted = theData['accepted']
-    query = f'''
-         UPDATE application
-         SET applied = '{applied}', accepted = '{accepted}', denied = '{denied}'
-         WHERE applicationId = {applicationId}
-    '''
-
-    current_app.logger.info(f'Updated application {applicationId} PUT /users/{userId}/application/{applicationId}, query = {query}')
-    
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-        
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-
-
-  elif request.method == 'DELETE':
-    query = f'''
-        DELETE 
-        FROM application
-        WHERE applicationId = {applicationId}
-        '''
-
-    current_app.logger.info(f'Deleted application {applicationId} DELETE /users/{userId}/application/{applicationId} query = {query}')
-        
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-        
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-
-
-
-
-
-
-  return response
-
 

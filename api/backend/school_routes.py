@@ -8,6 +8,8 @@ from backend.db_connection import db
 school = Blueprint('school', __name__)
 
 #------------------------------------------------------------
+# School routes
+#------------------------------------------------------------
 # Return a list of all schools
 @school.route('/school', methods=['GET'])
 def get_schools():
@@ -41,14 +43,12 @@ def get_schools():
     
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
     
         response = make_response('Added new school')
         response.status_code = 200
         return response
 
-#------------------------------------------------------------
-# School routes - return details about a specific school
 #------------------------------------------------------------
 # Return a school's profile by their ID
 @school.route('/school/<int:schoolId>', methods=['GET', 'PUT', 'DELETE'])
@@ -85,7 +85,7 @@ def get_school(schoolId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'School {schoolId} updated')
     response.status_code = 200

@@ -8,6 +8,8 @@ from backend.db_connection import db
 user_tags = Blueprint('user_tags', __name__)
 
 #------------------------------------------------------------
+# User tag routes
+#------------------------------------------------------------
 # Return a list of all user tags
 @user_tags.route('/user_tags', methods=['GET', 'POST'])
 def get_user_tags():
@@ -41,14 +43,12 @@ def get_user_tags():
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response('Added new user tag')
         response.status_code = 200
         return response
 
-#------------------------------------------------------------
-# User tag routes - return details about a specific user tag
 #------------------------------------------------------------
 # Return a user tag by their ID
 @user_tags.route('/user_tags/<int:userTagId>', methods=['GET', 'PUT', 'DELETE'])
@@ -87,6 +87,7 @@ def get_user_tag(userTagId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
+        db.get_db().commit()
         
         response = make_response(f'User tag {userTagId} updated')
         response.status_code = 200
