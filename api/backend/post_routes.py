@@ -110,7 +110,7 @@ def get_post_info(userId, postId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response(f'Post {postId} deleted')
         response.status_code = 200
