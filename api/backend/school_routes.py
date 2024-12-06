@@ -8,6 +8,8 @@ from backend.db_connection import db
 school = Blueprint('school', __name__)
 
 #------------------------------------------------------------
+# School routes
+#------------------------------------------------------------
 # Return a list of all schools
 @school.route('/school', methods=['GET'])
 def get_schools():
@@ -47,8 +49,6 @@ def get_schools():
         response.status_code = 200
         return response
 
-#------------------------------------------------------------
-# School routes - return details about a specific school
 #------------------------------------------------------------
 # Return a school's profile by their ID
 @school.route('/school/<int:schoolId>', methods=['GET', 'PUT', 'DELETE'])

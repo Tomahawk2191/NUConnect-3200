@@ -8,6 +8,8 @@ from backend.db_connection import db
 role = Blueprint('role', __name__)
 
 #------------------------------------------------------------
+# Role routes
+#------------------------------------------------------------
 # Return a list of all roles
 @role.route('/role', methods=['GET', 'POST'])
 def get_roles():
@@ -71,8 +73,6 @@ def get_roles():
         response.status_code = 200
         return response
 
-#------------------------------------------------------------
-# Role routes - return details about a specific role
 #------------------------------------------------------------
 # Return a role by their ID
 @role.route('/role/<int:roleId>', methods=['GET', 'PUT', 'DELETE'])

@@ -7,6 +7,9 @@ from backend.db_connection import db
 
 post_tags = Blueprint('post_tags', __name__)
 
+#------------------------------------------------------------
+# Post tag routes
+#------------------------------------------------------------
 # Return a list of all post tags
 @post_tags.route('/post_tags', methods=['GET', 'POST'])
 def get_user_tags():
@@ -48,8 +51,6 @@ def get_user_tags():
         response.status_code = 200
         return response
 
-#------------------------------------------------------------
-# Post tag routes - return details about a specific post tag
 #------------------------------------------------------------
 # Return a post tag by their ID
 @post_tags.route('/post_tags/<int:postTagId>', methods=['GET', 'PUT', 'DELETE'])

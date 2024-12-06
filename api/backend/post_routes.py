@@ -8,6 +8,8 @@ from backend.db_connection import db
 post = Blueprint('post', __name__)
 
 #------------------------------------------------------------
+# Post routes
+#------------------------------------------------------------
 # Returns all posts on platform 
 @post.route('/posts', methods=['GET'])
 def get_posts():

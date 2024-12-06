@@ -9,6 +9,8 @@ import pymysql
 user = Blueprint('user', __name__)
 
 #------------------------------------------------------------
+# User routes
+#------------------------------------------------------------
 # Return a list of all users
 @user.route('/users', methods=['GET', 'POST'])
 def get_users():
@@ -50,6 +52,7 @@ def get_users():
       cursor = db.get_db().cursor()
       cursor.execute(query)
       db.get_db().commit()
+
     except pymysql.Error as e:
       current_app.logger.error(f'Error adding new user: {e}')
       response = make_response('Error adding new user')
@@ -60,8 +63,6 @@ def get_users():
     response.status_code = 200
     return response
   
-#------------------------------------------------------------
-# User routes - return details about a specific user
 #------------------------------------------------------------
 # Return a user's profile by their ID
 @user.route('/users/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
