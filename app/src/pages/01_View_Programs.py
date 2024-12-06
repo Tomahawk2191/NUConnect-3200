@@ -87,9 +87,52 @@ elif st.session_state['role'] == 'professor':
             except requests.exceptions.RequestException as e:
                 st.error(f"Error with requests: {e}")
 
-    @st.dialog("Delete a program")
+
+    @st.dialog("Submit Program")
+    def add_program():
+        pass
+
+        title = st.text_input("title")
+        description = st.text_input("description")
+        location = st.text_input("location")
+       
+        schoolId = st.text_input("schoolId")
+        professorId = st.text_input("professorId")
+        programStart = st.text_input("programStart")
+        programEnd = st.text_input("programEnd")
+        approved = 0
+        submitted = st.button('Submit')
+
+        program_data = {
+            "title": title,
+            "description": description,
+            "location": location,
+            "schoolId": schoolId,
+            "professorId": professorId,
+            "programStart": programStart,
+            "programEnd": programEnd,
+            "approved": approved
+
+        }
+
+        if submitted:
+            try:
+                response = requests.post('http://api:4000/programs/programs', json=program_data)
+                if (response.status_code == 200):
+                    st.success("Creating Program...")
+                    response = requests.get('http://api:4000/users/users/programs/1').json()
+                    df = st.dataframe(response, column_order=["title", "description", "location", "programId"], hide_index=True)
+                else:
+                    st.error("Error making program")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error with requests: {e}")
+
+
+
+
+    @st.dialog("Delete a Program")
     def delete_program():
-        st.write("Delete a program")
+        st.write("Delete a Program")
         programId = st.text_input("programId")
         submitted = st.button('Submit')
 
@@ -111,7 +154,12 @@ elif st.session_state['role'] == 'professor':
 
     if (st.button('Update a Program')):
         update_program()
+
+    if (st.button('Submit Program')):
+        add_program()
+
     if (st.button('Delete a Program')):
         delete_program()
+    
     if (st.button('Refresh')):
         st.rerun()
