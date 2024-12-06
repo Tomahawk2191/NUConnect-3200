@@ -15,16 +15,16 @@ CREATE TABLE role
 (
     roleId          INT AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(150) NOT NULL,
-    canPost         BOOLEAN DEFAULT false,
-    canApprove      BOOLEAN DEFAULT false,
-    canAssignProf   BOOLEAN DEFAULT false,
-    canApply        BOOLEAN DEFAULT false,
-    canRetract      BOOLEAN DEFAULT false,
-    canEditOwn      BOOLEAN DEFAULT false,
-    canEditAll      BOOLEAN DEFAULT false,
-    canDeleteOwn    BOOLEAN DEFAULT false,
-    canDeleteAll    BOOLEAN DEFAULT false,
-    canUpdateAccess BOOLEAN DEFAULT false
+    canPost         BOOLEAN DEFAULT False,
+    canApprove      BOOLEAN DEFAULT False,
+    canAssignProf   BOOLEAN DEFAULT False,
+    canApply        BOOLEAN DEFAULT False,
+    canRetract      BOOLEAN DEFAULT False,
+    canEditOwn      BOOLEAN DEFAULT False,
+    canEditAll      BOOLEAN DEFAULT False,
+    canDeleteOwn    BOOLEAN DEFAULT False,
+    canDeleteAll    BOOLEAN DEFAULT False,
+    canUpdateAccess BOOLEAN DEFAULT False
 );
 
 CREATE TABLE user

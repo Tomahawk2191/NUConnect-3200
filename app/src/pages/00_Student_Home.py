@@ -38,3 +38,8 @@ if st.button('View All User Tags',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/user_tag.py')
+
+if st.button('View All Users Roles', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/22_View_All_Roles.py')
