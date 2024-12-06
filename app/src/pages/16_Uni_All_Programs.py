@@ -47,27 +47,32 @@ def edit_program_dialog():
     program_data = next((program for program in response if program["programId"] == programId_to_edit), None)
 
     if program_data:
+      
+        program_data["programStart"] = datetime.datetime.strptime(program_data["programStart"], "%a, %d %b %Y %H:%M:%S %Z").date()
+        program_data["programEnd"] = datetime.datetime.strptime(program_data["programEnd"], "%a, %d %b %Y %H:%M:%S %Z").date()
+        program_data["approved"] = True if program_data["approved"] == 1 else False
+        
         st.write('You are editing program:', programId_to_edit)
         title = st.text_input('Title', value=program_data["title"])
         description = st.text_input('Description', value=program_data["description"])
-        approved = st.text_input('Approved', value=program_data["approved"])
-        schoolId = st.text_input('SchoolId', value=program_data["schoolId"])
-        professorId = st.text_input('ProfessorId', value=program_data["professorId"])
-        programStart = st.text_input('Program Start', value=program_data["programStart"])
-        programEnd = st.text_input('Program End', value=program_data["programEnd"])
+        approved = st.checkbox('Approved?', value=program_data["approved"])
+        schoolId = st.number_input('SchoolId', value=program_data["schoolId"], min_value=1, step=1)
+        professorId = st.number_input('ProfessorId', value=program_data["professorId"], min_value=1, step=1)
+        programStart = st.date_input('Program Start', value=program_data["programStart"])
+        programEnd = st.date_input('Program End', value=program_data["programEnd"])
         location = st.text_input('Location', value=program_data["location"])
         submitted = st.button('Submit')
 
         if submitted:
             updated_program_data = {
-                "title": title or program_data["title"],
-                "description": description or program_data["description"],
-                "approved": approved or program_data["approved"],
-                "schoolId": schoolId or program_data["schoolId"],
-                "professorId": professorId or program_data["professorId"],
-                "programStart": programStart or program_data["programStart"],
-                "programEnd": programEnd or program_data["programEnd"],
-                "location": location or program_data["location"]
+              "title": title or program_data["title"],
+              "description": description or program_data["description"],
+              "approved": int(approved),
+              "schoolId": schoolId or program_data["schoolId"],
+              "professorId": professorId or program_data["professorId"],
+              "programStart": str(programStart) or program_data["programStart"],
+              "programEnd": str(programEnd) or program_data["programEnd"],
+              "location": location or program_data["location"]
             }
 
             logger.info(f'Edited Program Data: {updated_program_data}')
@@ -88,26 +93,29 @@ def add_program_form():
     st.write('Add a new program')
     title = st.text_input('Title')
     description = st.text_input('Description')
-    approved = st.text_input('Approved')
+    approved = st.checkbox('Approved?')
     schoolId = st.text_input('SchoolId')
     professorId = st.text_input('ProfessorId')
-    programStart = st.text_input('Program Start')
-    programEnd = st.text_input('Program End')
+    programStart = st.date_input('Program Start')
+    programEnd = st.date_input('Program End')
     location = st.text_input('Location')
     submitted = st.button('Submit')
 
     program_data = {
         "title": title,
         "description": description,
-        "approved": approved,
+        "approved": int(approved),
         "schoolId": schoolId,
         "professorId": professorId,
-        "programStart": programStart,
-        "programEnd": programEnd,
+        "programStart": str(programStart),
+        "programEnd": str(programEnd),
         "location": location,
     }
 
     if submitted:
+      if not all(value != "" for value in program_data.values()):
+        st.error("Please fill in all the fields.")
+      else:
         logger.info(f'Program Data submitted: {program_data}')
         try:
             response = requests.post('http://api:4000/programs/programs', json=program_data)
