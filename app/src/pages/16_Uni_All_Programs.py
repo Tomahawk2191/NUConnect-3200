@@ -21,13 +21,21 @@ st.write('View Profile')
 response = requests.get('http://api:4000/programs/programs/1').json()
 logger.info(f'data {response}')
 
-programId = response[0]["programId"]
+orig_programId = response[0]["programId"]
+orig_title = response[0]["title"]
+orig_description = response[0]["description"]
+orig_approved = response[0]["approved"]
+orig_schoolId = response[0]["schoolId"]
+orig_professorId = response[0]["professorId"]
+orig_programStart = response[0]["programStart"]
+orig_programEnd = response[0]["programEnd"]
+orig_location = response[0]["location"]
 
 df = st.dataframe(response, column_order=["title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
 
 @st.dialog("Edit Programs")
 def add_program_dialog():
-    st.write('Edit Programs')
+    st.write('Which values would you like to edit? (Leave blank to keep the original value)')
     title = st.text_input('Title')
     description = st.text_input('Description')
     approved = st.text_input('Approved')
@@ -50,22 +58,22 @@ def add_program_dialog():
     }
 
     if submitted:
-        if program_data["title"] == "":
-         program_data["title"] = None
-        if program_data["description"] == "":
-         program_data["description"] = None
-        if program_data["approved"] == "":
-         program_data["approved"] = None
-        if program_data["schoolId"] == "":
-         program_data["schoolId"] = None
-        if program_data["professorId"] == "":
-         program_data["professorId"] = None
-        if program_data["programStart"] == "":
-         program_data["programStart"] = None
-        if program_data["programEnd"] == "":
-         program_data["programEnd"] = None
-        if program_data["location"] == "":
-         program_data["location"] = None
+      if program_data["title"] == "": 
+        program_data["title"] = orig_title
+      if program_data["description"] == "":
+        program_data["description"] = orig_description
+      if program_data["approved"] == "":
+        program_data["approved"] = orig_approved
+      if program_data["schoolId"] == "":
+        program_data["schoolId"] = orig_schoolId
+      if program_data["professorId"] == "":
+        program_data["professorId"] = orig_professorId
+      if program_data["programStart"] == "":
+        program_data["programStart"] = orig_programStart
+      if program_data["programEnd"] == "":
+        program_data["programEnd"] = orig_programEnd
+      if program_data["location"] == "":
+        program_data["location"] = orig_location
 
         logger.info(f'Profile edited {program_data}')
 
