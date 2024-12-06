@@ -106,7 +106,7 @@ def get_user_tag(userTagId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response(f'User tag {userTagId} deleted')
         response.status_code = 200

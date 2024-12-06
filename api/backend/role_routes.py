@@ -41,26 +41,11 @@ def get_roles():
         canEditAll = theData['canEditAll'] 
         canDeleteOwn = theData['canDeleteOwn'] 
         canDeleteAll = theData['canDeleteAll'] 
-        canUpdateAcceess = theData['canUpdateAcceess'] 
+        canUpdateAccess = theData['canUpdateAccess'] 
     
         query = f'''
-            INSERT INTO role (name, 
-                              canPost, 
-                              canApprove, 
-                              canAssignProf, 
-                              canApply, 
-                              canRetract, 
-                              canEditOwn, 
-                              canEditAll, 
-                              canDeleteOwn, 
-                              canDeleteAll, 
-                              canUpdateAcceess)
-            VALUES ('{roleName}', '{canPost}', 
-                    '{canApprove}', '{canAssignProf}', 
-                    '{canApply}', '{canRetract}'),
-                    '{canEditOwn}', '{canEditAll}'),
-                    '{canDeleteOwn}', '{canDeleteAll}', 
-                    {canUpdateAcceess})
+            INSERT INTO role (name, canPost, canApprove, canAssignProf, canApply, canRetract, canEditOwn, canEditAll, canDeleteOwn, canDeleteAll, canUpdateAccess)
+            VALUES ('{roleName}', '{int(canPost == True)}', '{int(canApprove == True)}', '{int(canAssignProf == True)}', '{int(canApply == True)}', '{int(canRetract == True)}', '{int(canEditOwn == True)}', '{int(canEditAll == True)}','{int(canDeleteOwn == True)}', '{int(canDeleteAll == True)}', {int(canUpdateAccess == True)})
         '''
     
         current_app.logger.info(f'Added new role {roleName} POST /role query = {query}')
@@ -108,21 +93,11 @@ def get_role(roleId):
         canEditAll = theData['canEditAll'] 
         canDeleteOwn = theData['canDeleteOwn'] 
         canDeleteAll = theData['canDeleteAll'] 
-        canUpdateAcceess = theData['canUpdateAcceess'] 
+        canUpdateAccess = theData['canUpdateAccess'] 
     
         query = f'''
             UPDATE role
-            SET name = '{roleName}', 
-                canPost = '{canPost}', 
-                canApprove = '{canApprove}',
-                canAssignProf = '{canAssignProf}', 
-                canApply = '{canApply}', 
-                canRetract = '{canRetract}', 
-                canEditOwn = '{canEditOwn}', 
-                canEditAll = '{canEditAll}', 
-                canDeleteOwn = '{canDeleteOwn}',
-                canDeleteAll = '{canDeleteAll}',
-                canUpdateAcceess = '{canUpdateAcceess}',
+            SET name = '{roleName}', canPost = '{canPost}', canApprove = '{canApprove}', canAssignProf = '{canAssignProf}', canApply = '{canApply}', canRetract = '{canRetract}', canEditOwn = '{canEditOwn}', canEditAll = '{canEditAll}', canDeleteOwn = '{canDeleteOwn}', canDeleteAll = '{canDeleteAll}', canUpdateAccess = '{canUpdateAccess}',
             WHERE roleId = {roleId}
         '''
         
@@ -147,7 +122,7 @@ def get_role(roleId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response(f'Role {roleId} deleted')
         response.status_code = 200
