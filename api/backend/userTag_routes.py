@@ -69,6 +69,8 @@ def get_user_tag(userTagId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
+    
+
 
     elif request.method == 'PUT': # Update a user tag
         theData = request.json

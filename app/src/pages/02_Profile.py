@@ -75,3 +75,21 @@ if (st.button('Edit Profile')):
 if (st.button('Refresh')):
   st.rerun()
 
+st.write('')
+st.write('')
+st.write('')
+st.write('View All Tags')
+
+response = requests.get('http://api:4000/users/users/2/user_tags').json()
+logger.info(f'data {response}')
+
+df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
+
+@st.dialog("Edit tag")
+def edit_user_tag():
+  st.write('Edit Tag')
+  tagName = st.text_input('tag name')
+  category = st.text_input('category')
+
+
+  

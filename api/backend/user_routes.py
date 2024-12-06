@@ -137,14 +137,14 @@ def get_user(userId):
     return response
   
 #Returns a list of all posts created by a user  
-@user.route('/users/<int:userID>/posts', methods=['GET'])
+@user.route('/users/<int:userId>/posts', methods=['GET'])
 def get_user_posts(userId):
     query = f'''
         SELECT *
-        FROM posts
+        FROM post
         WHERE userId = {userId}
     '''
-    current_app.logger.info(f'GET /users/{userId}/posts query = {query}')
+    current_app.logger.info(f'GET /{userId}/posts query = {query}')
 
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -153,3 +153,27 @@ def get_user_posts(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+
+# return all tags for a given user
+# TODO
+# add to REST API matrix 
+@user.route('/users/<int:userId>/user_tags', methods = ['GET'])
+def get_user_tags(userId):
+  current_app.logger.info(f'trying GET')
+  query = f'''
+      SELECT utp.category, utp.tagName, utp.userTagId
+      FROM userTag AS ut 
+      JOIN userTagParent AS utp
+      ON ut.userTagId = utp.userTagId
+      WHERE ut.userId = {userId}
+      '''
+  current_app.logger.info(f'GET /{userId}/user_tags query = {query}')
+
+  cursor = db.get_db().cursor()
+  cursor.execute(query)
+  theData = cursor.fetchall()
+
+  response = make_response(jsonify(theData))
+  response.status_code = 200
+  return response
