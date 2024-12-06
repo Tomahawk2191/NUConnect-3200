@@ -120,10 +120,6 @@ def get_user(userId):
     return response
 
   elif request.method == 'DELETE': # Delete a user
-    # theData = request.json
-    # current_app.logger.info(theData)
-    # userId = theData['userId']
-    
     query = f'''
       DELETE
       FROM user
@@ -134,7 +130,7 @@ def get_user(userId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'User {userId} deleted')
     response.status_code = 200
@@ -157,4 +153,3 @@ def get_user_posts(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-

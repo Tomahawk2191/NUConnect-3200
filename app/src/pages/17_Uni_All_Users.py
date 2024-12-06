@@ -78,17 +78,11 @@ def delete_user_dialog():
         response = requests.delete(f'http://api:4000/users/users/{user_id}')
         if (response.status_code == 200):
           st.success("User deleted successfully")
-          
-          # Refresh the dataframe
-          response = requests.get('http://api:4000/users/users').json()
-          df = st.dataframe(response.json(), column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
         else:
           st.error("Error deleting user")
       except requests.exceptions.RequestException as e:
         st.error(f"Error with requests: {e}")
-
-
-
+        
 if (st.button('Add User')):
   add_user_dialog()
 if (st.button('Delete User')):
