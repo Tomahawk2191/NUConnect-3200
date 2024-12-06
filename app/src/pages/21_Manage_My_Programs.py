@@ -18,7 +18,7 @@ SideBarLinks()
 st.write('### Manage Harvard University Programs')
 
 # Get the data from the backend (List all programs for Jennie)
-response = requests.get('http://api:4000/programs/programs?schoolId=harvard').json()
+response = requests.get('http://api:4000/programs/programs').json()
 
 df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
 
@@ -36,14 +36,18 @@ def add_program_dialog():
     location = st.text_input('Location')
     submitted = st.button('Submit')
 
+    # Convert dates to string in 'YYYY-MM-DD' format
+    program_start_str = program_start.strftime('%Y-%m-%d') if program_start else None
+    program_end_str = program_end.strftime('%Y-%m-%d') if program_end else None
+
     program_data = {
         "title": title,
         "description": description,
         "approved": approved,
         "schoolId": school_id,
         "professorId": professor_id,
-        "programStart": program_start,
-        "programEnd": program_end,
+        "programStart": program_start_str,
+        "programEnd": program_end_str,
         "location": location
     }
 
@@ -64,6 +68,7 @@ def add_program_dialog():
             except requests.exceptions.RequestException as e:
                 st.error(f"Error with requests: {e}")
 
+
 # Dialog for editing a program at Harvard University
 @st.dialog("Edit Program")
 def edit_program_dialog():
@@ -79,6 +84,10 @@ def edit_program_dialog():
     location = st.text_input('Location')
     submitted = st.button('Submit')
 
+    # Convert dates to string in 'YYYY-MM-DD' format
+    program_start_str = program_start.strftime('%Y-%m-%d') if program_start else None
+    program_end_str = program_end.strftime('%Y-%m-%d') if program_end else None
+
     program_data = {
         "programId": program_id,
         "title": title,
@@ -86,8 +95,8 @@ def edit_program_dialog():
         "approved": approved,
         "schoolId": school_id,
         "professorId": professor_id,
-        "programStart": program_start,
-        "programEnd": program_end,
+        "programStart": program_start_str,
+        "programEnd": program_end_str,
         "location": location
     }
 
@@ -107,27 +116,6 @@ def edit_program_dialog():
                     st.error("Error editing program")
             except requests.exceptions.RequestException as e:
                 st.error(f"Error with requests: {e}")
-
-# Dialog for deleting a program from Harvard University
-@st.dialog("Delete Program")
-def delete_program_dialog():
-    st.write('Delete a program')
-    program_id = st.number_input('Program ID', min_value=1, step=1, placeholder='Enter the program ID')
-    submitted = st.button('Submit')
-
-    if submitted:
-        # Log the data to the console
-        logger.info(f'Delete Program submitted with data: {program_id}')
-        
-        # Send the data to the backend
-        try:
-            response = requests.delete(f'http://api:4000/programs/programs/{program_id}')
-            if response.status_code == 200:
-                st.success("Program deleted successfully")
-            else:
-                st.error("Error deleting program")
-        except requests.exceptions.RequestException as e:
-            st.error(f"Error with requests: {e}")
 
 # Buttons to trigger actions
 if st.button('Add Program'):
