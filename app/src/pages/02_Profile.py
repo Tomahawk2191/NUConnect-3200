@@ -83,6 +83,8 @@ st.write('View All Tags')
 response = requests.get('http://api:4000/users/users/2/user_tags').json()
 logger.info(f'data {response}')
 
+userTagId = response[0]["userTagId"]
+
 df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
 
 @st.dialog("Edit tag")
@@ -90,6 +92,33 @@ def edit_user_tag():
   st.write('Edit Tag')
   tagName = st.text_input('tag name')
   category = st.text_input('category')
+  submitted = st.button('Submit')
+  
+  tag_data = {
+
+    "userTagId": userTagId,
+    "tagName": tagName,
+    "category": category
+  }
+
+  if submitted:
+
+    logger.info(f'{tag_data}')
 
 
+    try:
+      response = requests.put('http://api:4000/user_tags/user_tags/2', json=tag_data)
+      if (response.status_code == 200):
+        st.success("User edited")
+        response = requests.get('http://api:4000/user_tags/user_tags/2').json()
+        df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
+      else:
+          st.error("Error editing user")
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error with requests: {e}")
+
+if (st.button('Edit tag')):
+        edit_user_tag()
+if (st.button('Refresh tag')):
+        st.rerun()
   
