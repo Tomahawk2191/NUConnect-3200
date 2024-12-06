@@ -129,7 +129,7 @@ def get_progra_users(programId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'Program {programId} deleted')
     response.status_code = 200
@@ -137,7 +137,7 @@ def get_progra_users(programId):
 
 #------------------------------------------------------------
 # Return a list of users that have applied for a program
-@programs.route('/programs/<int:programId>/users', methods=['GET', 'PUT', 'DELETE'])
+@programs.route('/programs/<int:programId>/users', methods=['GET'])
 def get_program(programId):
   if request.method == 'GET':
     query = f'''
