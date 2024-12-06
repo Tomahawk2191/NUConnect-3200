@@ -65,7 +65,7 @@ def get_users():
   
 #------------------------------------------------------------
 # Return a user's profile by their ID
-@user.route('/users/<int:userID>', methods=['GET', 'PUT', 'DELETE'])
+@user.route('/users/<int:userId>', methods=['GET', 'PUT', 'DELETE'])
 def get_user(userId):
   if request.method == 'GET': # Get a user's profile
     query = f'''
@@ -120,6 +120,10 @@ def get_user(userId):
     return response
 
   elif request.method == 'DELETE': # Delete a user
+    # theData = request.json
+    # current_app.logger.info(theData)
+    # userId = theData['userId']
+    
     query = f'''
       DELETE
       FROM user

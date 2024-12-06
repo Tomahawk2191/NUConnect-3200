@@ -45,22 +45,8 @@ def get_programs():
     
     #TODO: should awaiting default to false? If so, remove from query
     query = f'''
-      INSERT INTO program (title, 
-                           description, 
-                           location, 
-                           approved,  
-                           schoolId, 
-                           professorId, 
-                           programStart, 
-                           programEnd)
-      VALUES ('{title}', 
-              '{description}', 
-              '{location}', 
-              '{approved}', 
-              '{schoolId}', 
-              '{professorId}' 
-              '{programStart}', 
-              '{programEnd}')
+      INSERT INTO program (title, description, location, approved,  schoolId, professorId, programStart, programEnd)
+      VALUES ('{title}', '{description}', '{location}', '{approved}', '{schoolId}', '{professorId}', '{programStart}', '{programEnd}')
     '''
     
     current_app.logger.info(f'Added new program {title} POST /programs query = {query}')
@@ -76,7 +62,7 @@ def get_programs():
 #------------------------------------------------------------
 # Return a program by their ID
 @programs.route('/programs/<int:programId>', methods=['GET', 'PUT', 'DELETE'])
-def get_program(programId):
+def get_progra_users(programId):
   if request.method == 'GET':
     query = f'''
         SELECT *
