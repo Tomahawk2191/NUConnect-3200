@@ -47,14 +47,17 @@ def edit_program_dialog():
     program_data = next((program for program in response if program["programId"] == programId_to_edit), None)
 
     if program_data:
+      
+        program_data["programStart"] = datetime.datetime.strptime(program_data["programStart"], "%a, %d %b %Y %H:%M:%S %Z").date()
+        program_data["programEnd"] = datetime.datetime.strptime(program_data["programEnd"], "%a, %d %b %Y %H:%M:%S %Z").date()
         st.write('You are editing program:', programId_to_edit)
         title = st.text_input('Title', value=program_data["title"])
         description = st.text_input('Description', value=program_data["description"])
         approved = st.text_input('Approved', value=program_data["approved"])
         schoolId = st.text_input('SchoolId', value=program_data["schoolId"])
         professorId = st.text_input('ProfessorId', value=program_data["professorId"])
-        programStart = st.text_input('Program Start', value=program_data["programStart"])
-        programEnd = st.text_input('Program End', value=program_data["programEnd"])
+        programStart = st.date_input('Program Start', value=program_data["programStart"])
+        programEnd = st.date_input('Program End', value=program_data["programEnd"])
         location = st.text_input('Location', value=program_data["location"])
         submitted = st.button('Submit')
 
@@ -65,8 +68,8 @@ def edit_program_dialog():
                 "approved": approved or program_data["approved"],
                 "schoolId": schoolId or program_data["schoolId"],
                 "professorId": professorId or program_data["professorId"],
-                "programStart": programStart or program_data["programStart"],
-                "programEnd": programEnd or program_data["programEnd"],
+                "programStart": str(programStart) or program_data["programStart"],
+                "programEnd": str(programEnd) or program_data["programEnd"],
                 "location": location or program_data["location"]
             }
 
