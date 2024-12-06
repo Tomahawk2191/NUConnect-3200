@@ -95,7 +95,7 @@ def get_user(userId):
     phone = theData['phone']
     email = theData['email']
     schoolId = theData['schoolId']
-    roleId = theData['roleID']
+    roleId = theData['roleId']
     
     query = f'''
         UPDATE user
