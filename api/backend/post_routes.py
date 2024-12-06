@@ -51,9 +51,10 @@ def get_user_posts(userId):
         response.status_code = 200
         return response
 
+#------------------------------------------------------------
+# Returns a specific post made by a user
 @post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
 def get_post_info(userId, postId):
-
     if request.method == 'GET': # Return a post's information
 
         query = f'''
@@ -89,7 +90,7 @@ def get_post_info(userId, postId):
 
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response('Added new post')
         response.status_code = 200
@@ -113,7 +114,7 @@ def get_post_info(userId, postId):
     
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response(f'Post {postId} updated')
         response.status_code = 200

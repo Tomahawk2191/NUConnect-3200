@@ -67,8 +67,8 @@ def get_roles():
     
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
-    
+        db.get_db().commit()
+
         response = make_response('Added new role')
         response.status_code = 200
         return response
@@ -130,6 +130,7 @@ def get_role(roleId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
+        db.get_db().commit()
         
         response = make_response(f'Role {roleId} updated')
         response.status_code = 200

@@ -67,8 +67,8 @@ def get_programs():
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
-    
+    db.get_db().commit()
+
     response = make_response('Added new program')
     response.status_code = 200
     return response

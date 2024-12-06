@@ -43,7 +43,7 @@ def get_schools():
     
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
     
         response = make_response('Added new school')
         response.status_code = 200
@@ -85,7 +85,7 @@ def get_school(schoolId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'School {schoolId} updated')
     response.status_code = 200

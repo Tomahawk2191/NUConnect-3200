@@ -45,7 +45,7 @@ def get_user_tags():
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response('Added new post tag')
         response.status_code = 200
@@ -89,7 +89,7 @@ def get_post_tag(postTagId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response(f'Post tag {postTagId} updated')
         response.status_code = 200
