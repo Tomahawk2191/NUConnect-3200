@@ -14,11 +14,11 @@ SideBarLinks()
 add_logo("assets/logo.png", height=400)
 
 # set up the page
-st.markdown("# Profile")
-st.sidebar.header("Profile")
-st.write('View Profile')
+st.markdown("# Programs")
+st.sidebar.header("View Programs")
+st.write('View Programs')
 
-response = requests.get('http://api:4000/programs/programs/1').json()
+response = requests.get('http://api:4000/programs/programs').json()
 logger.info(f'data {response}')
 
 orig_programId = response[0]["programId"]
@@ -31,7 +31,7 @@ orig_programStart = response[0]["programStart"]
 orig_programEnd = response[0]["programEnd"]
 orig_location = response[0]["location"]
 
-df = st.dataframe(response, column_order=["title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
 
 @st.dialog("Edit Programs")
 def add_program_dialog():
@@ -88,9 +88,9 @@ def add_program_dialog():
         except requests.exceptions.RequestException as e:
             st.error(f"Error with requests: {e}")
 
-@st.dialog("Edit Programs")
+@st.dialog("Add Programs")
 def add_program_form():
-    st.write('Edit Programs')
+    st.write('Add Programs')
     title = st.text_input('Title')
     description = st.text_input('Description')
     approved = st.text_input('Approved')
@@ -115,33 +115,17 @@ def add_program_form():
     }
 
     if submitted:
-        if program_data["title"] == "":
-         program_data["title"] = None
-        if program_data["description"] == "":
-         program_data["description"] = None
-        if program_data["approved"] == "":
-         program_data["approved"] = None
-        if program_data["schoolId"] == "":
-         program_data["schoolId"] = None
-        if program_data["professorId"] == "":
-         program_data["professorId"] = None
-        if program_data["programStart"] == "":
-         program_data["programStart"] = None
-        if program_data["programEnd"] == "":
-         program_data["programEnd"] = None
-        if program_data["location"] == "":
-         program_data["location"] = None
-
+ 
         logger.info(f'Profile edited {program_data}')
 
         try:
-            response = requests.post('http://api:4000/programs/programs/', json=program_data)
+            response = requests.post('http://api:4000/programs/programs', json=program_data)
             if response.status_code == 200:
-                st.success("Program edited")
+                st.success("Program added")
                 response = requests.get('http://api:4000/programs/programs/1').json()
-                df = st.dataframe(response, column_order=["title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+                df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
             else:
-                st.error(f"Error editing Program {response.status_code} - {response.text}")
+                st.error(f"Error adding Program {response.status_code} - {response.text}")
         except requests.exceptions.RequestException as e:
             st.error(f"Error with requests: {e}")
 
