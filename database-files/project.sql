@@ -197,7 +197,7 @@ VALUES ('Dialogue: The Mathematical Heritage of Hungary', 'Hungary', 1, 1, '2024
 
 INSERT INTO post (postAuthor, title, body, programId, userId)
 VALUES ('Dr. Smith', 'Dialogue: The Mathematical Heritage of Hungary',
-        'This is an introduction to computer science courses.', 1, 1, TRUE),
+        'This is an introduction to computer science courses.', 1, 1),
        ('White Apple Snow', 'Dialogue: The Chemistry of Green Energy in Iceland',
         'Explore the world of finance and business opportunities in Iceland.', 2, 3);
 
