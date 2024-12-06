@@ -247,5 +247,65 @@ def get_programs(userId):
     response.status_code = 200
     return response
 
+
+# TODO make route in REST API matrix
+@user.route('/users/programs/<int:professorId>', methods = ['GET', 'PUT','DELETE'])
+def get_professor_programs(professorId):
+
+  if request.method == 'GET':
+
+    query = f'''
+    SELECT p.title, p.description, p.location, p.programId
+    FROM program p
+    WHERE p.professorId = {professorId}
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
   
+  elif request.method == 'PUT':
+    theDataOne = request.json
+    current_app.logger.info(theDataOne)
+    title = theDataOne['title']
+    description = theDataOne['description']
+    location = theDataOne['location']
+    programId = theDataOne['programId']
+
+    query = f'''
+      UPDATE program 
+      SET title = '{title}', description = '{description}', location = '{location}'
+      WHERE professorId = {professorId} AND programId = {programId}
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
     
+    response = make_response(f'for {professorId} updated')
+    response.status_code = 200
+    return response
+
+
+  
+  elif request.method == 'DELETE':
+    theDataTwo = request.json
+    current_app.logger.info(theDataTwo)
+    programId = theDataTwo['programId']
+
+
+    query = f'''
+      DELETE 
+      FROM PROGRAM
+      WHERE professorId = {professorId} AND programId = {programId}
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'for {professorId} deleted')
+    response.status_code = 200
+    return response

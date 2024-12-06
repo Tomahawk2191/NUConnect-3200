@@ -54,4 +54,64 @@ if st.session_state['role'] == 'student':
 
 elif st.session_state['role'] == 'professor':
     st.write(st.session_state['role'])
+    response = requests.get('http://api:4000/users/users/programs/1').json()
+    logger.info(f'data {response}')
+    df = st.dataframe(response, column_order=["title", "description", "location", "programId"], hide_index=True)
 
+    @st.dialog("Update a Program")
+    def update_program():
+        st.write("Update a Program")
+        title = st.text_input("title")
+        description = st.text_input("description")
+        location = st.text_input("location")
+        programId = st.text_input("programId")
+        submitted = st.button('Submit')
+
+
+        program_data = {
+            "title": title,
+            "description": description,
+            "location": location,
+            "programId": programId 
+        }
+
+        if submitted:
+            try:
+                response = requests.put('http://api:4000/users/users/programs/1', json=program_data)
+                if (response.status_code == 200):
+                    st.success("Program Updating")
+                    response = requests.get('http://api:4000/users/users/programs/1').json()
+                    df = st.dataframe(response, column_order=["title", "description", "location", "programId"], hide_index=True)
+                else:
+                    st.error("Error editing program")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error with requests: {e}")
+
+    @st.dialog("Delete a program")
+    def delete_program():
+        st.write("Delete a program")
+        programId = st.text_input("programId")
+        submitted = st.button('Submit')
+
+        delete_data = {
+            "programId": programId
+        }
+
+        if submitted:
+            try:
+                response = requests.delete('http://api:4000/users/users/programs/1', json=delete_data)
+                if (response.status_code == 200):
+                    st.success("Program Deleted")
+                    response = requests.get('http://api:4000/users/users/programs/1').json()
+                    df = st.dataframe(response, column_order=["title", "description", "location", "programId"], hide_index=True)
+                else:
+                    st.error("Error deleting program")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error with requests: {e}")
+
+    if (st.button('Update a Program')):
+        update_program()
+    if (st.button('Delete a Program')):
+        delete_program()
+    if (st.button('Refresh')):
+        st.rerun()
