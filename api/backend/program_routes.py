@@ -16,7 +16,7 @@ def get_programs():
   if request.method == 'GET':
     query = f'''
         SELECT *
-        FROM programs
+        FROM program
     '''
     
     current_app.logger.info(f'GET /programs query = {query}')
@@ -121,7 +121,7 @@ def get_progra_users(programId):
   elif request.method == 'DELETE': # Delete a user
     query = f'''
       DELETE
-      FROM programs
+      FROM program
       WHERE programId = {programId}
     '''
   
