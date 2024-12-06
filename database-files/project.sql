@@ -374,22 +374,6 @@ VALUES ('Daniel', NULL, 'Smith', '098-765-4321', 'smith@example.edu', 1, 2),
        ('Brown', 'Charlie', 'Alex', '444-333-2222', 'charlie@example.edu', 2, 2),
        ('Collins', 'Susan', 'Jade', '777-888-9999', 'jade@example.edu', 1, 3);
 insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (1, 'Adler', 'Hubbert', 'Danielsson', '374-940-7237', 'adanielsson0@about.me', 88, 3);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (2, 'Missy', 'Pottinger', 'Kinnerley', '743-786-3640', 'mkinnerley1@adobe.com', 68, 1);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (3, 'Cinderella', null, 'Ladbury', '635-615-7529', 'cladbury2@flickr.com', 15, 1);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (4, 'Dara', 'Honisch', 'Murdy', '735-691-1168', 'dmurdy3@zimbio.com', 17, 2);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (5, 'Ely', null, 'Skip', '808-693-6397', 'eskip4@nasa.gov', 86, 1);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (6, 'Walden', 'Gullefant', 'Bodiam', '862-403-6183', 'wbodiam5@taobao.com', 48, 3);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (7, 'Roslyn', 'Blackston', 'Schruyer', '395-691-3239', 'rschruyer6@jimdo.com', 34, 3);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
-values (8, 'Kent', 'Bass', 'Bilt', '682-248-4149', 'kbilt7@disqus.com', 50, 1);
-insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
 values (9, 'Haley', null, 'Pessler', '340-202-5351', 'hpessler8@prnewswire.com', 97, 1);
 insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
 values (10, 'Albie', 'Waddams', 'Kennedy', '761-473-0585', 'akennedy9@japanpost.jp', 97, 1);
