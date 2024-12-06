@@ -129,7 +129,7 @@ def get_progra_users(programId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'Program {programId} deleted')
     response.status_code = 200
