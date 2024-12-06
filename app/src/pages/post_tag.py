@@ -31,7 +31,7 @@ def add_post_tag_dialog():
     }
     
     if submitted:
-      # If the middle name is empty, set it to None
+      # If the category is empty, set it to None
       if (post_tag_data["category"] == ""):
         post_tag_data["category"] = None
         

@@ -31,7 +31,7 @@ def add_user_tag_dialog():
     }
     
     if submitted:
-      # If the middle name is empty, set it to None
+      # If the category is empty, set it to None
       if (user_tag_data["category"] == ""):
         user_tag_data["category"] = None
         
