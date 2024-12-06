@@ -29,27 +29,6 @@ def get_posts():
         return response
 
 #------------------------------------------------------------
-# Returns all posts made by a user
-@post.route('/users/<int:userId>/posts/', methods = ['GET'])
-def get_user_posts(userId):
-
-    if request.method == 'GET':
-
-        query = f'''
-            SELECT * 
-            FROM post
-            WHERE userId = {userId}
-        '''
-        
-        current_app.logger.info(f'GET /posts/{userId}/posts/ query = {query}')
-
-        cursor = db.get_db().cursor()
-        cursor.execute(query)
-        theData = cursor.fetchall()
-
-        response = make_response(jsonify(theData))
-        response.status_code = 200
-        return response
 
 #------------------------------------------------------------
 # Returns a specific post made by a user
