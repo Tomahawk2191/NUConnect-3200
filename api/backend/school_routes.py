@@ -11,7 +11,7 @@ school = Blueprint('school', __name__)
 # School routes
 #------------------------------------------------------------
 # Return a list of all schools
-@school.route('/school', methods=['GET'])
+@school.route('/school', methods=['GET', 'POST'])
 def get_schools():
   if request.method == 'GET':
     query = f'''
@@ -20,9 +20,11 @@ def get_schools():
     '''
     
     current_app.logger.info(f'GET /school query = {query}')
+
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
+
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
@@ -35,8 +37,8 @@ def get_schools():
         bio = theData['bio'] 
     
         query = f'''
-            INSERT INTO role (name, bio)
-            VALUES ('{schoolName}, {bio})
+            INSERT INTO school (name, bio)
+            VALUES ('{schoolName}', '{bio}')
         '''
     
         current_app.logger.info(f'Added new school {schoolName} POST /school query = {query}')
@@ -83,7 +85,7 @@ def get_school(schoolId):
         WHERE schoolId = {schoolId}
     '''
     
-    current_app.logger.info(f'Updated school {schoolId} PUT /school/profile/{schoolId} query = {query}')
+    current_app.logger.info(f'Updated school {schoolId} PUT /school/{schoolId} query = {query}')
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -99,7 +101,7 @@ def get_school(schoolId):
         WHERE schoolId = {schoolId}
     '''
     
-    current_app.logger.info(f'Deleted school {schoolId} DELETE /school/profile/{schoolId} query = {query}')
+    current_app.logger.info(f'Deleted school {schoolId} DELETE /school/{schoolId} query = {query}')
     
     cursor = db.get_db().cursor()
     cursor.execute(query)

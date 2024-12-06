@@ -2,11 +2,13 @@ from flask import Flask
 
 from backend.db_connection import db
 from backend.role_routes import role
-from backend.user_routes import user
-from backend.post_routes import post
-from backend.userTag_routes import user_tags
-from backend.postTag_routes import post_tags
 from backend.program_routes import programs
+from backend.school_routes import school
+from backend.user_routes import user
+from backend.userTag_routes import user_tags
+from backend.post_routes import post
+from backend.postTag_routes import post_tags
+
 
 
 import os
@@ -45,8 +47,9 @@ def create_app():
     # and give a url prefix to each
     app.logger.info('current_app(): registering blueprints with Flask app object.')
     app.register_blueprint(role, url_prefix='/roles')
-    app.register_blueprint(user, url_prefix='/users')
     app.register_blueprint(programs, url_prefix='/programs')
+    app.register_blueprint(school, url_prefix='/schools')
+    app.register_blueprint(user, url_prefix='/users')
     app.register_blueprint(user_tags, url_prefix='/user_tags')
     app.register_blueprint(post, url_prefix='/posts')
     app.register_blueprint(post_tags, url_prefix='/post_tags')
