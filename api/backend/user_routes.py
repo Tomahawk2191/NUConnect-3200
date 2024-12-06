@@ -177,3 +177,28 @@ def get_user_tags(userId):
   response = make_response(jsonify(theData))
   response.status_code = 200
   return response
+
+
+# add a new tag for a given user 
+# TODO add to REST Api matrix as well
+@user.route('/users/<int:userId>/user_tags', methods = ['POST'])
+def make_tag_user(userId):
+   current_app.logger.info(f'trying POST')
+
+   theData = request.json
+   userTagId = theData['userTagId']
+
+   query = f'''
+       INSERT INTO userTag
+       VALUES ('{userId}', '{userTagId}')
+    '''
+
+   current_app.logger.info('made change, added user tag for user')
+   
+   cursor = db.get_db().cursor()
+   cursor.execute(query)
+   db.get_db().commit()
+    
+   response = make_response(f'tag made for {userId}')
+   response.status_code = 200
+   return response

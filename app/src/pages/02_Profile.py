@@ -151,15 +151,39 @@ def delete_user_tag():
    
   
 @st.dialog("Add tag")
-def delete_user_tag():
-   pass
+def add_user_tag():
+   st.write("Add tag")
+   userTagId = st.number_input('userTagId', min_value=1, step=1)
+  
+   submitted = st.button('Submit')
+
+   tag_data = {
+
+    "userTagId": userTagId
+  }
+  
+  
+   if submitted:
+
+        logger.info(f'{tag_data}')
+   try:
+      response = requests.post(f'http://api:4000/users/users/2/user_tags', json=tag_data)
+      if (response.status_code == 200):
+        st.success("Tag found")
+        response = requests.get('http://api:4000/user_tags/user_tags/2').json()
+        df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
+      else:
+          st.error("Error adding Tag")
+   except requests.exceptions.RequestException as e:
+        st.error(f"Error with requests: {e}")
 
 
 if (st.button('Edit tag')):
         edit_user_tag()
 
 
-
+if (st.button('Add tag')):
+        add_user_tag()
 
 
 if (st.button('Delete tag')):
