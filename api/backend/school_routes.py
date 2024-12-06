@@ -61,9 +61,11 @@ def get_school(schoolId):
     '''
     
     current_app.logger.info(f'GET /school/{schoolId} query = {query}')
+
     cursor = db.get_db().cursor()
     cursor.execute(query)
     theData = cursor.fetchall()
+    
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
@@ -101,7 +103,7 @@ def get_school(schoolId):
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
+    db.get_db().commit()
     
     response = make_response(f'School {schoolId} deleted')
     response.status_code = 200

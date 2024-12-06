@@ -19,7 +19,7 @@ df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], h
 # st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)  
   
 @st.dialog("Create New User Tag")
-def add_user_dialog():
+def add_user_tag_dialog():
     st.write('Create a user tag')
     tag_name = st.text_input('Tag Name')
     category = st.text_input('Category')
@@ -49,7 +49,7 @@ def add_user_dialog():
         st.error(f"Error with requests: {e}")
 
 @st.dialog("Delete User Tag")
-def delete_user_dialog():
+def delete_user_tag_dialog():
     st.write('Delete a user tag')
     user_tag_id = st.number_input('User Tag ID', min_value=1, step=1, placeholder='Enter the user tag ID')
     submitted = st.button('Submit')
@@ -60,7 +60,7 @@ def delete_user_dialog():
       
       # Send the data to the backend
       try:
-        response = requests.delete(f'http://api:4000/users/users/{user_tag_id}')
+        response = requests.delete(f'http://api:4000/user_tags/user_tags/{user_tag_id}')
         if (response.status_code == 200):
           st.success("User tag deleted successfully")
         else:
@@ -69,8 +69,8 @@ def delete_user_dialog():
         st.error(f"Error with requests: {e}")
         
 if (st.button('Add User Tag')):
-  add_user_dialog()
+  add_user_tag_dialog()
 if (st.button('Delete User Tag')):
-  delete_user_dialog()
+  delete_user_tag_dialog()
 if (st.button('Refresh')):
   st.rerun()

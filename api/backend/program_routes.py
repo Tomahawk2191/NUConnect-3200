@@ -137,7 +137,7 @@ def get_progra_users(programId):
 
 #------------------------------------------------------------
 # Return a list of users that have applied for a program
-@programs.route('/programs/<int:programId>/users', methods=['GET', 'PUT', 'DELETE'])
+@programs.route('/programs/<int:programId>/users', methods=['GET'])
 def get_program(programId):
   if request.method == 'GET':
     query = f'''

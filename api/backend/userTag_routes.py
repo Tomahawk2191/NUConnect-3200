@@ -69,6 +69,8 @@ def get_user_tag(userTagId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
+    
+
 
     elif request.method == 'PUT': # Update a user tag
         theData = request.json
@@ -104,7 +106,7 @@ def get_user_tag(userTagId):
         
         cursor = db.get_db().cursor()
         cursor.execute(query)
-        theData = cursor.fetchall()
+        db.get_db().commit()
         
         response = make_response(f'User tag {userTagId} deleted')
         response.status_code = 200
