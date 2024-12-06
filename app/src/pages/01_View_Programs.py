@@ -2,40 +2,56 @@ import logging
 logger = logging.getLogger(__name__)
 import pandas as pd
 import streamlit as st
-from streamlit_extras.app_logo import add_logo
-import world_bank_data as wb
+import pydeck as pdk
+from urllib.error import URLError
+from modules.nav import SideBarLinks
+import requests
+
 import matplotlib.pyplot as plt
 import numpy as np
-import plotly.express as px
+
 from modules.nav import SideBarLinks
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
 
 # set the header of the page
-st.header('Programs')
+st.header('My Programs')
+if st.session_state['role'] == 'student':
+    st.write(st.session_state['role'])
+    response = requests.get('http://api:4000/users/users/4/programs').json()
+    logger.info(f'data {response}')
 
-# You can access the session state to make a more customized/personalized app experience
-st.write(f"### Hi, {st.session_state['first_name']}.")
+    df = st.dataframe(response, column_order=["title", "description", "location", "programId", "professorId", "applicationId"], hide_index=True)
 
-# get the countries from the world bank data
-with st.echo(code_location='above'):
-    countries:pd.DataFrame = wb.get_countries()
-   
-    st.dataframe(countries)
+    @st.dialog("Unenroll in a Program")
+    def unenroll_program():
+        st.write('Unenroll in a Program')
+        applicationId = st.text_input('applicationId')
+        submitted = st.button('Submit')
 
-# the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    arr = np.random.normal(1, 1, size=100)
-    test_plot, ax = plt.subplots()
-    ax.hist(arr, bins=20)
+        user_data = {
+            "applicationId": applicationId
+        }
 
-    st.pyplot(test_plot)
+        if submitted:
+            try:
+                response = requests.delete('http://api:4000/users/users/4/programs', json=user_data)
+                if (response.status_code == 200):
+                    st.success("Program Unenrolled")
+                    response = requests.get('http://api:4000/users/users/4/programs').json()
+                    df = st.dataframe(response, column_order=["title", "description", "location", "programId", "professorId", "applicationId"], hide_index=True)
+                else:
+                    st.error("Error editing user")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error with requests: {e}")
+
+    if (st.button('Unenroll in a Program')):
+        unenroll_program()
+    if (st.button('Refresh')):
+        st.rerun()
 
 
-with st.echo(code_location='above'):
-    slim_countries = countries[countries['incomeLevel'] != 'Aggregates']
-    data_crosstab = pd.crosstab(slim_countries['region'], 
-                                slim_countries['incomeLevel'],  
-                                margins = False) 
-    st.table(data_crosstab)
+elif st.session_state['role'] == 'professor':
+    st.write(st.session_state['role'])
+

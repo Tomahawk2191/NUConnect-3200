@@ -202,3 +202,50 @@ def make_tag_user(userId):
    response = make_response(f'tag made for {userId}')
    response.status_code = 200
    return response
+
+
+# return programs related to a user
+# TODO add to REST API Matrix  
+@user.route('/users/<int:userId>/programs', methods = ['GET', 'DELETE'])
+def get_programs(userId):
+
+  if request.method == 'GET':
+
+    query = f'''
+      SELECT p.title, p.description, p.location, p.professorId, a.applicationId
+      FROM program p
+      JOIN application a
+      ON p.programId = a.programId
+      WHERE a.userId = {userId}
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+  
+  # unenroll in a program
+  elif request.method == 'DELETE':
+    theData = request.json
+    current_app.logger.info(theData)
+    applicationId = theData['applicationId']
+
+    query = f'''
+      DELETE
+      FROM application
+      WHERE applicationId = {applicationId} AND userId = {userId}
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'User {userId} deleted')
+    response.status_code = 200
+    return response
+
+  
+    
