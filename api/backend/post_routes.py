@@ -15,8 +15,11 @@ post = Blueprint('post', __name__)
 def get_posts():
     if request.method == 'GET':
         query = f'''
-            SELECT * 
-            FROM post
+            SELECT *
+                FROM post AS p
+                JOIN postTag ON p.postId = postTag.postId
+                JOIN postTagParent ON postTag.postTagId = postTagParent.postTagId
+                JOIN program on p.programId = program.programId
         '''
         current_app.logger.info(f'GET /posts query = {query}')
 
