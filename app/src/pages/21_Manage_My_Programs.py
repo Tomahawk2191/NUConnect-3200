@@ -43,7 +43,7 @@ else:
     # Hardcoded example: schoolId=32 for Harvard University
     response = requests.get('http://api:4000/programs/programs/schools/32').json()
 
-    df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+    df = st.dataframe(response, column_order=["programId", "title", "description", "location", "approved", "schoolId", "professorId", "programStart", "programEnd"], hide_index=True)
 
     harvard_school_id = 32
 
@@ -104,7 +104,7 @@ else:
         title = st.text_input('Title')
         description = st.text_input('Description')
         approved = st.checkbox('Approved?', value=False)
-        school_id = st.number_input('School ID', value=1, step=1)
+        school_id = st.number_input('School ID', value=harvard_school_id, step=1)
         professor_id = st.number_input('Professor ID', min_value=1, step=1)
         program_start = st.date_input('Program Start')
         program_end = st.date_input('Program End')

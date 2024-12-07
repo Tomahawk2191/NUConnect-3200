@@ -14,15 +14,15 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
-if st.button('Edit/Post Programs', 
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/16_Uni_All_Programs.py')
-
 if st.button('View Profile', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/02_Profile.py')
+
+if st.button('Edit/Post Programs', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/16_Uni_All_Programs.py')
 
 if st.button("View Applications",
              type='primary',

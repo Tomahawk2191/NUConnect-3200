@@ -47,9 +47,9 @@ if st.session_state['role'] == 'student':
                 st.error(f"Error with requests: {e}")
 
     
-    @st.dialog("Enroll")
+    @st.dialog("Enroll in a Program")
     def add_application():
-        st.write("Enroll")
+        st.write("Enroll in a Program")
         programId = st.text_input("programId")
         submitted = st.button('Submit')
         application_data = {
@@ -70,7 +70,7 @@ if st.session_state['role'] == 'student':
             except requests.exceptions.RequestException as e:
                 st.error(f"Error with requests {e}")
 
-    if(st.button('Enroll')):
+    if(st.button('Enroll in a Program')):
         add_application() 
 
     if (st.button('Unenroll in a Program')):
