@@ -119,3 +119,26 @@ def get_post_info(userId, postId):
         response.status_code = 200
         return response
 
+
+
+# returns all posts under a user's major
+# TODO add to REST API matrix 
+
+@post.route('/posts/<int:professorId>', methods = ['GET'])
+def get_posts_author(professorId):
+    query = f'''
+    SELECT *
+    FROM post
+    WHERE userId = {professorId}
+    '''
+
+    current_app.logger.info(f'GET /posts/{professorId} query = {query}')
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
