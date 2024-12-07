@@ -47,12 +47,12 @@ else:
 
   @st.dialog("Add Post")
   def add_user_dialog():
-    st.write('Add a new Post'),
-    author = st.text_input('Post Author'),
-    title = st.text_input('Post Title'),
-    body = st.text_input('Body'),
-    user_id = st.number_input('User Id', min_value=1, max_value=100, step=1),
-    program_id = st.number_input('Program Id', min_value=1, max_value=100, step=1),
+    st.write('Add a new Post')
+    author = st.text_input('Post Author')
+    title = st.text_input('Post Title')
+    body = st.text_input('Body')
+    user_id = st.number_input('User Id', min_value=1, max_value=100, step=1)
+    program_id = st.number_input('Program Id', min_value=1, max_value=100, step=1)
     submitted = st.button("Submit")
 
     posts_data = {
