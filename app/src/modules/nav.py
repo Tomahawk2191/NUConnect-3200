@@ -41,7 +41,7 @@ def ProfHomeNav():
 
 def ProfProgramsNav():
     st.sidebar.page_link(
-        "pages/11_EditPost_Programs.py", label="Programs", icon="📝"
+        "pages/16_Uni_All_Programs.py", label="Programs", icon="📝"
     )
 
 def ProfProfileNav():
