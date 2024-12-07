@@ -11,7 +11,7 @@ post = Blueprint('post', __name__)
 # Post routes
 #------------------------------------------------------------
 # Returns all posts on platform 
-@post.route('/posts', methods=['GET'])
+@post.route('/posts', methods=['GET', 'POST', 'DELETE'])
 def get_posts():
     if request.method == 'GET':
         query = f'''
@@ -30,7 +30,46 @@ def get_posts():
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
+    elif request.method == 'POST': # Create a post
+        theData = request.json
+        
+        postAuthor = theData['postAuthor']
+        title = theData['title']
+        body = theData['body']
+        userId = theData['userId']
+        programId = theData['programId']
+        
+        query = f'''
+            INSERT INTO post (postAuthor, title, body, programId, userId)
+            VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
+        '''
+        current_app.logger.info(f'Added new post POST /posts query = {query}')
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        db.get_db().commit()
 
+        response = make_response('added new post')
+        response.status_code = 200
+        return response
+    elif request.method == 'DELETE': # Delete a post
+        theData = request.json
+        postId = theData['postId']
+        
+        query = f'''
+            DELETE
+            FROM post
+            WHERE postId = {postId}
+        '''
+        
+        current_app.logger.info(f'Deleted post {postId} DELETE /posts query = {query}')
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        db.get_db().commit()
+        
+        response = make_response(f'Post {postId} deleted')
+        response.status_code = 200
+        return response
+        
 #------------------------------------------------------------
 
 #------------------------------------------------------------

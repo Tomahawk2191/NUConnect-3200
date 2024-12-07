@@ -57,11 +57,11 @@ else:
     submitted = st.button("Submit")
 
     posts_data = {
-        "postAuthor": author,
-        "title": title,
-        "body": body,
-        "userId": user_id,
-        "programId": program,
+      "postAuthor": author,
+      "title": title,
+      "body": body,
+      "userId": user_id,
+      "programId": program
     }
     
     if submitted:
