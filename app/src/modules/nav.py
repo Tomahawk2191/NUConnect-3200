@@ -63,20 +63,30 @@ def ProfAppNav():
 def UniHomeNav():
     st.sidebar.page_link("pages/15_University_Home.py", label="Home", icon="🏠")
 
-def UniAllProgamsNav():
+def UniAllUsersNav():
+    st.sidebar.page_link(
+        "pages/18_Uni_All_Users.py", label="Manage Users", icon="👤"
+    )
+
+def UniAllRolesNav():
+    st.sidebar.page_link(
+        "pages/22_View_All_Roles.py", label="Manage Roles", icon="👤"
+    )
+
+def UniAllPostsNav():
+    st.sidebar.page_link(
+        "pages/23_View_All_Post.py", label="Manage Post", icon="📝"
+    )
+
+def UniAllProgramsNav():
     st.sidebar.page_link(
         "pages/16_Uni_All_Programs.py", label="Manage Programs", icon="📝"
     )
-
-def UniProfileNav():
+def UniAllSchoolsNav():
     st.sidebar.page_link(
-        "pages/02_Profile.py", label="Profile", icon="👤"
+        "pages/View_All_Schools.py", label="Manage Schools", icon="📊"
     )
 
-def UniAllUsersNav():
-    st.sidebar.page_link(
-        "pages/18_Uni_All_Users.py", label="Manage Users", icon="📊"
-    )
 ## ------------------------ Role of Lisa NEU Admin ------------------------
 def AdHomeNav():
     st.sidebar.page_link("pages/20_Admin_Home.py", label="Home", icon="🏠")
@@ -150,9 +160,10 @@ def SideBarLinks(show_home=False):
         # If user is University show University Sidebar Links 
         if st.session_state['role'] == 'outside_administrator':
             UniHomeNav(),
-            UniProfileNav(),
-            UniAllProgamsNav(),
+            UniAllRolesNav(),
+            UniAllPostsNav(),
             UniAllUsersNav()
+            UniAllSchoolsNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state['role'] == 'administrator':
