@@ -52,8 +52,7 @@ if (st.session_state['role'] == 'student'):
     st.write("Delete Application")
     applicationId = st.text_input("applicationId")
     submitted = st.button('Submit')
-    # DELETE where applicationId is applicationId
-
+    
 
     application_data = {
       "applicationId": applicationId
@@ -73,6 +72,23 @@ if (st.session_state['role'] == 'student'):
             st.error("Error Deleting Application")
        except requests.exceptions.RequestException as e:
           st.error(f"Error with requests: {e}")
+
+  
+  @st.dialog("Enroll")
+  def add_application():
+    st.write("Enroll")
+    programId = st.text_input("programId")
+    submitted = st.button('Submit')
+    application_data = {
+
+      "programId": programId
+    }
+
+    if submitted:
+      pass
+
+
+
 
   if (st.button('Update Application Status')):
     update_status()

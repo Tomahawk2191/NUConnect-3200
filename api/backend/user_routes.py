@@ -410,21 +410,29 @@ def get_applicants(professorId):
   return response
 
 
-# route to get all users that belong to a particular school
-# @user.route('/users/school/<int:schoolId>', methods = ['GET', 'PUT', 'DELETE'])
-# def get_school_users(schoolId):
-#   if request.method == 'GET':
-#     query = f'''
-#       SELECT *
-#       FROM user
-#       WHERE schoolId = {schoolId}
-#     '''
 
-#     cursor = db.get_db().cursor()
-#     cursor.execute(query)
-#     theData = cursor.fetchall()
-      
-#     response = make_response(jsonify(theData))
-#     response.status_code = 200
-#     return response
-#   elif request.method == 'PUT':
+
+# TODO add to REST API Matrix 
+# 
+@user.route('/users/<int:userId>/applications', methods = ['POST'])
+def add_user_program(userId):
+  theData = request.json
+  current_app.logger.info(theData)
+  programId = theData['programId']
+
+  extract = f'''
+    SELECT title, location
+    FROM program
+    WHERE programId = {programId}
+
+  '''
+
+  cursor = db.get_db().cursor()
+  cursor.execute(extract)
+  theData = cursor.fetchall()
+    
+  response = make_response(jsonify(theData))
+  response.status_code = 200
+
+
+    
