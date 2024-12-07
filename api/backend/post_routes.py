@@ -17,9 +17,6 @@ def get_posts():
         query = f'''
             SELECT *
                 FROM post AS p
-                JOIN postTag ON p.postId = postTag.postId
-                JOIN postTagParent ON postTag.postTagId = postTagParent.postTagId
-                JOIN program on p.programId = program.programId
         '''
         current_app.logger.info(f'GET /posts query = {query}')
 
