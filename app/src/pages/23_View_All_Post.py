@@ -64,7 +64,7 @@ else:
       "programId": program
     }
     
-      if submitted:
+    if submitted:
       # Log the data to the console
         logger.info(f'Add Post submitted with data: {posts_data}')
         

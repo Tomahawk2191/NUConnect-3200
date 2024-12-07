@@ -40,7 +40,7 @@ def get_posts():
         programId = theData['programId']
         
         query = f'''
-            INSERT INTO post (postAuthor, title, body, programId, userId)
+            INSERT INTO post (postAuthor, title, body, userId, programId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
         current_app.logger.info(f'Added new post POST /posts query = {query}')
