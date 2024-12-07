@@ -60,27 +60,27 @@ else:
       program = st.number_input('Program Id', min_value=1, step=1),
       submitted = st.button("Submit")
 
-      posts_data = {
-          "postAuthor": author,
-          "title": title,
-          "body": body,
-          "userId": user_id,
-          "programID": program,
-      }
+    posts_data = {
+        "postAuthor": author,
+        "title": title,
+        "body": body,
+        "userId": user_id,
+        "programId": program,
+    }
+    
+    if submitted:
+      # Log the data to the console
+      logger.info(f'Add Post submitted with data: {posts_data}')
       
-      if submitted:
-        # Log the data to the console
-        logger.info(f'Add Post submitted with data: {posts_data}')
-        
-        # Send the data to the backend
-        try:
-          response = requests.post('http://api:4000/posts/posts', json=posts_data)
-          if (response.status_code == 200):
-            st.success("New Post Created")
-          else:
-            st.error(f"Error Creating Post {response.status_code} - {response.text}")
-        except requests.exceptions.RequestException as e:
-          st.error(f"Error with requests: {e}")
+      # Send the data to the backend
+      try:
+        response = requests.post('http://api:4000/posts/posts', json=posts_data)
+        if (response.status_code == 200):
+          st.success("New Post Created")
+        else:
+          st.error(f"Error Creating Post {response.status_code} - {response.text}")
+      except requests.exceptions.RequestException as e:
+        st.error(f"Error with requests: {e}")
 
   @st.dialog("Delete Post")
   def delete_user_dialog():
