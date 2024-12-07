@@ -9,7 +9,9 @@ st.set_page_config(layout = 'wide')
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks(show_home=True)
 
-st.write('### View All Schools')
+st.markdown("# Schools")
+st.sidebar.header("View All Schools")
+st.write('View All Schools')
 
 # Get the data from the backend
 response = requests.get('http://api:4000/schools/school').json()
