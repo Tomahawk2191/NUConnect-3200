@@ -21,7 +21,7 @@ if st.button('Manage All Posts',
 if st.button('Manage All Programs', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/16_Uni_All_Programs.py')
+  st.switch_page('pages/21_Manage_My_Programs.py')
 
 if st.button('Manage All Schools', 
              type='primary',
