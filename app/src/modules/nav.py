@@ -30,6 +30,11 @@ def StuProgramsNav():
         "pages/01_View_Programs.py", label="Programs", icon="📝"
     )
 
+def StuPostsNav():
+    st.sidebar.page_link(
+        "pages/23_View_All_Post.py", label="Posts", icon="📝"
+    )
+
 def StuAppStatNav():
     st.sidebar.page_link(
         "pages/03_Application_Stat.py", label="Application Status", icon="📊"
@@ -132,6 +137,7 @@ def SideBarLinks(show_home=False):
             StuHomeNav(),
             StuProfileNav(),
             StuProgramsNav(),
+            StuPostsNav(),
             StuAppStatNav()
 
         # If user is Professor show Professor Sidebar Links 
