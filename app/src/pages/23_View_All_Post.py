@@ -37,7 +37,7 @@ def add_user_dialog():
         "title": title,
         "body": body,
         "userId": user_id,
-        "programID": program,
+        "programId": program,
     }
     
     if submitted:
