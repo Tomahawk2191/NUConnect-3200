@@ -84,7 +84,7 @@ if (st.session_state['role'] == 'student'):
     st.rerun()
 
 else:
-  st.write('### Manage all Uni Users')
+  st.write('### View Applications')
 
   # Get the data from the backend
   response = requests.get('http://api:4000/users/users').json()
