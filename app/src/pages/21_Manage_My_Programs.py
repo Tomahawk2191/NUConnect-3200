@@ -151,7 +151,7 @@ else:
         
         # Send the data to the backend
         try:
-          response = requests.delete(f'http://api:4000/programs/programs/{program_id}')
+          response = requests.delete(f'http://api:4000/programs/programs/schools/32/{program_id}')
           if (response.status_code == 200):
             st.success("Program deleted successfully")
           else:

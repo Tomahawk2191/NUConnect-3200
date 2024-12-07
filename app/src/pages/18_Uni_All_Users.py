@@ -49,8 +49,8 @@ if (st.session_state['role'] == 'administrator' or st.session_state['role'] == '
             last_name = st.text_input('Last Name', value=user_data["lastName"])
             phone = st.text_input('Phone Number', value=user_data["phone"])
             email = st.text_input('Email', value=user_data["email"])
-            school_id = st.number_input('School ID', value=user_data["schoolId"], min_value=1)
-            role_id = st.number_input('Role ID', value=user_data["roleId"], min_value=1)
+            school_id = st.number_input('School ID', value=user_data["schoolId"], min_value=1, step=1)
+            role_id = st.number_input('Role ID', value=user_data["roleId"], min_value=1, step=1)
             submitted = st.button('Submit')
 
             if submitted:

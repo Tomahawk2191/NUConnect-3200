@@ -245,4 +245,22 @@ def get_school_program(schoolId):
     response.status_code = 200
     return response
 
+# Delete a program from this schools list of programs
+@programs.route('/programs/schools/<int:schoolId>/<int:programId>', methods = ['DELETE'])
+def delete_school_program(schoolId, programId):
+  if request.method == 'DELETE':
+    query = f'''
+      DELETE
+      FROM program
+      WHERE schoolId = {schoolId} AND programId = {programId}
+    '''
   
+    current_app.logger.info(f'Deleted program {programId} DELETE /programs/{schoolId}/{programId} query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'Program {programId} deleted')
+    response.status_code = 200
+    return response
