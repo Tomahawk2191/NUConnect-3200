@@ -20,9 +20,15 @@ st.markdown("# Programs")
 # Fetches program data from the API
 def fetch_programs():
     try:
-        response = requests.get('http://api:4000/programs/programs').json()
-        logger.info(f'data {response}')
-        return response
+        if (st.session_state['role'] == 'administrator'):
+            response = requests.get('http://api:4000/programs/programs').json()
+            logger.info(f'data {response}')
+            return response
+        else:
+            # Hardcoded example: schoolId=32 for Harvard University
+            response = requests.get('http://api:4000/programs/programs/schools/32').json()
+            logger.info(f'data {response}')
+            return response
     except requests.exceptions.RequestException as e:
         st.error(f"Error fetching programs: {e}")
         return []
