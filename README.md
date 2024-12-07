@@ -44,8 +44,8 @@ Explore Features
 Stay Connected!!
 
 ## Technical Requirements
-Web Browser: Google Chrome, Mozilla Firefox, Safari, or Microsoft Edge.
-Devices: Accessible on desktops, laptops, tablets, and smartphones.
+- Web Browser: Google Chrome, Mozilla Firefox, Safari, or Microsoft Edge.
+- Devices: Accessible on desktops, laptops, tablets, and smartphones.
 
 ## Feedback and Support
 We’re committed to improving NUConnect. If you encounter issues or have suggestions, please contact our support team at support@nuconnect.com.
