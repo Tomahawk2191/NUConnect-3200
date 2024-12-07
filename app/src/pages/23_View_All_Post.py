@@ -1,15 +1,21 @@
 import logging
 import streamlit as st
+from streamlit_extras.app_logo import add_logo
 import requests
 from modules.nav import SideBarLinks
 
 logger = logging.getLogger(__name__)
 st.set_page_config(layout = 'wide')
 
-# Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks(show_home=True)
 
-st.write('### Manage all Posts')
+# Add Northeastern logo
+add_logo("assets/logo.png", height=400)
+
+# Set up the page
+st.markdown("# Posts")
+st.sidebar.header("View Posts")
+st.write('View Posts')
 
 # Get the data from the backend
 response = requests.get(f'http://api:4000/posts/posts').json()
