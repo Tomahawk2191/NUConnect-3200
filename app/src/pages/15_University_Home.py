@@ -1,18 +1,18 @@
 import logging
 logger = logging.getLogger(__name__)
-
 import streamlit as st
 from modules.nav import SideBarLinks
 
 st.set_page_config(layout = 'wide')
 
-# Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
 
-st.title(f"Welcome NUConnect, {st.session_state['first_name']}.")
+
+# Northeastern Admin Home Page
+st.title(f"Welcome to NUConnect, {st.session_state['first_name']}.")
 st.write('')
 st.write('')
-st.write('### What would you like to do today?')
+st.subheader('What would you like to do today?')
 
 if st.button('Manage Available Programs', 
              type='primary',
@@ -23,4 +23,9 @@ if st.button("Manage All Users",
              type='primary',
              use_container_width=True):
   st.switch_page('pages/18_Uni_All_Users.py')
+  
+if st.button('View All Users Roles', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/22_View_All_Roles.py')
 
