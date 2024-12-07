@@ -22,12 +22,12 @@ if st.session_state['role'] == 'student':
     response = requests.get('http://api:4000/users/users/4/programs').json()
     logger.info(f'data {response}')
 
-    df = st.dataframe(response, column_order=["title", "description", "location", "programId", "professorId", "applicationId"], hide_index=True)
+    df = st.dataframe(response, column_order=["applicationId", "title", "description", "location", "programId", "professorId"], hide_index=True)
 
     @st.dialog("Unenroll in a Program")
     def unenroll_program():
         st.write('Unenroll in a Program')
-        applicationId = st.text_input('applicationId')
+        applicationId = st.text_input('Application ID')
         submitted = st.button('Submit')
 
         user_data = {
@@ -50,7 +50,7 @@ if st.session_state['role'] == 'student':
     @st.dialog("Enroll in a Program")
     def enroll_program():
         st.write("Enroll in a Program")
-        applicationId = st.text_input('applicationId')
+        applicationId = st.text_input('Application ID')
         submitted = st.button('Submit')
 
         if submitted:
