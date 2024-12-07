@@ -79,16 +79,14 @@ def get_posts():
 
 #------------------------------------------------------------
 # Returns a specific post made by a user
-@post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+@post.route('/users/<int:userId>/posts/<int:postId>', methods = ['GET', 'POST', 'PUT'])
 def get_post_info(userId, postId):
     if request.method == 'GET': # Return a post's information
-
         query = f'''
             SELECT * 
             FROM post
             WHERE postId = {postId} and userId = {userId}
         '''
-        
         current_app.logger.info(f'GET /posts/{userId}/posts/{postId} query = {query}')
 
         cursor = db.get_db().cursor()
@@ -112,13 +110,13 @@ def get_post_info(userId, postId):
             INSERT INTO post (postAuthor, title, body, userId, programId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
-        current_app.logger.info(f'Added new user {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} query = {query}')
+        current_app.logger.info(f'Created new post {postAuthor}, {title}, {body}, {userId}, {programId} POST /users/{userId}/posts/{postId} query = {query}')
 
         cursor = db.get_db().cursor()
         cursor.execute(query)
         db.get_db().commit()
         
-        response = make_response('Added new post')
+        response = make_response('Created new post')
         response.status_code = 200
         return response
     
@@ -146,11 +144,7 @@ def get_post_info(userId, postId):
         response.status_code = 200
         return response
 
-
-
-# returns all posts under a user's major
-# TODO add to REST API matrix 
-
+# Returns all posts made by a specific professor
 @post.route('/posts/<int:professorId>', methods = ['GET', 'DELETE'])
 def get_posts_author(professorId):
     if request.method == 'GET':
@@ -169,7 +163,8 @@ def get_posts_author(professorId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    elif request.method == 'DELETE': # Delete a post
+
+    elif request.method == 'DELETE': # Delete a post associated with a professor
         query = f'''
         DELETE
         FROM post

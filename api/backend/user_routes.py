@@ -155,9 +155,7 @@ def get_user_posts(userId):
     return response
 
 
-# return all tags for a given user
-# TODO
-# add to REST API matrix 
+# Return all user tags for a given user
 @user.route('/users/<int:userId>/user_tags', methods = ['GET', 'POST', 'DELETE'])
 def get_user_tags(userId):
   if (request.method == 'GET'):
@@ -178,6 +176,7 @@ def get_user_tags(userId):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
   elif (request.method == 'POST'):
     current_app.logger.info(f'trying POST')
     theData = request.json
@@ -188,15 +187,16 @@ def get_user_tags(userId):
         VALUES ('{userId}', '{userTagId}')
       '''
 
-    current_app.logger.info('made change, added user tag for user')
+    current_app.logger.info(f'Added user tag {userTagId} for user')
     
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
       
-    response = make_response(f'tag made for {userId}')
+    response = make_response(f'Tag made for {userId}')
     response.status_code = 200
     return response
+
   elif (request.method == 'DELETE'):
     current_app.logger.info(f'trying DELETE')
     theData = request.json
@@ -212,13 +212,12 @@ def get_user_tags(userId):
     cursor.execute(query)
     db.get_db().commit()
     
-    response = make_response(f'tag deleted for {userId}')
+    response = make_response(f'Tag deleted for {userId}')
     response.status_code = 200
     return response
 
 
-# return programs related to a user
-# TODO add to REST API Matrix  
+# Return programs related to a user
 @user.route('/users/<int:userId>/programs', methods = ['GET', 'DELETE'])
 def get_programs(userId):
 
@@ -227,8 +226,7 @@ def get_programs(userId):
     query = f'''
       SELECT p.title, p.description, p.location, p.professorId, a.applicationId
       FROM program p
-      JOIN application a
-      ON p.programId = a.programId
+        JOIN application a ON p.programId = a.programId
       WHERE a.userId = {userId}
     '''
 
@@ -240,7 +238,7 @@ def get_programs(userId):
     response.status_code = 200
     return response
   
-  # unenroll in a program
+  # Unenroll from a program
   elif request.method == 'DELETE':
     theData = request.json
     current_app.logger.info(theData)
@@ -260,17 +258,14 @@ def get_programs(userId):
     response.status_code = 200
     return response
 
-
-# TODO make route in REST API matrix
+# Returns a list of all programs that a professor has posted
 @user.route('/users/programs/<int:professorId>', methods = ['GET', 'PUT','DELETE'])
 def get_professor_programs(professorId):
-
   if request.method == 'GET':
-
     query = f'''
-    SELECT p.title, p.description, p.location, p.programId
-    FROM program p
-    WHERE p.professorId = {professorId}
+      SELECT p.title, p.description, p.location, p.programId
+      FROM program p
+      WHERE p.professorId = {professorId}
     '''
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -302,13 +297,10 @@ def get_professor_programs(professorId):
     response.status_code = 200
     return response
 
-
-  
   elif request.method == 'DELETE':
     theDataTwo = request.json
     current_app.logger.info(theDataTwo)
     programId = theDataTwo['programId']
-
 
     query = f'''
       DELETE 
@@ -323,8 +315,7 @@ def get_professor_programs(professorId):
     response.status_code = 200
     return response
   
-# returns all applications for a user, route also allows for rescinding 
-# TODO add to REST API matrix 
+# Returns all applications for a user, route also allows for rescinding 
 @user.route('/users/applications/<int:userId>', methods=['GET', 'PUT', 'POST', 'DELETE'])
 def filter_program_posts(userId):
 
@@ -389,7 +380,6 @@ def filter_program_posts(userId):
     current_app.logger.info(theData)
     applicationId = theData['applicationId']
     
-
     query = f'''
       DELETE
       FROM application
@@ -404,8 +394,7 @@ def filter_program_posts(userId):
     response.status_code = 200
     return response
 
-# route to get all applicants for a particular professor
-# TODO add to REST API matrix 
+# Gets all applicants for a particular professor 
 @user.route('/users/applications/students/<int:professorId>', methods = ['GET'])
 def get_applicants(professorId):
   query = f'''
@@ -426,8 +415,7 @@ def get_applicants(professorId):
   response.status_code = 200
   return response
 
-#route to get all users from a particular school
-# TODO add to REST API matrix
+# Gets all users from a particular school
 @user.route('/users/schools/<int:schoolId>', methods = ['GET'])
 def get_school_users(schoolId):
   query = f'''

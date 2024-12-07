@@ -37,18 +37,15 @@ def get_programs():
     description = theData['description']
     location = theData['location']
     approved = theData['approved']
-    #awaiting = theData['awaiting']
     schoolId = theData['schoolId']
     professorId = theData['professorId']
     programStart = theData['programStart']
     programEnd = theData['programEnd']
     
-    #TODO: should awaiting default to false? If so, remove from query
     query = f'''
       INSERT INTO program (title, description, location, approved,  schoolId, professorId, programStart, programEnd)
       VALUES ('{title}', '{description}', '{location}', '{approved}', '{schoolId}', '{professorId}', '{programStart}', '{programEnd}')
     '''
-    
     current_app.logger.info(f'Added new program {title} POST /programs query = {query}')
     
     cursor = db.get_db().cursor()
@@ -58,13 +55,8 @@ def get_programs():
     response = make_response('Added new program')
     response.status_code = 200
     return response
-  
 
 #------------------------------------------------------------
-
-
-
-  
 #------------------------------------------------------------
 # Return a program by their ID
 @programs.route('/programs/<int:programId>', methods=['GET', 'PUT', 'DELETE'])
@@ -106,7 +98,6 @@ def get_program_users(programId):
         SET title = '{title}', description = '{description}', location = '{location}', approved = '{approved}', schoolId = '{schoolId}', professorId = '{professorId}', programStart = '{programStart}', programEnd = '{programEnd}'
         WHERE programId = {programId}
     '''
-    
     current_app.logger.info(f'Updated program {programId} PUT /programs/{programId} query = {query}')
     
     cursor = db.get_db().cursor()
@@ -117,13 +108,12 @@ def get_program_users(programId):
     response.status_code = 200
     return response
 
-  elif request.method == 'DELETE': # Delete a user
+  elif request.method == 'DELETE': # Delete a proram
     query = f'''
       DELETE
       FROM program
       WHERE programId = {programId}
     '''
-  
     current_app.logger.info(f'Deleted program {programId} DELETE /programs/{programId} query = {query}')
     
     cursor = db.get_db().cursor()
@@ -142,11 +132,10 @@ def get_program(programId):
     query = f'''
       SELECT p.programId, p.title, u.firstName, u.lastName, u.email
       FROM program p
-      JOIN application a on p.programId = a.programId
-      JOIN user u on a.userId = u.userId
+        JOIN application a ON p.programId = a.programId
+        JOIN user u ON a.userId = u.userId
       WHERE programId = {programId}
     '''
-    
     current_app.logger.info(f'GET /programs/{programId}/users query = {query}')
 
     cursor = db.get_db().cursor()
@@ -169,9 +158,7 @@ def get_school_program(schoolId):
     SELECT * 
     FROM program
     WHERE schoolId = {schoolId}
-
     '''
-
     current_app.logger.info(f'GET /programs/{schoolId} query = {query}')
 
     cursor = db.get_db().cursor()
@@ -185,7 +172,6 @@ def get_school_program(schoolId):
   elif request.method == 'POST':
     theData = request.json
     current_app.logger.info(theData)
-
 
     title = theData['title']
     description = theData['description']
@@ -202,7 +188,6 @@ def get_school_program(schoolId):
       INSERT INTO program (title, description, location, approved,  schoolId, professorId, programStart, programEnd)
       VALUES ('{title}', '{description}', '{location}', '{approved}', '{schoolId}', '{professorId}', '{programStart}', '{programEnd}')
     '''
-    
     current_app.logger.info(f'Added new program {title} POST /programs/{schoolId} query = {query}')
     
     cursor = db.get_db().cursor()
@@ -219,7 +204,6 @@ def get_school_program(schoolId):
     title = theData['title']
     description = theData['description']
     location = theData['location']
-    # not sure about this one
     approved = theData['approved']
     professorId = theData['professorId']
     programId = theData['programId']
@@ -233,7 +217,6 @@ def get_school_program(schoolId):
         SET title = '{title}', description = '{description}', location = '{location}', approved = '{approved}', professorId = '{professorId}', programStart = '{programStart}', programEnd = '{programEnd}'
         WHERE programId = {programId} 
     '''
-
     current_app.logger.info(f'Edited program {title} PUT /programs/{schoolId} query = {query}')
     
     cursor = db.get_db().cursor()
