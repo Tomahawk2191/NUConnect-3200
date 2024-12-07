@@ -17,7 +17,7 @@ st.write('### What would you like to do today?')
 if st.button('Edit/Post Programs', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/01_View_Programs.py')
+  st.switch_page('pages/16_Uni_All_Programs.py')
 
 if st.button('View Profile', 
              type='primary',
