@@ -162,7 +162,7 @@ def get_program(programId):
 # /programs/schoolId/professorId, 21
 
 # GETS programs for their particular univeristy, allows for upload, deletion and editing
-@programs.route('/programs/<int:schoolId>', methods = ['GET', 'POST'])
+@programs.route('/programs/schools/<int:schoolId>', methods = ['GET', 'POST'])
 def get_school_program(schoolId):
   if request.method == 'GET':
     query = f'''
