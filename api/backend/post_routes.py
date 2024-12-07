@@ -30,6 +30,7 @@ def get_posts():
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
+
     elif request.method == 'POST': # Create a post
         theData = request.json
         
@@ -40,7 +41,7 @@ def get_posts():
         programId = theData['programId']
         
         query = f'''
-            INSERT INTO post (postAuthor, title, body, userId, programId)
+            INSERT INTO post (postAuthor, title, body, programId, userId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
         current_app.logger.info(f'Added new post POST /posts query = {query}')

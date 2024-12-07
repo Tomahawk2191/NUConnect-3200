@@ -146,7 +146,10 @@ if (st.session_state['role'] == 'administrator'):
         edit_user_dialog()
     if st.button('Refresh'):
         st.rerun()
+
 if (st.session_state['role'] == 'outside_administrator'):
+    sample_school_id = 1
+
     @st.dialog("Edit User")
     def edit_user_dialog():
         st.write('Which user would you like to edit?')
@@ -156,7 +159,7 @@ if (st.session_state['role'] == 'outside_administrator'):
         last_name = st.text_input('Last Name')
         phone = st.text_input('Phone Number')
         email = st.text_input('Email')
-        school_id = 1
+        school_id = st.number_input('School ID', value=sample_school_id)
         role_id = st.number_input('Role ID', min_value=1, step=1)
         submitted = st.button('Submit')
 
@@ -243,9 +246,12 @@ if (st.session_state['role'] == 'outside_administrator'):
                 
     if st.button('Add User'):
         add_user_dialog()
-    if st.button('Delete User'):
-        delete_user_dialog()
+
     if st.button('Edit User'):
         edit_user_dialog()
+
+    if st.button('Delete User'):
+        delete_user_dialog()    
+
     if st.button('Refresh'):
         st.rerun()
