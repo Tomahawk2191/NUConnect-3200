@@ -91,9 +91,19 @@ def UniAllSchoolsNav():
 def AdHomeNav():
     st.sidebar.page_link("pages/20_Admin_Home.py", label="Home", icon="🏠")
 
+def AdPostNav():
+    st.sidebar.page_link(
+        "pages/23_View_All_Post.py", label="Manage Posts", icon="📝"
+    )
+
 def AdProgramNav():
     st.sidebar.page_link(
         "pages/16_Uni_All_Programs.py", label="Manage Programs", icon="📝"
+    )
+
+def AdSchoolstNav():
+    st.sidebar.page_link(
+        "pages/View_All_Schools.py", label="Manage Schools", icon="🏫"
     )
 
 def AdUserNav():
@@ -104,16 +114,6 @@ def AdUserNav():
 def AdRolesNav():
     st.sidebar.page_link(
         "pages/22_View_All_Roles.py", label="Manage Roles", icon="👤"
-    )
-
-def AdAllPostNav():
-    st.sidebar.page_link(
-        "pages/23_View_All_Post.py", label="Manage Posts", icon="📝"
-    )
-
-def AdAllSchoolstNav():
-    st.sidebar.page_link(
-        "pages/View_All_Schools.py", label="Manage Schools", icon="🏫"
     )
 
 # --------------------------------Links Function -----------------------------------------------
@@ -169,9 +169,9 @@ def SideBarLinks(show_home=False):
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state['role'] == 'administrator':
             AdHomeNav(),
-            AdAllPostNav(),
+            AdPostNav(),
             AdProgramNav(),
-            AdAllSchoolstNav(),
+            AdSchoolstNav(),
             AdUserNav(),
             AdRolesNav(),
 
