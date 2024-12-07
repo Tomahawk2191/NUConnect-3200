@@ -13,7 +13,7 @@ import numpy as np
 from modules.nav import SideBarLinks
 
 # Call the SideBarLinks from the nav module in the modules directory
-SideBarLinks()
+SideBarLinks(show_home=True)
 
 # set the header of the page
 st.header('My Programs')

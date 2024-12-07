@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 st.set_page_config(layout = 'wide')
 
 # Show appropriate sidebar links for the role of the currently logged in user
-SideBarLinks()
+SideBarLinks(show_home=True)
 
 st.write('### Manage all Posts')
 

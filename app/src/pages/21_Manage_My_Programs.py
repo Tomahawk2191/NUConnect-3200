@@ -4,7 +4,7 @@ import requests
 from modules.nav import SideBarLinks
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__) 
 st.set_page_config(layout='wide')
 
 # Show appropriate sidebar links for the role of the currently logged-in user
