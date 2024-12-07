@@ -28,8 +28,8 @@ def add_user_dialog():
     author = st.text_input('Post Author'),
     title = st.text_input('Post Title'),
     body = st.text_input('Body'),
-    user_id = st.number_input('User Id'),
-    program = st.number_input('Program Id'),
+    user_id = st.number_input('User Id', min_value=1, step=1),
+    program = st.number_input('Program Id', min_value=1, step=1),
     submitted = st.button("Submit")
 
     posts_data = {
