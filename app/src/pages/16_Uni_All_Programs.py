@@ -11,15 +11,15 @@ import pandas as pd
 
 SideBarLinks(show_home=True)
 
-# add the logo
+# Add Northeastern logo
 add_logo("assets/logo.png", height=400)
 
-# set up the page
+# Set up the page
 st.markdown("# Programs")
 st.sidebar.header("View Programs")
 st.write('View Programs')
 
-# function to fetch program data from the API
+# Fetches program data from the API
 def fetch_programs():
     try:
         response = requests.get('http://api:4000/programs/programs').json()
@@ -31,7 +31,7 @@ def fetch_programs():
 
 response = fetch_programs()
 
-# ensure there's data to display
+# Ensure there's data to display
 if response:
     st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
 else:
@@ -79,6 +79,7 @@ def edit_program_dialog():
             }
 
             logger.info(f'Edited Program Data: {updated_program_data}')
+            
             try:
                 response = requests.put(f'http://api:4000/programs/programs/{programId_to_edit}', json=updated_program_data)
                 if response.status_code == 200:
@@ -91,7 +92,7 @@ def edit_program_dialog():
                 st.error(f"Error with request: {e}")
 
 
-@st.dialog("Add Programs")
+@st.dialog("Add Program")
 def add_program_form():
     st.write('Add a new program')
     title = st.text_input('Title')
@@ -119,7 +120,7 @@ def add_program_form():
       if not all(value != "" for value in program_data.values()):
         st.error("Please fill in all the fields.")
       else:
-        logger.info(f'Program Data submitted: {program_data}')
+        logger.info(f'Program data submitted: {program_data}')
         try:
             response = requests.post('http://api:4000/programs/programs', json=program_data)
             if response.status_code == 200:
@@ -148,12 +149,15 @@ def delete_program_dialog():
         except requests.exceptions.RequestException as e:
             st.error(f"Error with request: {e}")
 
-if st.button('Edit Program'):
-    edit_program_dialog()
-if st.button('Delete Program'):
-    delete_program_dialog()
 if st.button('Add Program'):
     add_program_form()
+
+if st.button('Edit Program'):
+    edit_program_dialog()
+
+if st.button('Delete Program'):
+    delete_program_dialog()
+
 if st.button('Refresh'):
     st.rerun()
 
@@ -162,4 +166,3 @@ st.subheader("Sort Programs")
 sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
 sorted_programs = sorted(response, key=lambda x: x[sort_by])
 st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
-
