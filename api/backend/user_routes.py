@@ -158,50 +158,63 @@ def get_user_posts(userId):
 # return all tags for a given user
 # TODO
 # add to REST API matrix 
-@user.route('/users/<int:userId>/user_tags', methods = ['GET'])
+@user.route('/users/<int:userId>/user_tags', methods = ['GET', 'POST', 'DELETE'])
 def get_user_tags(userId):
-  current_app.logger.info(f'trying GET')
-  query = f'''
-      SELECT utp.category, utp.tagName, utp.userTagId
-      FROM userTag AS ut 
-      JOIN userTagParent AS utp
-      ON ut.userTagId = utp.userTagId
-      WHERE ut.userId = {userId}
+  if (request.method == 'GET'):
+    current_app.logger.info(f'trying GET')
+    query = f'''
+        SELECT utp.category, utp.tagName, utp.userTagId
+        FROM userTag AS ut 
+        JOIN userTagParent AS utp
+        ON ut.userTagId = utp.userTagId
+        WHERE ut.userId = {userId}
+        '''
+    current_app.logger.info(f'GET /{userId}/user_tags query = {query}')
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+  elif (request.method == 'POST'):
+    current_app.logger.info(f'trying POST')
+    theData = request.json
+    userTagId = theData['userTagId']
+
+    query = f'''
+        INSERT INTO userTag
+        VALUES ('{userId}', '{userTagId}')
       '''
-  current_app.logger.info(f'GET /{userId}/user_tags query = {query}')
 
-  cursor = db.get_db().cursor()
-  cursor.execute(query)
-  theData = cursor.fetchall()
-
-  response = make_response(jsonify(theData))
-  response.status_code = 200
-  return response
-
-
-# add a new tag for a given user 
-# TODO add to REST Api matrix as well
-@user.route('/users/<int:userId>/user_tags', methods = ['POST'])
-def make_tag_user(userId):
-   current_app.logger.info(f'trying POST')
-
-   theData = request.json
-   userTagId = theData['userTagId']
-
-   query = f'''
-       INSERT INTO userTag
-       VALUES ('{userId}', '{userTagId}')
-    '''
-
-   current_app.logger.info('made change, added user tag for user')
-   
-   cursor = db.get_db().cursor()
-   cursor.execute(query)
-   db.get_db().commit()
+    current_app.logger.info('made change, added user tag for user')
     
-   response = make_response(f'tag made for {userId}')
-   response.status_code = 200
-   return response
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+      
+    response = make_response(f'tag made for {userId}')
+    response.status_code = 200
+    return response
+  elif (request.method == 'DELETE'):
+    current_app.logger.info(f'trying DELETE')
+    theData = request.json
+    userTagId = theData['userTagId']
+
+    query = f'''
+        DELETE
+        FROM userTag
+        WHERE userId = {userId} AND userTagId = {userTagId}
+      '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'tag deleted for {userId}')
+    response.status_code = 200
+    return response
 
 
 # return programs related to a user
@@ -397,4 +410,21 @@ def get_applicants(professorId):
   return response
 
 
-  
+# route to get all users that belong to a particular school
+# @user.route('/users/school/<int:schoolId>', methods = ['GET', 'PUT', 'DELETE'])
+# def get_school_users(schoolId):
+#   if request.method == 'GET':
+#     query = f'''
+#       SELECT *
+#       FROM user
+#       WHERE schoolId = {schoolId}
+#     '''
+
+#     cursor = db.get_db().cursor()
+#     cursor.execute(query)
+#     theData = cursor.fetchall()
+      
+#     response = make_response(jsonify(theData))
+#     response.status_code = 200
+#     return response
+#   elif request.method == 'PUT':
