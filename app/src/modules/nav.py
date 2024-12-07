@@ -96,6 +96,11 @@ def AdAllPostNav():
         "pages/23_View_All_Post.py", label="Manage Posts", icon="📝"
     )
 
+def AdAllSchoolstNav():
+    st.sidebar.page_link(
+        "pages/View_All_Schools.py", label="Manage Schools", icon="🏫"
+    )
+
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
     """
@@ -148,6 +153,7 @@ def SideBarLinks(show_home=False):
             AdHomeNav(),
             AdAllPostNav(),
             AdProgramNav(),
+            AdAllSchoolstNav(),
             AdUserNav(),
             AdRolesNav(),
 
