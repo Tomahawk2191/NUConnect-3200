@@ -138,7 +138,26 @@ else:
                         st.error("Error editing program")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error with requests: {e}")
+    @st.dialog("Delete Program")
+    def delete_program_dialog():
+      st.write('Delete a Program')
+      program_id = st.number_input('Program ID', min_value=1, step=1, placeholder='Enter the program ID')
+      submitted = st.button('Submit')
 
+      if submitted:
+        # Log the data to the console
+        logger.info(f'Delete Program submitted with data: {program_id}')
+        
+        # Send the data to the backend
+        try:
+          response = requests.delete(f'http://api:4000/programs/programs/{program_id}')
+          if (response.status_code == 200):
+            st.success("Program deleted successfully")
+          else:
+            st.error("Error deleting user")
+        except requests.exceptions.RequestException as e:
+          st.error(f"Error with requests: {e}")
+          
     # Buttons to trigger actions
     if st.button('Add Program'):
         add_program_dialog()
