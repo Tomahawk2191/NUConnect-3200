@@ -53,7 +53,7 @@ else:
     title = st.text_input('Post Title'),
     body = st.text_input('Body'),
     user_id = st.number_input('User Id', min_value=1, max_value=100, step=1),
-    program = st.number_input('Program Id', min_value=1, max_value=100, step=1),
+    program_id = st.number_input('Program Id', min_value=1, max_value=100, step=1),
     submitted = st.button("Submit")
 
     posts_data = {
@@ -61,7 +61,7 @@ else:
       "title": title,
       "body": body,
       "userId": user_id,
-      "programId": program
+      "programId": program_id
     }
     
     if submitted:
