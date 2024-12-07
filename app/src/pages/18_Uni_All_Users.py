@@ -17,7 +17,7 @@ def fetch_users():
             return response
         else:
             # Hardcoded example: schoolId=32 for Harvard University
-            response = requests.get('http://api:4000/users/users/school/32').json()
+            response = requests.get('http://api:4000/users/users/schools/1').json()
             logger.info(f'Fetched users: {response}')
             return response
     except requests.exceptions.RequestException as e:
@@ -156,34 +156,35 @@ if (st.session_state['role'] == 'outside_administrator'):
         last_name = st.text_input('Last Name')
         phone = st.text_input('Phone Number')
         email = st.text_input('Email')
-        school_id = 32
+        school_id = 1
         role_id = st.number_input('Role ID', min_value=1, step=1)
         submitted = st.button('Submit')
 
+        updated_user_data = {
+            "firstName": first_name,
+            "middleName": middle_name if middle_name else None,
+            "lastName": last_name,
+            "phone": phone,
+            "email": email,
+            "schoolId": school_id,
+            "roleId": role_id
+        }
+        
         if submitted:
-            updated_user_data = {
-                "firstName": first_name,
-                "middleName": middle_name if middle_name else None,
-                "lastName": last_name,
-                "phone": phone,
-                "email": email,
-                "schoolId": school_id,
-                "roleId": role_id
-            }
-
-            logger.info(f'Edited User Data: {updated_user_data}')
-            try:
-                response = requests.put(f'http://api:4000/users/users/{userId}', json=updated_user_data)
-                if response.status_code == 200:
-                    st.success("User edited successfully")
-                    users = fetch_users() 
-                    st.dataframe(users, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
-                else:
-                    st.error(f"Error editing user: {response.status_code} - {response.text}")
-            except requests.exceptions.RequestException as e:
-                st.error(f"Error with request: {e}")
-        else:
-            st.write("User not found.")
+            if not all(value != "" for value in updated_user_data.values()):
+                st.error("Please fill in all the fields.")
+            else:
+                logger.info(f'Edited User Data: {updated_user_data}')
+                try:
+                    response = requests.put(f'http://api:4000/users/users/{userId}', json=updated_user_data)
+                    if response.status_code == 200:
+                        st.success("User edited successfully")
+                        users = fetch_users() 
+                        st.dataframe(users, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
+                    else:
+                        st.error(f"Error editing user: {response.status_code} - {response.text}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error with request: {e}")
     
     @st.dialog("Add User")
     def add_user_dialog():
@@ -202,7 +203,7 @@ if (st.session_state['role'] == 'outside_administrator'):
             "lastName": last_name,
             "phone": phone,
             "email": email,
-            "schoolId": 32,
+            "schoolId": 1,
             "roleId": role_Id
         }
 
@@ -239,3 +240,12 @@ if (st.session_state['role'] == 'outside_administrator'):
                     st.error("Error deleting user")
             except requests.exceptions.RequestException as e:
                 st.error(f"Error with requests: {e}")
+                
+    if st.button('Add User'):
+        add_user_dialog()
+    if st.button('Delete User'):
+        delete_user_dialog()
+    if st.button('Edit User'):
+        edit_user_dialog()
+    if st.button('Refresh'):
+        st.rerun()

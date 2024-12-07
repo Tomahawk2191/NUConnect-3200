@@ -425,3 +425,20 @@ def get_applicants(professorId):
   response = make_response(jsonify(theData))
   response.status_code = 200
   return response
+
+#route to get all users from a particular school
+# TODO add to REST API matrix
+@user.route('/users/schools/<int:schoolId>', methods = ['GET'])
+def get_school_users(schoolId):
+  query = f'''
+    SELECT *
+    FROM user
+    WHERE schoolId = {schoolId}
+  '''
+  cursor = db.get_db().cursor()
+  cursor.execute(query)
+  theData = cursor.fetchall()
+    
+  response = make_response(jsonify(theData))
+  response.status_code = 200
+  return response
