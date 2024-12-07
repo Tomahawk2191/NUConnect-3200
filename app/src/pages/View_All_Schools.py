@@ -10,7 +10,6 @@ st.set_page_config(layout = 'wide')
 SideBarLinks(show_home=True)
 
 st.markdown("# Schools")
-st.sidebar.header("View All Schools")
 st.write('View All Schools')
 
 # Get the data from the backend
@@ -71,10 +70,11 @@ def delete_school_dialog():
           st.error(f"Error deleting school {response.status_code} - {response.text}")
       except requests.exceptions.RequestException as e:
         st.error(f"Error with requests: {e}")
-        
-if (st.button('Add School')):
-  add_school_dialog()
-if (st.button('Delete School')):
-  delete_school_dialog()
+
+if (st.session_state['role'] == 'administrator'):    
+  if (st.button('Add School')):
+    add_school_dialog()
+  if (st.button('Delete School')):
+    delete_school_dialog()
 if (st.button('Refresh')):
   st.rerun()

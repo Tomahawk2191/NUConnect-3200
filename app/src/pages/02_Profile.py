@@ -16,7 +16,6 @@ add_logo("assets/logo.png", height=400)
 
 # set up the page
 st.markdown("# Profile")
-st.sidebar.header("Profile")
 st.write('View Profile')
 
 

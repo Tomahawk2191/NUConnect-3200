@@ -16,7 +16,6 @@ add_logo("assets/logo.png", height=400)
 
 # Set up the page
 st.markdown("# Programs")
-st.sidebar.header("View Programs")
 st.write('View Programs')
 
 # Fetches program data from the API

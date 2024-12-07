@@ -14,7 +14,6 @@ add_logo("assets/logo.png", height=400)
 
 # Set up the page
 st.markdown("# Posts")
-st.sidebar.header("View Posts")
 st.write('View Posts')
 
 # Get the data from the backend
