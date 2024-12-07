@@ -156,3 +156,110 @@ def get_program(programId):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+  
+
+# TODO need to add assigning professor to program 
+# /programs/schoolId/professorId, 21
+
+# GETS programs for their particular univeristy, allows for upload, deletion and editing
+@programs.route('/programs/schools/<int:schoolId>', methods = ['GET', 'POST', 'PUT'])
+def get_school_program(schoolId):
+  if request.method == 'GET':
+    query = f'''
+    SELECT * 
+    FROM program
+    WHERE schoolId = {schoolId}
+
+    '''
+
+    current_app.logger.info(f'GET /programs/{schoolId} query = {query}')
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+  
+  elif request.method == 'POST':
+    theData = request.json
+    current_app.logger.info(theData)
+
+
+    title = theData['title']
+    description = theData['description']
+    location = theData['location']
+    # not sure about this one
+    approved = 1
+    professorId = theData['professorId']
+    
+    #TODO: how to update programStart and programEnd? Maybe check in request if programStart and programEnd are valid dates?
+    programStart = theData['programStart']
+    programEnd = theData['programEnd']
+
+    query = f'''
+      INSERT INTO program (title, description, location, approved,  schoolId, professorId, programStart, programEnd)
+      VALUES ('{title}', '{description}', '{location}', '{approved}', '{schoolId}', '{professorId}', '{programStart}', '{programEnd}')
+    '''
+    
+    current_app.logger.info(f'Added new program {title} POST /programs/{schoolId} query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+
+    response = make_response('Added new program')
+    response.status_code = 200
+    return response
+  
+  elif request.method == 'PUT':
+    theData = request.json
+    current_app.logger.info(theData)
+    title = theData['title']
+    description = theData['description']
+    location = theData['location']
+    # not sure about this one
+    approved = theData['approved']
+    professorId = theData['professorId']
+    programId = theData['programId']
+    
+    #TODO: how to update programStart and programEnd? Maybe check in request if programStart and programEnd are valid dates?
+    programStart = theData['programStart']
+    programEnd = theData['programEnd']
+
+    query = f'''
+        UPDATE program
+        SET title = '{title}', description = '{description}', location = '{location}', approved = '{approved}', professorId = '{professorId}', programStart = '{programStart}', programEnd = '{programEnd}'
+        WHERE programId = {programId} 
+    '''
+
+    current_app.logger.info(f'Edited program {title} PUT /programs/{schoolId} query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+
+    response = make_response('Edited program')
+    response.status_code = 200
+    return response
+
+# Delete a program from this schools list of programs
+@programs.route('/programs/schools/<int:schoolId>/<int:programId>', methods = ['DELETE'])
+def delete_school_program(schoolId, programId):
+  if request.method == 'DELETE':
+    query = f'''
+      DELETE
+      FROM program
+      WHERE schoolId = {schoolId} AND programId = {programId}
+    '''
+  
+    current_app.logger.info(f'Deleted program {programId} DELETE /programs/{schoolId}/{programId} query = {query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'Program {programId} deleted')
+    response.status_code = 200
+    return response

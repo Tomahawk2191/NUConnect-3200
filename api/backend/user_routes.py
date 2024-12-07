@@ -312,10 +312,12 @@ def get_professor_programs(professorId):
   
 # returns all applications for a user, route also allows for rescinding 
 # TODO add to REST API matrix 
-@user.route('/users/applications/<int:userId>', methods=['GET'])
+@user.route('/users/applications/<int:userId>', methods=['GET', 'PUT', 'DELETE'])
 def filter_program_posts(userId):
+
+  if request.method == 'GET':
     query = f'''
-      SELECT a.userId, p.programId, p.title, p.location, a.applied, a.accepted, a.denied
+      SELECT a.userId, a.applicationId, p.title, p.location, a.applied, a.accepted, a.denied
       FROM application AS a
       JOIN program AS p 
       ON a.programId = p.programId
@@ -327,5 +329,46 @@ def filter_program_posts(userId):
     theData = cursor.fetchall()
     
     response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+  elif request.method == 'PUT':
+    theData = request.json
+    current_app.logger.info(theData)
+    applicationId = theData['applicationId']
+    applied = theData['applied']
+
+    query = f'''
+      UPDATE application
+      SET applied = '{applied}'
+      WHERE applicationId = '{applicationId}'
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'for {applicationId} updated')
+    response.status_code = 200
+    return response
+
+    
+  elif request.method == 'DELETE':
+    theData = request.json
+    current_app.logger.info(theData)
+    applicationId = theData['applicationId']
+    
+
+    query = f'''
+      DELETE
+      FROM application
+      WHERE applicationId = {applicationId}
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response(f'for {applicationId} deleted')
     response.status_code = 200
     return response

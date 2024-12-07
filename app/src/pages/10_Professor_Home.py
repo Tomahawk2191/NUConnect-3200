@@ -27,5 +27,5 @@ if st.button('View Profile',
 if st.button("View Applications",
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/13_Applications.py')
+  st.switch_page('pages/03_Application_Stat.py')
 
