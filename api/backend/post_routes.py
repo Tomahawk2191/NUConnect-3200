@@ -40,19 +40,22 @@ def get_posts():
         programId = theData['programId']
         
         query = f'''
-            INSERT INTO post (postAuthor, title, body, programId, userId)
+            INSERT INTO post (postAuthor, title, body, userId, programId)
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
         current_app.logger.info(f'Added new post POST /posts query = {query}')
+        
         cursor = db.get_db().cursor()
         cursor.execute(query)
         db.get_db().commit()
 
-        response = make_response('added new post')
+        response = make_response('Added new post')
         response.status_code = 200
         return response
+
     elif request.method == 'DELETE': # Delete a post
         theData = request.json
+
         postId = theData['postId']
         
         query = f'''
@@ -62,6 +65,7 @@ def get_posts():
         '''
         
         current_app.logger.info(f'Deleted post {postId} DELETE /posts query = {query}')
+
         cursor = db.get_db().cursor()
         cursor.execute(query)
         db.get_db().commit()
@@ -140,44 +144,43 @@ def get_post_info(userId, postId):
         response = make_response(f'Post {postId} updated')
         response.status_code = 200
         return response
-    
-    elif request.method == 'DELETE': # Delete a post
-        query = f'''
-        DELETE
-        FROM post
-        WHERE postId = {postId}
-        '''
-    
-        current_app.logger.info(f'Deleted post {postId} DELETE /users/{userId}/posts/{postId} query = {query}')
-        
-        cursor = db.get_db().cursor()
-        cursor.execute(query)
-        db.get_db().commit()
-        
-        response = make_response(f'Post {postId} deleted')
-        response.status_code = 200
-        return response
 
 
 
 # returns all posts under a user's major
 # TODO add to REST API matrix 
 
-@post.route('/posts/<int:professorId>', methods = ['GET'])
+@post.route('/posts/<int:professorId>', methods = ['GET', 'DELETE'])
 def get_posts_author(professorId):
-    query = f'''
-    SELECT *
-    FROM post
-    WHERE userId = {professorId}
-    '''
+    if request.method == 'GET':
+        query = f'''
+        SELECT *
+        FROM post
+        WHERE userId = {professorId}
+        '''
 
-    current_app.logger.info(f'GET /posts/{professorId} query = {query}')
+        current_app.logger.info(f'GET /posts/{professorId} query = {query}')
 
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        theData = cursor.fetchall()
 
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+    elif request.method == 'DELETE': # Delete a post
+        query = f'''
+        DELETE
+        FROM post
+        WHERE postId = {professorId}
+        '''
+    
+        current_app.logger.info(f'Deleted post {professorId} DELETE /posts/{professorId}/ query = {query}')
+        
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        db.get_db().commit()
+        
+        response = make_response(f'Post {professorId} deleted')
+        response.status_code = 200
+        return response
