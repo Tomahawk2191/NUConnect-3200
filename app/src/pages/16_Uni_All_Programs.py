@@ -16,15 +16,19 @@ add_logo("assets/logo.png", height=400)
 
 # Set up the page
 st.markdown("# Programs")
-st.sidebar.header("View Programs")
-st.write('View Programs')
 
 # Fetches program data from the API
 def fetch_programs():
     try:
-        response = requests.get('http://api:4000/programs/programs').json()
-        logger.info(f'data {response}')
-        return response
+        if (st.session_state['role'] == 'administrator'):
+            response = requests.get('http://api:4000/programs/programs').json()
+            logger.info(f'data {response}')
+            return response
+        else:
+            # Hardcoded example: schoolId=32 for Harvard University
+            response = requests.get('http://api:4000/programs/programs/schools/32').json()
+            logger.info(f'data {response}')
+            return response
     except requests.exceptions.RequestException as e:
         st.error(f"Error fetching programs: {e}")
         return []
@@ -161,8 +165,8 @@ if st.button('Delete Program'):
 if st.button('Refresh'):
     st.rerun()
 
-# added sort functionality
-st.subheader("Sort Programs")
-sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
-sorted_programs = sorted(response, key=lambda x: x[sort_by])
-st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+# # added sort functionality
+# st.subheader("Sort Programs")
+# sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
+# sorted_programs = sorted(response, key=lambda x: x[sort_by])
+# st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)

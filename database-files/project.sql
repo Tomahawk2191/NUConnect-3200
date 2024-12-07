@@ -883,7 +883,7 @@ VALUES ('Daniel', NULL, 'Smith', 1, 1, 'Professor teaching Biology and is open t
        ('Dao', 'Lain', 'Hope', 5, 1, 'Software Engineer looking for a dialogue!', 'dao@example.com'),
        ('Ben', NULL, 'June', 6, 2, 'Business Analyst specializing in market trends.', 'ben@example.com');
 
-INSERT INTO program (title, location, schoolId, professorId, programStart, programEnd, approved, awaiting)
+INSERT INTO `program` (title, location, schoolId, professorId, programStart, programEnd, approved, awaiting)
 VALUES
 ('Dialogue: AI and Ethics in Finland', 'Finland', 25, 10, '2025-09-01', '2026-03-01', TRUE, FALSE),
 ('Dialogue: Urban Planning in the Netherlands', 'Netherlands', 32, 58, '2025-10-01', '2026-04-01', FALSE, TRUE),
