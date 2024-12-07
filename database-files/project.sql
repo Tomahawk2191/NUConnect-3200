@@ -557,6 +557,9 @@ insert into user (userId, firstName, middleName, lastName, phone, email, schoolI
 values (99, 'Marcile', null, 'Eckley', '833-586-8666', 'meckley2q@mit.edu', 13, 2);
 insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
 values (100, 'Flori', 'Alp', 'Clemas', '611-144-5600', 'fclemas2r@wp.com', 5, 2);
+insert into user (userId, firstName, middleName, lastName, phone, email, schoolId, roleId)
+values (101, 'Seth', 'Geoff', 'Cooper', '617-401-3456', 'cooper@northeastern.edu', 1, 2);
+
 
 
 INSERT INTO userTagParent (tagName, category)
@@ -665,7 +668,9 @@ VALUES ('Computer Science', 'Major'),
 
 INSERT INTO userTag (userId, userTagId)
 VALUES (1, 1),
-       (2, 2);
+       (2, 2),
+       (101, 23),
+       (101, 12);
 insert into userTag (userId, userTagId)
 values (4, 74);
 insert into userTag (userId, userTagId)
@@ -984,6 +989,9 @@ VALUES
 ('Dialogue: Law and Ethics in the UK', 'United Kingdom', 17, 46, '2034-09-01', '2035-04-01', TRUE, FALSE),
 ('Dialogue: Aerospace Engineering in Sweden', 'Sweden', 57, 25, '2034-10-01', '2035-05-01', TRUE, FALSE),
 ('Dialogue: Digital Art in Japan', 'Japan', 55, 28, '2034-11-01', '2035-06-01', FALSE, TRUE);
+
+INSERT INTO program(title, program.description, location, schoolId, professorId, programStart, programEnd, approved, awaiting)
+VALUES ('Dialogue: Software Engineering in Belgium','Experience software engineering in a European light.', 'Belgium', 1, 101, '2025-11-01', '2025-06-01', TRUE, TRUE);
 
 
 
