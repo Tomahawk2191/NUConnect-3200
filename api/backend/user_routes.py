@@ -372,3 +372,29 @@ def filter_program_posts(userId):
     response = make_response(f'for {applicationId} deleted')
     response.status_code = 200
     return response
+
+
+# route to get all applicants for a particular professor
+# TODO add to REST API matrix 
+@user.route('/users/applications/<int:professorId>', methods = ['GET'])
+def get_applicants(professorId):
+  query = f'''
+    SELECT u.userId, u.firstName, u.middleName, u.lastName, u.phone, u.email
+    FROM user AS u 
+    JOIN application AS a
+    ON u.userId = a.userId
+    JOIN program  AS p
+    ON p.programId = a.programId
+    WHERE p.professorId = {professorId}
+  '''
+
+  cursor = db.get_db().cursor()
+  cursor.execute(query)
+  theData = cursor.fetchall()
+    
+  response = make_response(jsonify(theData))
+  response.status_code = 200
+  return response
+
+
+  

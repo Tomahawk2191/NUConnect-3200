@@ -14,15 +14,20 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
+if st.button('View My Profile', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/02_Profile.py')
+
 if st.button('View My Programs', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/01_View_Programs.py')
 
-if st.button('View My Profile', 
+if st.button('View All Posts', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_Profile.py')
+  st.switch_page('pages/23_View_All_Post.py')
 
 if st.button('Track My Applications', 
              type='primary',
