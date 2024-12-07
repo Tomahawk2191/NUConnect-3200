@@ -31,7 +31,7 @@ st.write("## Meet the Team")
 team_members = [
     {"name": "Isaac Polite", "email": "polite.i@northeastern.edu"},
     {"name": "Pierre Dang", "email": "dang.pi@northeastern.edu"},
-    {"name": "Catherine Zhou", "email": "zhou.cat@northeastern.edu"},  # Add the missing comma here
+    {"name": "Catherine Zhou", "email": "zhou.cat@northeastern.edu"}, 
     {"name": "Toby Chan", "email": "chan.to@northeastern.edu"},
     {"name": "Alen Ganopolsky", "email": "ganopolsky.a@northeastern.edu"},
 ]
