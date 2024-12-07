@@ -16,8 +16,6 @@ add_logo("assets/logo.png", height=400)
 
 # Set up the page
 st.markdown("# Programs")
-st.sidebar.header("View Programs")
-st.write('View Programs')
 
 # Fetches program data from the API
 def fetch_programs():
@@ -161,8 +159,8 @@ if st.button('Delete Program'):
 if st.button('Refresh'):
     st.rerun()
 
-# added sort functionality
-st.subheader("Sort Programs")
-sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
-sorted_programs = sorted(response, key=lambda x: x[sort_by])
-st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+# # added sort functionality
+# st.subheader("Sort Programs")
+# sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
+# sorted_programs = sorted(response, key=lambda x: x[sort_by])
+# st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
