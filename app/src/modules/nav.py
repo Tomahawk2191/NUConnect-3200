@@ -46,7 +46,7 @@ def ProfProgramsNav():
 
 def ProfProfileNav():
     st.sidebar.page_link(
-        "pages/10_Professor_Home.py", label="Profile", icon="👤"
+        "pages/02_Profile.py", label="Profile", icon="👤"
     )
 
 def ProfAppNav():
@@ -65,7 +65,7 @@ def UniAllProgamsNav():
 
 def UniProfileNav():
     st.sidebar.page_link(
-        "pages/12_Prof_Profile.py", label="Profile", icon="👤"
+        "pages/02_Profile.py", label="Profile", icon="👤"
     )
 
 def UniAllUsersNav():
@@ -121,7 +121,7 @@ def SideBarLinks(show_home=False):
             UniAllUsersNav()
 
         # If the user is an administrator, give them access to the administrator pages
-        if st.session_state['role'] == 'admin':
+        if st.session_state['role'] == 'nuadmin':
             AdminPageNav()
 
     # Always show the About page at the bottom of the list of links

@@ -14,13 +14,74 @@ if (st.session_state['role'] == 'student'):
   st.header('My Applications')
   response = requests.get('http://api:4000/users/users/applications/5').json()
   logger.info(response)
-  df = st.dataframe(response, column_order=["userId", "programId", "title", "location", "applied", "accepted", "denied"], hide_index=True)
+  df = st.dataframe(response, column_order=["userId", "applicationId", "title", "location", "applied", "accepted", "denied"], hide_index=True)
   
-  # PUT REQUEST WHERE applied is 0
+  # PUT REQUEST WHERE applicationId is applicationId
+  # select box with application status (yes or no)
+  @st.dialog("Update Application Status")
+  def update_status():
+    st.write("Update Application Status")
+    status = st.selectbox("Update Status:", ["Apply", "Rescind"])
+    applicationId = st.text_input("applicationId")
+    status = 0 if status == "Rescind" else 1
+    logger.info(status)
+    submitted = st.button('Submit')
+  
+
+    application_data = {
+      "applied": status,
+      "applicationId": applicationId
+    }
+
+    if submitted:
+       try:
+          response = requests.put('http://api:4000/users/users/applications/5', json=application_data)
+          if (response.status_code == 200):
+            st.success("Application Updated Successfully")
+            
+            # Refresh the dataframe
+            response = requests.get('http://api:4000/users/users/applications/5').json()
+            df = st.dataframe(response, column_order=["userId", "programId", "title", "location", "applied", "accepted", "denied"], hide_index=True)
+          else:
+            st.error("Error Editing Application")
+       except requests.exceptions.RequestException as e:
+          st.error(f"Error with requests: {e}")
+  
+  @st.dialog("Delete Application")
+  def delete_application():
+    st.write("Delete Application")
+    applicationId = st.text_input("applicationId")
+    submitted = st.button('Submit')
+    # DELETE where applicationId is applicationId
 
 
+    application_data = {
+      "applicationId": applicationId
 
-  # DELETE where applicationId is applicationId
+    }
+
+    if submitted:
+       try:
+          response = requests.delete('http://api:4000/users/users/applications/5', json=application_data)
+          if (response.status_code == 200):
+            st.success("Application Deleted Successfully")
+            
+            # Refresh the dataframe
+            response = requests.get('http://api:4000/users/users/applications/5').json()
+            df = st.dataframe(response, column_order=["userId", "programId", "title", "location", "applied", "accepted", "denied"], hide_index=True)
+          else:
+            st.error("Error Deleting Application")
+       except requests.exceptions.RequestException as e:
+          st.error(f"Error with requests: {e}")
+
+  if (st.button('Update Application Status')):
+    update_status()
+  
+  if (st.button('Delete Application')):
+    delete_application()
+
+  if (st.button('Refresh')):
+    st.rerun()
 
 else:
   st.write('### Manage all Uni Users')

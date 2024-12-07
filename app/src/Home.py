@@ -66,15 +66,6 @@ if st.button('Act as Cooper, A Northeastern Professor',
     logger.info("Logging in as Dr. Cooper, a professor")
     st.switch_page('pages/10_Professor_Home.py')
 
-if st.button('Act as Lisa, a Northeastern University Administrator', 
-            type = 'primary', 
-            use_container_width=True):
-    st.session_state['authenticated'] = True
-    st.session_state['role'] = 'administrator'
-    st.session_state['first_name'] = 'Lisa'
-    logger.info("Logging in as Lisa, a Northeastern University Administrator")
-    st.switch_page('pages/15_University_Home.py')
-
 if st.button('Act as Jennie, an Administrator from Harvard University', 
             type = 'primary', 
             use_container_width=True):
@@ -83,6 +74,15 @@ if st.button('Act as Jennie, an Administrator from Harvard University',
     st.session_state['first_name'] = 'Jennie'
     logger.info("Logging in as Jennie, an Admin at Harvard Administrator")
     st.switch_page('pages/20_Admin_Home.py')    
+
+if st.button('Act as Lisa, a Northeastern University Administrator', 
+            type = 'primary', 
+            use_container_width=True):
+    st.session_state['authenticated'] = True
+    st.session_state['role'] = 'administrator'
+    st.session_state['first_name'] = 'Lisa'
+    logger.info("Logging in as Lisa, a Northeastern University Administrator")
+    st.switch_page('pages/15_University_Home.py')
 
 
 

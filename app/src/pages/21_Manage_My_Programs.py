@@ -12,13 +12,16 @@ SideBarLinks()
 
 st.write('### Harvard University Programs')
 
-# Get the data from the backend (List all programs for Jennie)
-response = requests.get('http://api:4000/programs/programs').json()
+if (st.session_state['role'] == 'student'):
+    st.write('Posted Programs')
+    response = requests.get('http://api:4000/posts/posts').json()
+    df = st.dataframe(response, column_order=["title", "body", "location", "programStart", "programEnd", "postAuthor"], hide_index=True)
+elif (st.session_state['role'] == 'administrator'):
+    # Get the data from the backend (List all programs for Jennie)
+    response = requests.get('http://api:4000/programs/programs').json()
 
-df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+    df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
 
-if (st.session_state['role'] == 'administrator'):
-# Dialog for creating a new program at Harvard University
     @st.dialog("Add Program")
     def add_program_dialog():
         st.write('Add a new program')
