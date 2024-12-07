@@ -162,8 +162,9 @@ def SideBarLinks(show_home=False):
             UniHomeNav(),
             UniAllRolesNav(),
             UniAllPostsNav(),
-            UniAllUsersNav()
-            UniAllSchoolsNav()
+            UniAllUsersNav(),
+            UniAllSchoolsNav(),
+            UniAllProgramsNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state['role'] == 'administrator':
