@@ -29,7 +29,45 @@ if users:
     st.dataframe(users, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
 
 if (st.session_state['role'] == 'administrator' or st.session_state['role'] == 'outside_administrator'):
-    
+    @st.dialog("Add User")
+    def add_user_dialog():
+        st.write('Add a new user')
+        first_name = st.text_input('First Name')
+        middle_name = st.text_input('Middle Name')
+        last_name = st.text_input('Last Name')
+        phone = st.text_input('Phone Number')
+        email = st.text_input('Email')
+        school_Id = st.number_input('School ID', min_value=1, step=1)
+        role_Id = st.number_input('Role ID', min_value=1, step=1)
+        submitted = st.button('Submit')
+
+        user_data = {
+            "firstName": first_name,
+            "middleName": middle_name,
+            "lastName": last_name,
+            "phone": phone,
+            "email": email,
+            "schoolId": school_Id,
+            "roleId": role_Id
+        }
+
+        if submitted:
+            if (user_data["middleName"] == ""):
+                user_data["middleName"] = None
+
+            logger.info(f'Add User submitted with data: {user_data}')
+
+            try:
+                response = requests.post('http://api:4000/users/users', json=user_data)
+                if response.status_code == 200:
+                    st.success("User added successfully")
+                    users = fetch_users()  
+                    st.dataframe(users, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
+                else:
+                    st.error("Error adding user")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error with requests: {e}")
+
     @st.dialog("Edit User")
     def edit_user_dialog():
         global users
@@ -78,45 +116,6 @@ if (st.session_state['role'] == 'administrator' or st.session_state['role'] == '
         else:
             st.write("User not found.")
 
-    @st.dialog("Add User")
-    def add_user_dialog():
-        st.write('Add a new user')
-        first_name = st.text_input('First Name')
-        middle_name = st.text_input('Middle Name')
-        last_name = st.text_input('Last Name')
-        phone = st.text_input('Phone Number')
-        email = st.text_input('Email')
-        school_Id = st.number_input('School ID', min_value=1, step=1)
-        role_Id = st.number_input('Role ID', min_value=1, step=1)
-        submitted = st.button('Submit')
-
-        user_data = {
-            "firstName": first_name,
-            "middleName": middle_name,
-            "lastName": last_name,
-            "phone": phone,
-            "email": email,
-            "schoolId": school_Id,
-            "roleId": role_Id
-        }
-
-        if submitted:
-            if (user_data["middleName"] == ""):
-                user_data["middleName"] = None
-
-            logger.info(f'Add User submitted with data: {user_data}')
-
-            try:
-                response = requests.post('http://api:4000/users/users', json=user_data)
-                if response.status_code == 200:
-                    st.success("User added successfully")
-                    users = fetch_users()  
-                    st.dataframe(users, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
-                else:
-                    st.error("Error adding user")
-            except requests.exceptions.RequestException as e:
-                st.error(f"Error with requests: {e}")
-
     @st.dialog("Delete User")
     def delete_user_dialog():
         st.write('Delete a user')
@@ -133,11 +132,15 @@ if (st.session_state['role'] == 'administrator' or st.session_state['role'] == '
                     st.error("Error deleting user")
             except requests.exceptions.RequestException as e:
                 st.error(f"Error with requests: {e}")
+
     if st.button('Add User'):
         add_user_dialog()
-    if st.button('Delete User'):
-        delete_user_dialog()
+
     if st.button('Edit User'):
         edit_user_dialog()
+
+    if st.button('Delete User'):
+        delete_user_dialog()
+
     if st.button('Refresh'):
         st.rerun()

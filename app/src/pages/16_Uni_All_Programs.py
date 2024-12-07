@@ -39,7 +39,7 @@ response = fetch_programs()
 
 # Ensure there's data to display
 if response:
-    st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+    st.dataframe(response, column_order=["programId", "title", "description", "location", "approved", "schoolId", "professorId", "programStart", "programEnd", "dateCreated"], hide_index=True)
 else:
     st.write("No programs available to display.")
 
