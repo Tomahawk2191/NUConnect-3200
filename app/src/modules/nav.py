@@ -51,7 +51,7 @@ def ProfProfileNav():
 
 def ProfAppNav():
     st.sidebar.page_link(
-        "pages/13_Applications.py", label="Applications", icon="📊"
+        "pages/03_Application_Stat.py", label="Applications", icon="📊"
     )
 
 ## ------------------------ Role of Jennie Harvard University ------------------------
