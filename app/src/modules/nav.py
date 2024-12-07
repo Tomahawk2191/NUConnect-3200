@@ -60,8 +60,14 @@ def SideBarLinks(show_home=False):
     This function handles adding links to the sidebar of the app based upon the logged-in user's role, which was put in the streamlit session_state object when logging in.
     """
 
-    # add a logo to the sidebar always
-    st.sidebar.image("assets/logo.png", width=150)
+    # custom logos for the sidebar
+    if (st.session_state["authenticated"]):
+        if (st.session_state["role"] == "administrator"):
+            st.sidebar.image("assets/logo.png", width=150, use_container_width=True)
+        elif (st.session_state["role"] == "outside_administrator"):
+            st.sidebar.image("assets/harvard.png", width=220, use_container_width=False)
+    else:
+        st.sidebar.image("assets/logo.png", width=150)
 
     # If there is no logged in user, redirect to the Home (Landing) page
     if "authenticated" not in st.session_state:
