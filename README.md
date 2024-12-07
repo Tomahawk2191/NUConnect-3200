@@ -2,6 +2,9 @@
 
 NUConnect is a platform designed to transform the study abroad application process. By integrating communication and support tools, NUConnect bridges the gap between students, professors, and universities creating an accessible and streamlined experience for all users.
 
+## Video Link
+https://northeastern-my.sharepoint.com/:v:/g/personal/polite_i_northeastern_edu/Eb7O6gKd-jJCksInXa9XfeEBV92sdye1TCZg7qi6wFgw2w?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=IUpM6w
+
 ## Features
 ### For Students
 - View Programs: Explore a variety of study abroad programs tailored to your interests and goals.
