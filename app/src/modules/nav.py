@@ -37,7 +37,7 @@ def StuAppStatNav():
 
 ## ------------------------ Role of Cooper Professor ------------------------
 def ProfHomeNav():
-    st.sidebar.page_link("pages/10_Professor_Home.py", label="Professor Home", icon="🏠")
+    st.sidebar.page_link("pages/10_Professor_Home.py", label="Home", icon="🏠")
 
 def ProfProgramsNav():
     st.sidebar.page_link(
@@ -56,11 +56,11 @@ def ProfAppNav():
 
 ## ------------------------ Role of Jennie Harvard University ------------------------
 def UniHomeNav():
-    st.sidebar.page_link("pages/15_University_Home.py", label="Havard Home", icon="🏠")
+    st.sidebar.page_link("pages/15_University_Home.py", label="Home", icon="🏠")
 
 def UniAllProgamsNav():
     st.sidebar.page_link(
-        "pages/16_Uni_All_Programs.py", label="Programs", icon="📝"
+        "pages/16_Uni_All_Programs.py", label="Manage Programs", icon="📝"
     )
 
 def UniProfileNav():
@@ -70,13 +70,31 @@ def UniProfileNav():
 
 def UniAllUsersNav():
     st.sidebar.page_link(
-        "pages/18_Uni_All_Users.py", label="Applications", icon="📊"
+        "pages/18_Uni_All_Users.py", label="Manage Users", icon="📊"
     )
-#### ------------------------ Role of Lisa NEU Admin ------------------------
-def AdminPageNav():
-    st.sidebar.page_link("pages/15_University_Home.py", label="System Admin", icon="🖥️")
-    st.sidebar.page_link("pages/21_Manage_My_Programs.py", label="ML Model Management", icon="🏢")
+## ------------------------ Role of Lisa NEU Admin ------------------------
+def AdHomeNav():
+    st.sidebar.page_link("pages/20_Admin_Home.py", label="Home", icon="🏠")
 
+def AdProgramNav():
+    st.sidebar.page_link(
+        "pages/16_Uni_All_Programs.py", label="Manage Programs", icon="📝"
+    )
+
+def AdUserNav():
+    st.sidebar.page_link(
+        "pages/18_Uni_All_Users.py", label="Manage Users", icon="👤"
+    )
+
+def AdRolesNav():
+    st.sidebar.page_link(
+        "pages/22_View_All_Roles.py", label="Manage Roles", icon="👤"
+    )
+
+def AdAllPostNav():
+    st.sidebar.page_link(
+        "pages/23_View_All_Post.py", label="Manage Posts", icon="📝"
+    )
 
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
@@ -114,15 +132,20 @@ def SideBarLinks(show_home=False):
             ProfAppNav()
         
         # If user is University show University Sidebar Links 
-        if st.session_state['role'] == 'school':
+        if st.session_state['role'] == 'outside_administrator':
             UniHomeNav(),
             UniProfileNav(),
             UniAllProgamsNav(),
             UniAllUsersNav()
 
         # If the user is an administrator, give them access to the administrator pages
-        if st.session_state['role'] == 'nuadmin':
-            AdminPageNav()
+        if st.session_state['role'] == 'administrator':
+            AdHomeNav(),
+            AdAllPostNav(),
+            AdProgramNav(),
+            AdUserNav(),
+            AdRolesNav(),
+
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
