@@ -18,8 +18,8 @@ SideBarLinks(show_home=True)
 # set the header of the page
 st.header('My Programs')
 if st.session_state['role'] == 'student':
-    st.write(st.session_state['role'])
-    response = requests.get('http://api:4000/users/users/4/programs').json()
+    st.write("View all available programs")
+    response = requests.get('http://api:4000/posts/posts').json()
     logger.info(f'data {response}')
 
     df = st.dataframe(response, column_order=["title", "description", "location", "programId", "professorId", "applicationId"], hide_index=True)
@@ -47,16 +47,31 @@ if st.session_state['role'] == 'student':
                 st.error(f"Error with requests: {e}")
 
     
-    # @st.dialog("Enroll in a Program")
-    # def enroll_program():
-    #     st.write("Enroll in a Program")
-    #     applicationId = st.text_input('applicationId')
-    #     submitted = st.button('Submit')
+    @st.dialog("Enroll")
+    def add_application():
+        st.write("Enroll")
+        programId = st.text_input("programId")
+        submitted = st.button('Submit')
+        application_data = {
+        "programId": programId
+        }
 
-    #     if submitted:
-            
+        if submitted:
+            try:
+                response = requests.post('http://api:4000/users/users/applications/5', json=application_data)
+                if (response.status_code == 200):
+                    st.success("Application Submitted Successfully")
+                    
+                    # Refresh the dataframe
+                    response = requests.get('http://api:4000/users/users/applications/5').json()
+                    df = st.dataframe(response, column_order=["userId", "programId", "title", "location", "applied", "accepted", "denied"], hide_index=True)
+                else:
+                    st.error("Error Submitting Application")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error with requests {e}")
 
-
+    if(st.button('Enroll')):
+        add_application() 
 
     if (st.button('Unenroll in a Program')):
         unenroll_program()
@@ -176,7 +191,3 @@ elif st.session_state['role'] == 'professor':
     
     if (st.button('Refresh')):
         st.rerun()
-
-
-elif st.session_state['role'] == 'outside_administrator':
-    st.write(st.session_state['role'])

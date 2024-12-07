@@ -325,7 +325,7 @@ def get_professor_programs(professorId):
   
 # returns all applications for a user, route also allows for rescinding 
 # TODO add to REST API matrix 
-@user.route('/users/applications/<int:userId>', methods=['GET', 'PUT', 'DELETE'])
+@user.route('/users/applications/<int:userId>', methods=['GET', 'PUT', 'POST', 'DELETE'])
 def filter_program_posts(userId):
 
   if request.method == 'GET':
@@ -365,6 +365,24 @@ def filter_program_posts(userId):
     response.status_code = 200
     return response
 
+  elif request.method == 'POST':
+    theData = request.json
+    current_app.logger.info(theData)
+    programId = theData['programId']
+    applied = 1
+    
+    extract = f'''
+      INSERT INTO application (userId, programId, applied)
+      VALUES ('{userId}', '{programId}', '{applied}')
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(extract)
+    db.get_db().commit()
+      
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
     
   elif request.method == 'DELETE':
     theData = request.json
@@ -386,10 +404,9 @@ def filter_program_posts(userId):
     response.status_code = 200
     return response
 
-
 # route to get all applicants for a particular professor
 # TODO add to REST API matrix 
-@user.route('/users/applications/<int:professorId>', methods = ['GET'])
+@user.route('/users/applications/students/<int:professorId>', methods = ['GET'])
 def get_applicants(professorId):
   query = f'''
     SELECT u.userId, u.firstName, u.middleName, u.lastName, u.phone, u.email
@@ -408,31 +425,3 @@ def get_applicants(professorId):
   response = make_response(jsonify(theData))
   response.status_code = 200
   return response
-
-
-
-
-# TODO add to REST API Matrix 
-# 
-@user.route('/users/<int:userId>/applications', methods = ['POST'])
-def add_user_program(userId):
-  theData = request.json
-  current_app.logger.info(theData)
-  programId = theData['programId']
-
-  extract = f'''
-    SELECT title, location
-    FROM program
-    WHERE programId = {programId}
-
-  '''
-
-  cursor = db.get_db().cursor()
-  cursor.execute(extract)
-  theData = cursor.fetchall()
-    
-  response = make_response(jsonify(theData))
-  response.status_code = 200
-
-
-    

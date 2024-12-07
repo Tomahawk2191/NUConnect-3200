@@ -71,25 +71,8 @@ if (st.session_state['role'] == 'student'):
           else:
             st.error("Error Deleting Application")
        except requests.exceptions.RequestException as e:
-          st.error(f"Error with requests: {e}")
-
-  
-  @st.dialog("Enroll")
-  def add_application():
-    st.write("Enroll")
-    programId = st.text_input("programId")
-    submitted = st.button('Submit')
-    application_data = {
-
-      "programId": programId
-    }
-
-    if submitted:
-      pass
-
-
-
-
+          st.error(f"Error with requests: {e}") 
+    
   if (st.button('Update Application Status')):
     update_status()
   
@@ -107,6 +90,10 @@ else:
 
   df = st.dataframe(response, column_order=["programId", "title", "description", "location"], hide_index=True)
 
+  st.write('Students who have applied to your programs')
+  response = requests.get('http://api:4000/users/users/applications/students/101').json()
+  df = st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "phone", "email"], hide_index=True)
+  
   # st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)  
   
   
