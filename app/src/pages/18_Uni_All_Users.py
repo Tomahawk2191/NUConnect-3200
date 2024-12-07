@@ -138,5 +138,5 @@ if (st.session_state['role'] == 'administrator' or st.session_state['role'] == '
         delete_user_dialog()
     if st.button('Edit User'):
         edit_user_dialog()
-if st.button('Refresh'):
-    st.rerun()
+    if st.button('Refresh'):
+        st.rerun()
