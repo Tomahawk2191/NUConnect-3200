@@ -34,21 +34,21 @@ Enhanced Communication: Fosters direct interaction among students, faculty, and 
 Global Networking: Builds lasting international connections, enhancing the cultural and academic experience.
 
 ## Getting Started
-Sign Up: Create an account as a student, professor, or administrator! 
+
+Build the docker containers using [docker compose build].
+
+Use [docker-compose up] to restart the application containers.
+
+Open Datagrip for MySQL and run the SQL file on port [3200].
 
 Explore Features
 - Students: View programs, apply to programs, track applications, and access resources.
 - Professors: Post programs, view applications, review student profiles, and connect with other universities.
 - Administrators: Post and view programs, connect with other universities, manage users, and support applications.
 
-Stay Connected!!
-
 ## Technical Requirements
 - Web Browser: Google Chrome, Mozilla Firefox, Safari, or Microsoft Edge.
-- Devices: Accessible on desktops, laptops, tablets, and smartphones.
-
-## Feedback and Support
-We’re committed to improving NUConnect. If you encounter issues or have suggestions, please contact our support team at support@nuconnect.com.
+- Datagrip or other SQL management software to run the SQL file on the database container.
 
 ----------------------------------------------------------------------------------------------
 Thank you for choosing NUConnect. Together, we’re redefining the study abroad experience.
