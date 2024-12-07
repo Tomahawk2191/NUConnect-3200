@@ -44,15 +44,18 @@ def get_posts():
             VALUES ('{postAuthor}', '{title}', '{body}', '{userId}', '{programId}')
         '''
         current_app.logger.info(f'Added new post POST /posts query = {query}')
+        
         cursor = db.get_db().cursor()
         cursor.execute(query)
         db.get_db().commit()
 
-        response = make_response('added new post')
+        response = make_response('Added new post')
         response.status_code = 200
         return response
+
     elif request.method == 'DELETE': # Delete a post
         theData = request.json
+
         postId = theData['postId']
         
         query = f'''
@@ -62,6 +65,7 @@ def get_posts():
         '''
         
         current_app.logger.info(f'Deleted post {postId} DELETE /posts query = {query}')
+
         cursor = db.get_db().cursor()
         cursor.execute(query)
         db.get_db().commit()
