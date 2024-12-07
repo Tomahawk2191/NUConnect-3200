@@ -47,22 +47,19 @@ if st.session_state['role'] == 'student':
                 st.error(f"Error with requests: {e}")
 
     
-    @st.dialog("Enroll in a Program")
-    def enroll_program():
-        st.write("Enroll in a Program")
-        applicationId = st.text_input('applicationId')
-        submitted = st.button('Submit')
+    # @st.dialog("Enroll in a Program")
+    # def enroll_program():
+    #     st.write("Enroll in a Program")
+    #     applicationId = st.text_input('applicationId')
+    #     submitted = st.button('Submit')
 
-        if submitted:
-            pass
+    #     if submitted:
+            
 
 
 
     if (st.button('Unenroll in a Program')):
         unenroll_program()
-
-    if (st.button('Enroll in a Program')):
-        enroll_program()
 
     if (st.button('Refresh')):
         st.rerun()
