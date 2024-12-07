@@ -162,4 +162,3 @@ st.subheader("Sort Programs")
 sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
 sorted_programs = sorted(response, key=lambda x: x[sort_by])
 st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
-

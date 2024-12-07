@@ -14,17 +14,8 @@ st.write('### Manage all Posts')
 # Get the data from the backend
 response = requests.get(f'http://api:4000/posts/posts').json()
 
-df = st.dataframe(response, column_order=["postAuthor", "title", "body", "userId", "programId", "published", "favorited", 
-                                          "createdAt", "lastEdited", "postId"], hide_index=True)
+df = st.dataframe(response, column_order=["postId", "postAuthor", "title", "body", "userId", "programId", "published", "favorited", "createdAt", "lastEdited"], hide_index=True)
 
-#df = st.dataframe(response, column_order=["postAuthor", "title", "body", "userId", "programId", "published", "favorited", 
-#                                          "createdAt", "lastEdited", "postId"], hide_index=True)
-
-response = requests.get(f'http://api:4000/posts/users/{userId}/posts/{postID}').json()
-df = st.dataframe(response, column_order=["postAuthor", "title", "body", "userId", "programId", "published", "favorited", 
-                                          "createdAt", "lastEdited", "postId"], hide_index=True)
-
-'''
 @st.dialog("Add Post")
 def add_user_dialog():
     st.write('Add a new Post'),
@@ -60,7 +51,7 @@ def add_user_dialog():
 @st.dialog("Delete Post")
 def delete_user_dialog():
     st.write('Delete a Post')
-    role_id = st.number_input('postId', min_value=1, step=1, placeholder='Enter the Post ID')
+    post_id = st.number_input('postId', min_value=1, step=1, placeholder='Enter the Post ID')
     submitted = st.button('Submit')
 
     if submitted:
@@ -83,4 +74,3 @@ if (st.button('Delete Post')):
   delete_user_dialog()
 if (st.button('Refresh')):
   st.rerun()
-'''
