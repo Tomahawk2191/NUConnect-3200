@@ -15,8 +15,31 @@ st.write('### Harvard University Programs')
 if (st.session_state['role'] == 'student'):
     st.write('Posted Programs')
     response = requests.get('http://api:4000/posts/posts').json()
-    df = st.dataframe(response, column_order=["title", "body", "location", "programStart", "programEnd", "postAuthor"], hide_index=True)
-elif (st.session_state['role'] == 'administrator'):
+    df = st.dataframe(response, column_order=["postId", "title", "body", "location", "programStart", "programEnd", "postAuthor", "professorId"], hide_index=True)
+    
+    @st.dialog("View Post")
+    def view_post_dialog():
+        st.write('View Post')
+        post_id = st.number_input('Post ID', min_value=1, step=1, placeholder='Enter the post ID')
+        submitted = st.button('Submit')
+
+        if submitted:
+            if post_id:
+                # Log the data to the console
+                logger.info(f'View Post submitted with data: {post_id}')
+                
+                # Send the data to the backend
+                try:
+                    response = requests.get(f'http://api:4000/posts/posts/{post_id}').json()
+                    if response:
+                        st.write(response)
+                    else:
+                        st.error("Error fetching post")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error with requests: {e}")
+            else:
+                st.error("Please fill in all the fields.")
+else:
     # Get the data from the backend (List all programs for Jennie)
     response = requests.get('http://api:4000/programs/programs').json()
 
