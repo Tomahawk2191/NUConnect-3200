@@ -26,8 +26,8 @@ def add_user_dialog():
     last_name = st.text_input('Last Name')
     phone = st.text_input('Phone Number')
     email = st.text_input('Email')
-    school_Id = st.number_input('School ID')
-    role_Id = st.number_input('Role ID')
+    school_Id = st.number_input('School ID', min_value=1, step=1)
+    role_Id = st.number_input('Role ID', min_value=1, step=1)
     submitted = st.button('Submit')
 
     user_data = {
@@ -39,7 +39,6 @@ def add_user_dialog():
         "schoolId": school_Id,
         "roleId": role_Id
     }
-    
     
     if submitted:
       # If the middle name is empty, set it to None
@@ -54,10 +53,6 @@ def add_user_dialog():
         response = requests.post('http://api:4000/users/users', json=user_data)
         if (response.status_code == 200):
           st.success("User added successfully")
-          
-          # Refresh the dataframe
-          response = requests.get('http://api:4000/users/users').json()
-          df = st.dataframe(response.json(), column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
         else:
           st.error("Error adding user")
       except requests.exceptions.RequestException as e:

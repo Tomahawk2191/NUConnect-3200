@@ -9,7 +9,7 @@ from modules.nav import SideBarLinks
 import requests
 
 
-SideBarLinks()
+SideBarLinks(show_home=True)
 
 # add the logo
 add_logo("assets/logo.png", height=400)
