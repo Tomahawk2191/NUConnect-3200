@@ -41,17 +41,17 @@ def ProfHomeNav():
 
 def ProfProgramsNav():
     st.sidebar.page_link(
-        "pages/11_EditPost_Programs.py", label="Programs", icon="📝"
+        "pages/16_Uni_All_Programs.py", label="Programs", icon="📝"
     )
 
 def ProfProfileNav():
     st.sidebar.page_link(
-        "pages/12_Prof_Profile.py", label="Profile", icon="👤"
+        "pages/02_Profile.py", label="Profile", icon="👤"
     )
 
 def ProfAppNav():
     st.sidebar.page_link(
-        "pages/13_Applications.py", label="Applications", icon="📊"
+        "pages/03_Application_Stat.py", label="Applications", icon="📊"
     )
 
 ## ------------------------ Role of Jennie Harvard University ------------------------
@@ -65,7 +65,7 @@ def UniAllProgamsNav():
 
 def UniProfileNav():
     st.sidebar.page_link(
-        "pages/12_Prof_Profile.py", label="Profile", icon="👤"
+        "pages/02_Profile.py", label="Profile", icon="👤"
     )
 
 def UniAllUsersNav():

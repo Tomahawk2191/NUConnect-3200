@@ -22,7 +22,7 @@ if st.button('Edit/Post Programs',
 if st.button('View Profile', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/12_Prof_Profile.py')
+  st.switch_page('pages/02_Profile.py')
 
 if st.button("View Applications",
              type='primary',

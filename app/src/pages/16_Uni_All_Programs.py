@@ -7,6 +7,7 @@ import pydeck as pdk
 from urllib.error import URLError
 from modules.nav import SideBarLinks
 import requests
+import pandas as pd
 
 SideBarLinks(show_home=True)
 
@@ -36,6 +37,8 @@ if response:
 else:
     st.write("No programs available to display.")
 
+
+
 # edit Program Dialog
 @st.dialog("Edit Programs")
 def edit_program_dialog():
@@ -47,7 +50,7 @@ def edit_program_dialog():
     program_data = next((program for program in response if program["programId"] == programId_to_edit), None)
 
     if program_data:
-      
+        
         program_data["programStart"] = datetime.datetime.strptime(program_data["programStart"], "%a, %d %b %Y %H:%M:%S %Z").date()
         program_data["programEnd"] = datetime.datetime.strptime(program_data["programEnd"], "%a, %d %b %Y %H:%M:%S %Z").date()
         program_data["approved"] = True if program_data["approved"] == 1 else False
@@ -153,3 +156,10 @@ if st.button('Add Program'):
     add_program_form()
 if st.button('Refresh'):
     st.rerun()
+
+# added sort functionality
+st.subheader("Sort Programs")
+sort_by = st.selectbox("Sort programs by", ["title", "programStart", "programEnd", "schoolId", "professorId"])
+sorted_programs = sorted(response, key=lambda x: x[sort_by])
+st.dataframe(sorted_programs, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
+
