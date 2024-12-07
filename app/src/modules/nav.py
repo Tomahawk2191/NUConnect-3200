@@ -6,49 +6,73 @@ import streamlit as st
 
 
 #### ------------------------ General ------------------------
-def HomeNav():
-    st.sidebar.page_link("Home.py", label="Home", icon="🏠")
+def MainNav():
+    st.sidebar.page_link("Home.py", label="Main", icon="🔗")
 
 
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
 
-#### ------------------------ Examples for Role of pol_strat_advisor ------------------------
-def PolStratAdvHomeNav():
+#### ------------------------ Role of Dao Student ------------------------
+def StuHomeNav():
     st.sidebar.page_link(
-        "pages/00_Student_Home.py", label="Political Strategist Home", icon="👤"
+        "pages/00_Student_Home.py", label="Home", icon="🏠"
     )
 
-
-def WorldBankVizNav():
+def StuProfileNav():
     st.sidebar.page_link(
-        "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
+        "pages/02_Profile.py", label="Profile", icon="👤"
     )
 
-
-def MapDemoNav():
-    st.sidebar.page_link("pages/02_Map_Demo.py", label="Map Demonstration", icon="🗺️")
-
-
-## ------------------------ Examples for Role of usaid_worker ------------------------
-def ApiTestNav():
-    st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
-
-
-def PredictionNav():
+def StuProgramsNav():
     st.sidebar.page_link(
-        "pages/11_Prediction.py", label="Regression Prediction", icon="📈"
+        "pages/01_View_Programs.py", label="Programs", icon="📝"
     )
 
-
-def ClassificationNav():
+def StuAppStatNav():
     st.sidebar.page_link(
-        "pages/13_Classification.py", label="Classification Demo", icon="🌺"
+        "pages/03_Application_Stat.py", label="Application Status", icon="📊"
     )
 
+## ------------------------ Role of Cooper Professor ------------------------
+def ProfHomeNav():
+    st.sidebar.page_link("pages/10_Professor_Home.py", label="Professor Home", icon="🏠")
 
-#### ------------------------ System Admin Role ------------------------
+def ProfProgramsNav():
+    st.sidebar.page_link(
+        "pages/16_Uni_All_Programs.py", label="Programs", icon="📝"
+    )
+
+def ProfProfileNav():
+    st.sidebar.page_link(
+        "pages/10_Professor_Home.py", label="Profile", icon="👤"
+    )
+
+def ProfAppNav():
+    st.sidebar.page_link(
+        "pages/03_Application_Stat.py", label="Applications", icon="📊"
+    )
+
+## ------------------------ Role of Jennie Harvard University ------------------------
+def UniHomeNav():
+    st.sidebar.page_link("pages/15_University_Home.py", label="Havard Home", icon="🏠")
+
+def UniAllProgamsNav():
+    st.sidebar.page_link(
+        "pages/16_Uni_All_Programs.py", label="Programs", icon="📝"
+    )
+
+def UniProfileNav():
+    st.sidebar.page_link(
+        "pages/12_Prof_Profile.py", label="Profile", icon="👤"
+    )
+
+def UniAllUsersNav():
+    st.sidebar.page_link(
+        "pages/18_Uni_All_Users.py", label="Applications", icon="📊"
+    )
+#### ------------------------ Role of Lisa NEU Admin ------------------------
 def AdminPageNav():
     st.sidebar.page_link("pages/15_University_Home.py", label="System Admin", icon="🖥️")
     st.sidebar.page_link("pages/21_Manage_My_Programs.py", label="ML Model Management", icon="🏢")
@@ -70,25 +94,34 @@ def SideBarLinks(show_home=False):
 
     if show_home:
         # Show the Home page link (the landing page)
-        HomeNav()
+        MainNav()
 
     # Show the other page navigators depending on the users' role.
     if st.session_state["authenticated"]:
 
-        # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
-        if st.session_state["role"] == "pol_strat_advisor":
-            PolStratAdvHomeNav()
-            WorldBankVizNav()
-            MapDemoNav()
+        # If user is Student show Student Sidebar Links 
+        if st.session_state['role'] == 'student':
+            StuHomeNav(),
+            StuProfileNav(),
+            StuProgramsNav(),
+            StuAppStatNav()
 
-        # If the user role is usaid worker, show the Api Testing page
-        if st.session_state["role"] == "usaid_worker":
-            PredictionNav()
-            ApiTestNav()
-            ClassificationNav()
+        # If user is Professor show Professor Sidebar Links 
+        if st.session_state['role'] == 'professor':
+            ProfHomeNav(),
+            ProfProfileNav(),
+            ProfProgramsNav(),
+            ProfAppNav()
+        
+        # If user is University show University Sidebar Links 
+        if st.session_state['role'] == 'school':
+            UniHomeNav(),
+            UniProfileNav(),
+            UniAllProgamsNav(),
+            UniAllUsersNav()
 
         # If the user is an administrator, give them access to the administrator pages
-        if st.session_state["role"] == "administrator":
+        if st.session_state['role'] == 'admin':
             AdminPageNav()
 
     # Always show the About page at the bottom of the list of links
@@ -99,4 +132,4 @@ def SideBarLinks(show_home=False):
         if st.sidebar.button("Logout"):
             del st.session_state["role"]
             del st.session_state["authenticated"]
-            st.switch_page("Home.py")
+            st.switch_page("Home.py") 

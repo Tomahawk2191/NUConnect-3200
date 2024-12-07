@@ -309,3 +309,23 @@ def get_professor_programs(professorId):
     response = make_response(f'for {professorId} deleted')
     response.status_code = 200
     return response
+  
+# returns all applications for a user, route also allows for rescinding 
+# TODO add to REST API matrix 
+@user.route('/users/applications/<int:userId>', methods=['GET'])
+def filter_program_posts(userId):
+    query = f'''
+      SELECT a.userId, p.programId, p.title, p.location, a.applied, a.accepted, a.denied
+      FROM application AS a
+      JOIN program AS p 
+      ON a.programId = p.programId
+      WHERE a.userId = {userId};
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response

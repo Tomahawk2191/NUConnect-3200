@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
 
-SideBarLinks()
+SideBarLinks(show_home=True)
 
 st.write("""
 # Simple Iris Flower Prediction App
