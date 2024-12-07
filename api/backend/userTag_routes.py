@@ -62,6 +62,7 @@ def get_user_tag(userTagId):
         
         # Log the query
         current_app.logger.info(f'GET /user_tags/{userTagId} query = {query}')
+
         cursor = db.get_db().cursor()
         cursor.execute(query)
         theData = cursor.fetchall()
@@ -69,8 +70,6 @@ def get_user_tag(userTagId):
         response = make_response(jsonify(theData))
         response.status_code = 200
         return response
-    
-
 
     elif request.method == 'PUT': # Update a user tag
         theData = request.json
@@ -80,7 +79,7 @@ def get_user_tag(userTagId):
         category = theData['category'] 
     
         query = f'''
-            UPDATE userTagParent`
+            UPDATE userTagParent
             SET tagName = '{tagName}', category = '{category}'
             WHERE userTagId = {userTagId}
         '''
