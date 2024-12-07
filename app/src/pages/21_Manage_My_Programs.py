@@ -99,7 +99,7 @@ else:
         program_id = st.number_input('Program ID', min_value=1, step=1, placeholder='Enter the program ID')
         title = st.text_input('Title')
         description = st.text_input('Description')
-        approved = st.selectbox('Approved', ['Yes', 'No'])
+        approved = st.checkbox('Approved?', value=False)
         school_id = st.number_input('School ID', value=1, step=1)
         professor_id = st.number_input('Professor ID', min_value=1, step=1)
         program_start = st.date_input('Program Start')
@@ -111,6 +111,8 @@ else:
         program_start_str = program_start.strftime('%Y-%m-%d') if program_start else None
         program_end_str = program_end.strftime('%Y-%m-%d') if program_end else None
 
+        approved = int(approved)
+        
         program_data = {
             "programId": program_id,
             "title": title,
