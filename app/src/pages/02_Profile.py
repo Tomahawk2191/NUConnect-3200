@@ -36,44 +36,43 @@ df = st.dataframe(response, column_order=["userId", "firstName", "middleName", "
 @st.dialog("Edit Profile")
 def add_user_dialog():
     st.write('Edit Profile')
-    first_name = st.text_input('First Name')
-    middle_name = st.text_input('Middle Name')
-    last_name = st.text_input('Last Name')
-    phone = st.text_input('Phone Number')
-    email = st.text_input('Email')
+    first_name = st.text_input('First Name', value="")
+    middle_name = st.text_input('Middle Name', value="")
+    last_name = st.text_input('Last Name', value="")
+    phone = st.text_input('Phone Number', value="")
+    email = st.text_input('Email', value="")
     submitted = st.button('Submit')
 
-    user_data = {
-        "firstName": first_name,
-        "middleName": middle_name,
-        "lastName": last_name,
-        "phone": phone,
-        "email": email,
-        "schoolId": schoolId,
-        "roleId": roleId
-       
-    }
-    
     if submitted:
-    
-      if (user_data["middleName"] == ""):
-        user_data["middleName"] = None
-        
-      logger.info(f'Profile edited {user_data}')
-      
-      try:
-        response = requests.put(f'http://api:4000/users/users/{userId}', json=user_data)
-        if (response.status_code == 200):
-          st.success("User edited")
-          
-          
-          response = requests.get(f'http://api:4000/users/users/{userId}').json()
-          df = st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
-        else:
-          st.error("Error editing user")
-      except requests.exceptions.RequestException as e:
-        st.error(f"Error with requests: {e}")
+        if not first_name.strip():
+            st.error("First Name is required.")
+            return
+        if not last_name.strip():
+            st.error("Last Name is required.")
+            return
 
+        user_data = {
+            "firstName": first_name.strip(),
+            "middleName": middle_name.strip() if middle_name.strip() else None,
+            "lastName": last_name.strip(),
+            "phone": phone.strip(),
+            "email": email.strip(),
+            "schoolId": schoolId,
+            "roleId": roleId
+        }
+
+        logger.info(f'Profile edited {user_data}')
+
+        try:
+            response = requests.put(f'http://api:4000/users/users/{userId}', json=user_data)
+            if response.status_code == 200:
+                st.success("User edited successfully")
+                updated_response = requests.get(f'http://api:4000/users/users/{userId}').json()
+                st.dataframe(updated_response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
+            else:
+                st.error(f"Error editing user: {response.status_code} - {response.text}")
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error with requests: {e}")
 
         
 if (st.button('Edit Profile')):
@@ -89,108 +88,59 @@ st.write('View All Tags')
 response = requests.get(f'http://api:4000/users/users/{userId}/user_tags').json()
 logger.info(f'data {response}')
 
-
-
 if response and isinstance(response, list) and response[0] and "userTagId" in response[0]:
- userTagId = response[0]["userTagId"]
+  userTagId = response[0]["userTagId"]
 
 df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
 
-@st.dialog("Edit tag")
-def edit_user_tag():
-  st.write('Edit Tag')
-  tagName = st.text_input('tag name')
-  category = st.text_input('category')
+@st.dialog("Delete tag")
+def delete_user_tag():
+  st.write("Delete tag")
+  userTagId = st.number_input('userTagId', min_value=1, max_value=65, step=1)
   submitted = st.button('Submit')
-  
-  tag_data = {
 
-    "userTagId": userTagId,
-    "tagName": tagName,
-    "category": category
+  tag_data = {
+    "userTagId": userTagId
   }
 
   if submitted:
-
     logger.info(f'{tag_data}')
-
-
     try:
-      response = requests.put(f'http://api:4000/user_tags/user_tags/{userId}', json=tag_data)
-      if (response.status_code == 200):
-        st.success("Tag edited")
-        response = requests.get(f'http://api:4000/user_tags/user_tags/{userId}').json()
-        df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
-      else:
-          st.error("Error editing Tag")
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error with requests: {e}")
-
-@st.dialog("Delete tag")
-def delete_user_tag():
-   st.write("Delete tag")
-   tagName = st.text_input('tag name')
-   category = st.text_input('category')
-   submitted = st.button('Submit')
-
-   tag_data = {
-
-    "userTagId": userTagId,
-    "tagName": tagName,
-    "category": category
-  }
-  
-  
-   if submitted:
-
-        logger.info(f'{tag_data}')
-   try:
-      response = requests.delete(f'http://api:4000/user_tags/user_tags/{userId}', json=tag_data)
+      response = requests.delete(f'http://api:4000/users/users/{userId}/user_tags', json=tag_data)
       if (response.status_code == 200):
         st.success("Tag deleted")
-        response = requests.get(f'http://api:4000/user_tags/user_tags/{userId}').json()
-        df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
       else:
           st.error("Error deleting Tag")
-   except requests.exceptions.RequestException as e:
-        st.error(f"Error with requests: {e}")
-   
+    except requests.exceptions.RequestException as e:
+          st.error(f"Error with requests: {e}")
   
 @st.dialog("Add tag")
 def add_user_tag():
-   st.write("Add tag")
-   userTagId = st.number_input('userTagId', min_value=1, step=1)
+  st.write("Add tag")
+  userTagId = st.number_input('userTagId', min_value=1, max_value=65, step=1)
+  response = requests.get(f'http://api:4000/user_tags/user_tags/{userTagId}').json()
+  dataframe = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
+
   
-   submitted = st.button('Submit')
+  submitted = st.button('Submit')
 
-   tag_data = {
-
+  tag_data = {
     "userTagId": userTagId
   }
   
-  
-   if submitted:
-
-        logger.info(f'{tag_data}')
-   try:
+  if submitted:
+    logger.info(f'{tag_data}')
+    try:
       response = requests.post(f'http://api:4000/users/users/{userId}/user_tags', json=tag_data)
       if (response.status_code == 200):
-        st.success("Tag found")
-        response = requests.get(f'http://api:4000/user_tags/user_tags/{userId}').json()
-        df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
+        st.success("Tag added")
       else:
-          st.error("Error adding Tag")
-   except requests.exceptions.RequestException as e:
-        st.error(f"Error with requests: {e}")
-
-
-if (st.button('Edit tag')):
-        edit_user_tag()
-
+        st.error("Error adding Tag")
+    except requests.exceptions.RequestException as e:
+      st.error(f"Error with requests: {e}")
 
 if (st.button('Add tag')):
         add_user_tag()
-
 
 if (st.button('Delete tag')):
         delete_user_tag()
