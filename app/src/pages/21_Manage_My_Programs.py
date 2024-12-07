@@ -45,13 +45,15 @@ else:
 
     df = st.dataframe(response, column_order=["programId", "title", "description", "approved", "schoolId", "professorId", "programStart", "programEnd", "location"], hide_index=True)
 
+    harvard_school_id = 32
+
     @st.dialog("Add Program")
     def add_program_dialog():
         st.write('Add a new program')
         title = st.text_input('Title')
         description = st.text_input('Description')
         approved = st.checkbox('Approved?', value=False)
-        school_id = 32
+        school_id = st.number_input('School ID', value=harvard_school_id)
         professor_id = st.number_input('Professor ID', min_value=1, step=1)
         program_start = st.date_input('Program Start')
         program_end = st.date_input('Program End')
@@ -87,7 +89,7 @@ else:
                     if response.status_code == 200:
                         st.success("Program added successfully")
                     else:
-                        st.error("Error adding program")
+                        st.error(f"Error adding program")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error with requests: {e}")
 
@@ -95,6 +97,8 @@ else:
     # Dialog for editing a program at Harvard University
     @st.dialog("Edit Program")
     def edit_program_dialog():
+        response = requests.get('http://api:4000/posts/posts').json()
+
         st.write('Edit an existing program')
         program_id = st.number_input('Program ID', min_value=1, step=1, placeholder='Enter the program ID')
         title = st.text_input('Title')
@@ -141,6 +145,7 @@ else:
                         st.error("Error editing program")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error with requests: {e}")
+
     @st.dialog("Delete Program")
     def delete_program_dialog():
       st.write('Delete a Program')
