@@ -163,3 +163,7 @@ elif st.session_state['role'] == 'professor':
     
     if (st.button('Refresh')):
         st.rerun()
+
+
+elif st.session_state['role'] == 'outside_administrator':
+    st.write(st.session_state['role'])

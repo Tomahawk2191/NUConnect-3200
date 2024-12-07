@@ -19,7 +19,13 @@ st.markdown("# Profile")
 st.sidebar.header("Profile")
 st.write('View Profile')
 
-response = requests.get('http://api:4000/users/users/5').json()
+
+userId = 5
+
+if st.session_state['role'] == 'professor':
+  userId = 101
+  
+response = requests.get(f'http://api:4000/users/users/{userId}').json()
 logger.info(f'data {response}')
 
 schoolId = response[0]["schoolId"]
@@ -56,12 +62,12 @@ def add_user_dialog():
       logger.info(f'Profile edited {user_data}')
       
       try:
-        response = requests.put('http://api:4000/users/users/5', json=user_data)
+        response = requests.put(f'http://api:4000/users/users/{userId}', json=user_data)
         if (response.status_code == 200):
           st.success("User edited")
           
           
-          response = requests.get('http://api:4000/users/users/5').json()
+          response = requests.get(f'http://api:4000/users/users/{userId}').json()
           df = st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
         else:
           st.error("Error editing user")
@@ -80,7 +86,7 @@ st.write('')
 st.write('')
 st.write('View All Tags')
 
-response = requests.get('http://api:4000/users/users/2/user_tags').json()
+response = requests.get(f'http://api:4000/users/users/{userId}/user_tags').json()
 logger.info(f'data {response}')
 
 
@@ -110,10 +116,10 @@ def edit_user_tag():
 
 
     try:
-      response = requests.put('http://api:4000/user_tags/user_tags/2', json=tag_data)
+      response = requests.put(f'http://api:4000/user_tags/user_tags/{userId}', json=tag_data)
       if (response.status_code == 200):
         st.success("Tag edited")
-        response = requests.get('http://api:4000/user_tags/user_tags/2').json()
+        response = requests.get(f'http://api:4000/user_tags/user_tags/{userId}').json()
         df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
       else:
           st.error("Error editing Tag")
@@ -139,10 +145,10 @@ def delete_user_tag():
 
         logger.info(f'{tag_data}')
    try:
-      response = requests.delete('http://api:4000/user_tags/user_tags/2', json=tag_data)
+      response = requests.delete(f'http://api:4000/user_tags/user_tags/{userId}', json=tag_data)
       if (response.status_code == 200):
         st.success("Tag deleted")
-        response = requests.get('http://api:4000/user_tags/user_tags/2').json()
+        response = requests.get(f'http://api:4000/user_tags/user_tags/{userId}').json()
         df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
       else:
           st.error("Error deleting Tag")
@@ -167,10 +173,10 @@ def add_user_tag():
 
         logger.info(f'{tag_data}')
    try:
-      response = requests.post(f'http://api:4000/users/users/2/user_tags', json=tag_data)
+      response = requests.post(f'http://api:4000/users/users/{userId}/user_tags', json=tag_data)
       if (response.status_code == 200):
         st.success("Tag found")
-        response = requests.get('http://api:4000/user_tags/user_tags/2').json()
+        response = requests.get(f'http://api:4000/user_tags/user_tags/{userId}').json()
         df = st.dataframe(response, column_order=["userTagId", "tagName", "category"], hide_index=True)
       else:
           st.error("Error adding Tag")
