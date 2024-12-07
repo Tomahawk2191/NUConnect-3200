@@ -36,44 +36,43 @@ df = st.dataframe(response, column_order=["userId", "firstName", "middleName", "
 @st.dialog("Edit Profile")
 def add_user_dialog():
     st.write('Edit Profile')
-    first_name = st.text_input('First Name')
-    middle_name = st.text_input('Middle Name')
-    last_name = st.text_input('Last Name')
-    phone = st.text_input('Phone Number')
-    email = st.text_input('Email')
+    first_name = st.text_input('First Name', value="")
+    middle_name = st.text_input('Middle Name', value="")
+    last_name = st.text_input('Last Name', value="")
+    phone = st.text_input('Phone Number', value="")
+    email = st.text_input('Email', value="")
     submitted = st.button('Submit')
 
-    user_data = {
-        "firstName": first_name,
-        "middleName": middle_name,
-        "lastName": last_name,
-        "phone": phone,
-        "email": email,
-        "schoolId": schoolId,
-        "roleId": roleId
-      
-    }
-    
     if submitted:
-    
-      if (user_data["middleName"] == ""):
-        user_data["middleName"] = None
-        
-      logger.info(f'Profile edited {user_data}')
-      
-      try:
-        response = requests.put(f'http://api:4000/users/users/{userId}', json=user_data)
-        if (response.status_code == 200):
-          st.success("User edited")
-          
-          
-          response = requests.get(f'http://api:4000/users/users/{userId}').json()
-          df = st.dataframe(response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
-        else:
-          st.error("Error editing user")
-      except requests.exceptions.RequestException as e:
-        st.error(f"Error with requests: {e}")
+        if not first_name.strip():
+            st.error("First Name is required.")
+            return
+        if not last_name.strip():
+            st.error("Last Name is required.")
+            return
 
+        user_data = {
+            "firstName": first_name.strip(),
+            "middleName": middle_name.strip() if middle_name.strip() else None,
+            "lastName": last_name.strip(),
+            "phone": phone.strip(),
+            "email": email.strip(),
+            "schoolId": schoolId,
+            "roleId": roleId
+        }
+
+        logger.info(f'Profile edited {user_data}')
+
+        try:
+            response = requests.put(f'http://api:4000/users/users/{userId}', json=user_data)
+            if response.status_code == 200:
+                st.success("User edited successfully")
+                updated_response = requests.get(f'http://api:4000/users/users/{userId}').json()
+                st.dataframe(updated_response, column_order=["userId", "firstName", "middleName", "lastName", "email", "roleId", "schoolId"], hide_index=True)
+            else:
+                st.error(f"Error editing user: {response.status_code} - {response.text}")
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error with requests: {e}")
 
         
 if (st.button('Edit Profile')):
