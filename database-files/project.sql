@@ -668,7 +668,9 @@ VALUES ('Computer Science', 'Major'),
 
 INSERT INTO userTag (userId, userTagId)
 VALUES (1, 1),
-       (2, 2);
+       (2, 2),
+       (101, 23),
+       (101, 12);
 insert into userTag (userId, userTagId)
 values (4, 74);
 insert into userTag (userId, userTagId)
